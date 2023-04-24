@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('fonts/Noto_Sans/NotoSans-SemiBold.ttf') format('truetype');
+}
+
+body{
+    background-color: #0093E9;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: black;
+    color: white;
+}
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+.logo{
+    display: flex;
+    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+}
+
+#linkedlylogo{
+    margin: 5px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    flex-direction: column;
+    margin: 5px;
+}
+
+/* Create a cool, smooth and modern hover animation for the background for #subbutton and #genScoresBtn */
+#subbutton, #genScoresBtn {
+    position: relative;
+    display: inline-block;
+  }
+  
+#subbutton::before, #genScoresBtn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #f2f2f2;
+    transition: transform 0.5s ease-out;
+    transform: scale(0);
+    transform-origin: center;
+}
+
+#subbutton:hover::before, #genScoresBtn:hover::before {
+    transform: scale(1);
+}
+  

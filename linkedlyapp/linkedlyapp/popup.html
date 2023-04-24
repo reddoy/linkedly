@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="indexstyle.css">
+    <title>Reader</title>
+</head>
+<body>
+    <div class="logo">
+        <img src="images\chainlogosmall.png" alt="linkedlylogo" id="linkedlylogo">
+        <h1>Linkedly</h1>
+    </div>
+    <form action="" id="personForm">
+        <div class="question">
+            <label for="linkUrl">Linkedin URL</label>
+            <input type="text" name="linkUrl" id="linkUrl">
+        </div>
+        <div class="question">
+            <label for="email">Email</label>
+            <input type="text" name="email">
+        </div>
+        <div class="question">
+            <label for="note">Note</label>
+            <input type="text" name="note">
+        </div>
+        <div class="buttons">
+            <input type="submit" id="subbutton" value="Add to List">
+            <button id="genScoresBtn">Generate Scores</button>
+        </div>
+    </form>
+  
+    <div id="displaySect"></div>
+    <script src="app.js"></script>
+</body>
+</html>
