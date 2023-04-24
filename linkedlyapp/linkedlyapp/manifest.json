@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Linkedly",
+  "version": "1.0.0",
+  "description": "Linkedly is a chrome extension that helps you find the most relevant LinkedIn profiles for your target companies.",
+  "permissions": ["tabs", "scripting"],
+  "icons": {
+    "128": "images/chainlogo.png"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
