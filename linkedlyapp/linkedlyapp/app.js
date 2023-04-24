@@ -2,16 +2,6 @@
 window.onload = function(){
     personArr = []
 
-
-
-    // popup.js
-
-    // create a function that listens for the genScoresBtn to be clicked
-    // then send a message to content.js to run the addScores function
-
-    // create a function that listens for the genScoresBtn to be clicked then
-    // send a message to content.js to run the addScores() function. I am building a chrome extension
-
     // create a funciton that listens for the genScoresBtn to be clicked then
     // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
@@ -28,8 +18,6 @@ window.onload = function(){
         console.log(response);
     }
 
-
-    
     const form = document.getElementById('personForm');
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -37,25 +25,24 @@ window.onload = function(){
         document.getElementById('linkUrl').value = url;
     });
 
+    // create a funciton that listens for when the personForm is submitted
+    // then runs the addPerson(linkedUrl, Name) function and passes in the values
+    // from the form
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const linkedUrl = document.getElementById('linkUrl').value;
+        const name = document.getElementById('name').value;
+        addPerson(linkedUrl, name);
+    });
 
-    // create an event listener for the genScoresBtn to be clicked then sends a message to content.js
-      
+    // create a function that listens for when the downloadPpl button is clicked
+    // then conversts each array in the personArr to a csv file and downloads it
+    // to the users computer
+    document.getElementById('downloadPpl').addEventListener('click', function(){
+        downloadCSV(personArr);
+    });
 
-    // form.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    //     let curPost = [];
-    //     const formData = new FormData(form);
-    //     jsonObj = {
-    //         linkedinURL:formData.get('linkUrl'),
-    //         email: formData.get('email')
-    //     }
-    //     personArr.push(jsonObj);
-    // });
-    
-    
-//     const displayButton = document.getElementById('displayButton');
-    
-//     displayButton.addEventListener('click', function(){
-//         document.getElementById('displaySect').innerText = JSON.stringify(personArr);
-//     });
+    //this function takes in a array filled with arrays of people objects 
+
+
 }
