@@ -1,20 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("Content script loaded and ready");
-  
-    // Add the message listener here
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-      if (request.message == "addScores") {
-        addScores();
-      }
-    });
-  });
-
-
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
     if (request.message === "addScores")
       addScores();
   }

@@ -53,8 +53,3 @@ form{
     transform: scale(0);
     transform-origin: center;
 }
-
-#subbutton:hover::before, #genScoresBtn:hover::before {
-    transform: scale(1);
-}
-  
