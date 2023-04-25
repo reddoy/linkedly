@@ -25,6 +25,14 @@ form{
     margin: 5px;
 }
 
+.question{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 5px;
+}
+
 .buttons{
     display: flex;
     justify-content: center;
@@ -34,22 +42,25 @@ form{
     margin: 5px;
 }
 
-/* Create a cool, smooth and modern hover animation for the background for #subbutton and #genScoresBtn */
-#subbutton, #genScoresBtn {
-    position: relative;
-    display: inline-block;
-  }
-  
-#subbutton::before, #genScoresBtn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-color: #f2f2f2;
-    transition: transform 0.5s ease-out;
-    transform: scale(0);
-    transform-origin: center;
+/* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
+#subbutton, #genScoresBtn, #downloadPpl, #clearListBtn {
+    border-radius: 12px;
+    font-weight: bold;
+    background: linear-gradient(to right, #0093E9, #80D0C7);
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    width: 150px;
+    transition: 0.5s;
+    margin: 5px;
+}
+
+
+/* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
+#subbutton:hover, #genScoresBtn:hover, #downloadPpl:hover, #clearListBtn:hover {
+    background-color: #ffffff;
+    color: #000000;
+    transition: 0.5s;
 }
