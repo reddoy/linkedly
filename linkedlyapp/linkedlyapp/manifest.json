@@ -8,7 +8,7 @@
     "128": "images/chainlogo.png"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "home.html"
   },
   "background.service_worker": {
     "service_worker": "background.js",
