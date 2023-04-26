@@ -50,7 +50,6 @@ window.onload = function(){
             personArr.push([email, linkedUrl, note]);
             saveListToStorage(personArr);
           });
-
     });
 
     // create a function that listens for when the clearListBtn button is clicked
@@ -58,7 +57,6 @@ window.onload = function(){
     document.getElementById('clearListBtn').addEventListener('click', function(){
         chrome.storage.local.clear(function() {
             console.log("personList cleared")
-            console.log(chrome.runtime.lastError);
         });
     });
         
@@ -69,6 +67,7 @@ window.onload = function(){
         chrome.storage.local.get(["personList"], function(result) {
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Email,LinkedIn URL,Note\r\n";
+            console.log(result.personList);
             result.personList.forEach(function(rowArray){
                 let row = rowArray.join(",");
                 csvContent += row + "\r\n";
