@@ -8,6 +8,7 @@ body{
     font-family: 'Noto Sans', sans-serif;
     background-color: black;
     color: white;
+    overflow: hidden;
 }
 form{
     display: flex;
@@ -40,6 +41,11 @@ form{
     margin: 5px;
     flex-direction: column;
     margin: 5px;
+}
+
+#clearListBtn{
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */

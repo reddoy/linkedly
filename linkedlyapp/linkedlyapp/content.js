@@ -38,3 +38,8 @@ displayFlexElement.appendChild(rezScore);
 console.log(displayFlexElement);
     }
 }
+
+
+function calculateLinkScore{
+  
+}
