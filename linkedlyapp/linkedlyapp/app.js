@@ -4,15 +4,17 @@ window.onload = function(){
     // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
     // write code that avoids this error
-    document.getElementById('genScoresBtn').addEventListener('click', function(){
-        getScores();
-    });
 
     function saveListToStorage(list) {
         chrome.storage.local.set({ "personList": list }, function() {
             console.log("Value stored");
             document.getElementById('email').value = '';
             document.getElementById('note').value = '';
+            let addListBtn = document.getElementById('subbutton');
+            addListBtn.value = "Added!";
+            setTimeout(function(){
+                addListBtn.value = "Add to List";
+            }, 1000);
           });
       }
 
@@ -56,7 +58,14 @@ window.onload = function(){
     // then clears the personList from chrome storage
     document.getElementById('clearListBtn').addEventListener('click', function(){
         chrome.storage.local.clear(function() {
-            console.log("personList cleared")
+            console.log("personList cleared");
+            // write code that changes the text of clearListBtn to say "List Cleared"
+            // for 1 second then changes back to "Clear List"
+            let clearListBtn = document.getElementById('clearListBtn');
+            clearListBtn.innerHTML = "List Cleared";
+            setTimeout(function(){
+                clearListBtn.innerHTML = "Clear List";
+            }, 1000);
         });
     });
         
