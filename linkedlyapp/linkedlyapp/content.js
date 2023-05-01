@@ -40,16 +40,11 @@ function addScores(){
 }
 
 
-<div class="pv-text-details__left-panel mt2">
-    <span class="text-body-small inline t-black--light break-words">
-      Santa Monica, California, United States
-    </span>
-      <span class="pv-text-details__separator t-black--light">
-        <a href="/in/scott-gallo-71ba5323/overlay/contact-info/" id="top-card-text-details-contact-info" class="ember-view link-without-visited-state cursor-pointer text-heading-small inline-block break-words">
-          Contact info
-        </a>
-      </span>
-  </div>
+function genEmails(){
+  let curName = document.querySelector('.text-heading-xlarge').innerText.trim();
+
+
+}
 
 function calculateLinkScore(){
   let isMemberPremium = document.querySelector('.pv-member-badge')  || false;
