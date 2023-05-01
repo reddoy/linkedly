@@ -1,30 +1,36 @@
+
 const axios = require('axios');
 
-const prompt = "Once upon a time";
+// Your API key
+const API_KEY = 'REDACTED';
+console.log(API_KEY);
 
-const openaiApiKey = 'REDACTED';
+// API endpoint
+const API_URL = 'https://api.openai.com/v1/engines';
 
-const params = {
-  "model": "text-davinci-002",
-  "temperature": 0.7,
-  "max_tokens": 60,
-  "top_p": 1,
-  "frequency_penalty": 0,
-  "presence_penalty": 0
+// Prompt text to be completed by the model
+const prompt = 'Hello, World!';
+
+// Request parameters
+const data = {
+    prompt: prompt,
+    max_tokens: 50,
+    temperature: 0.5
 };
 
-axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-  prompt,
-  ...params,
-}, {
-  headers: {
+// API request headers
+const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `${openaiApiKey}`,
-  },
-})
-.then(response => {
-  console.log(response.data.choices[0].text);
-})
-.catch(error => {
-  console.error(error);
-});
+    'Authorization': `Bearer ${API_KEY}`
+};
+
+// Send a POST request to the API endpoint
+axios.post(API_URL, data, { headers })
+    .then(response => {
+        // Handle the API response
+        console.log(response.data.choices[0].text);
+    })
+    .catch(error => {
+        // Handle any errors
+        console.error(error);
+    });
