@@ -18,20 +18,46 @@ window.onload = function(){
           });
       }
 
-    async function getScores() {
+    async function genEmailsPopup() {
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
         console.log([tab]);
-        const response = await chrome.tabs.sendMessage(tab.id, {message: "addScores"});
+        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
         // do something with response here, not outside the function
         console.log(response);
     }
+    genEmailsPopup();
 
     const form = document.getElementById('personForm');
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var url = tabs[0].url;
+        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
         document.getElementById('linkUrl').value = url;
     });
+    
+
+    // create code that listens for the message from content.js 
+    // that contains the message genEmails
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        console.log(request.message);
+        if (request.message == "genEmails") {
+            console.log("message recieved: " + request.curName);
+            getDomainName(request.curCompany).then(domain => {
+                console.log(domain);
+                let email = request.curName.split(" ")[0] + "@" + domain;
+                document.getElementById('email').value = email;
+            });
+        }
+    });
+
+    async function getDomainName(companyName) {
+        console.log(companyName);
+        const apiKey = ''; // replace with your Hunter API key
+        const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.data.domain;
+      }      
 
     // create a funciton that listens for when the personForm is submitted
     // then runs the addPerson(linkedUrl, Name) function and passes in the values
