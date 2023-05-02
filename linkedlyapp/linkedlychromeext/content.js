@@ -1,7 +1,8 @@
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.message === "addScores")
-      addScores();
+    if (request.message === "popupGenEmails"){
+      genEmails();
+    }
   }
 );
 
@@ -40,13 +41,29 @@ function addScores(){
 }
 
 
-function genEmails(){
-  let curName = document.querySelector('.text-heading-xlarge').innerText.trim();
+function genEmails() {
+  console.log("genEmails function called");
+  let curName = document.querySelector('.text-heading-xlarge');
 
-
+  if (curName) {
+    console.log("this is the curName and it passed: "+ curName.innerText);
+    curName = curName.innerText;
+    let curCompany = document.querySelector(' #ember28 > div.ph5.pb5 > div.mt2.relative > ul > li > button > span > div').innerText.trim();
+    try {                                   
+      chrome.runtime.sendMessage({message: "genEmails", curName: curName, curCompany: curCompany});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  else{
+    console.log("curname failed");
+  }
 }
 
+
+
 function calculateLinkScore(){
+  let curCompany = document.querySelector('#ember802 > div.ph5.pb5 > div.mt2.relative > ul > li:nth-child(1) > button > span > div').innerText.trim();
   let isMemberPremium = document.querySelector('.pv-member-badge')  || false;
   var curName = document.querySelector('.text-heading-xlarge').innerText;
   const distance = document.querySelector('.dist-value').textContent.trim();
