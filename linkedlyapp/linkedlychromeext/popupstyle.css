@@ -49,7 +49,7 @@ form{
 }
 
 /* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
-#subbutton, #genScoresBtn, #downloadPpl, #clearListBtn {
+#addToListBtn, #genScoresBtn, #downloadPpl, #clearListBtn {
     border-radius: 12px;
     font-weight: bold;
     background: linear-gradient(to right, #0093E9, #80D0C7);
@@ -65,8 +65,19 @@ form{
 
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
-#subbutton:hover, #genScoresBtn:hover, #downloadPpl:hover, #clearListBtn:hover {
+#addToListBtn:hover, #genScoresBtn:hover, #downloadPpl:hover, #clearListBtn:hover {
     background-color: #ffffff;
     color: #000000;
     transition: 0.5s;
+}
+
+.emailInput{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.arrows{
+    color: #ffffff;
 }
