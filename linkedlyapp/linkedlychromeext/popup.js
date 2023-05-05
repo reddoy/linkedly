@@ -28,8 +28,8 @@ window.onload = function(){
         'flast',
         'firstl',
         'first.m.last',
-        
-    ];
+     ];
+
     async function genEmailsPopup() {
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
         console.log([tab]);
@@ -45,7 +45,6 @@ window.onload = function(){
         document.getElementById('linkUrl').value = url;
     });
     
-
     // create code that listens for the message from content.js 
     // that contains the message genEmails
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
