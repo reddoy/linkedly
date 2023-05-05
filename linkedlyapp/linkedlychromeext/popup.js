@@ -1,4 +1,12 @@
+
 window.onload = function(){
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        console.log(tabs[0].url);
+        var url = tabs[0].url;
+        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
+        document.getElementById('linkUrl').value = url;
+    });
 
     // create a funciton that listens for the genScoresBtn to be clicked then
     // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
@@ -18,7 +26,55 @@ window.onload = function(){
           });
       }
 
-    allEmailFormats = [
+
+    async function genEmailsPopup() {
+        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+        console.log([tab]);
+        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
+        // do something with response here, not outside the function
+        console.log(response);
+    }
+
+    document.getElementById('genEmailsBtn').addEventListener('click', function(){
+        genEmailsPopup();
+    });
+    
+    let inputBox = document.querySelector('.emailInput');
+    let upArrow = inputBox.querySelector('.up-arrow');
+    let downArrow = inputBox.querySelector('.down-arrow');
+    let optionsInput = inputBox.querySelector('#email');
+  
+    upArrow.addEventListener('click', () => {
+        let currentValue = optionsInput.value;
+        let options = ['Option 1', 'Option 2', 'Option 3'];
+        let currentIndex = options.indexOf(currentValue);
+        if (currentIndex < options.length - 1) {
+        optionsInput.value = options[currentIndex + 1];
+        }
+    });
+    
+    downArrow.addEventListener('click', () => {
+        let currentValue = optionsInput.value;
+        let options = ['Option 1', 'Option 2', 'Option 3'];
+        let currentIndex = options.indexOf(currentValue);
+        if (currentIndex > 0) {
+        optionsInput.value = options[currentIndex - 1];
+        }
+    });
+
+    // create code that listens for the message from content.js 
+    // that contains the message genEmails
+    chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+        console.log(request.message);
+        if (request.message == "genEmails") {
+            console.log("message recieved: " + request.curName);
+            res = await fetch('127.0.0.1/email/'+ request.curCompany);
+            data = await res.json();
+            
+        }
+    });
+
+    const allEmailFormats = [
         'first',
         'flast',
         'firstl',
@@ -27,47 +83,25 @@ window.onload = function(){
         'first.l',
         'flast',
         'firstl',
-        'first.m.last',
-        
+        'first.m.last'
     ];
-    async function genEmailsPopup() {
-        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-        console.log([tab]);
-        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
-        // do something with response here, not outside the function
-        console.log(response);
-    }
-    genEmailsPopup();
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var url = tabs[0].url;
-        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
-        document.getElementById('linkUrl').value = url;
-    });
-    
-
-    // create code that listens for the message from content.js 
-    // that contains the message genEmails
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        console.log(request.message);
-        if (request.message == "genEmails") {
-            console.log("message recieved: " + request.curName);
-            getDomainName(request.curCompany).then(domain => {
-                console.log(domain);
-                let email = request.curName.split(" ")[0] + "@" + domain;
-                document.getElementById('email').value = email;
-            });
+    function emailFormatter(curName, domain){
+        splitName = curName.split(" ");
+        if (splitName.length == 2){
+            first = splitName[0];
+            last = splitName[1];
+            firstLast = first + last;
+            firstDotLast = first + '.' + last;
+            firstDotL = first + '.l';
+            fLast = first[0] + last;
+            firstL = first + last[0];
+            firstMLast = first + '.' + last[0] + last;
+            return [first, last, firstLast, firstDotLast, firstDotL, fLast, firstL, firstMLast];
         }
-    });
+        
+    }
 
-    async function getDomainName(companyName) {
-        console.log(companyName);
-        const apiKey = ''; // replace with your Hunter API key
-        const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.data.domain;
-      }      
 
     // create a funciton that listens for when the personForm is submitted
     // then runs the addPerson(linkedUrl, Name) function and passes in the values
@@ -123,29 +157,6 @@ window.onload = function(){
             window.open(encodedUri);
           });
     });
-}
 
-window.onload = function(){
-    const inputBox = document.querySelector('.emailInput');
-    const upArrow = inputBox.querySelector('.up-arrow');
-    const downArrow = inputBox.querySelector('.down-arrow');
-    const optionsInput = inputBox.querySelector('#email');
-  
-  upArrow.addEventListener('click', () => {
-    const currentValue = optionsInput.value;
-    const options = ['Option 1', 'Option 2', 'Option 3'];
-    const currentIndex = options.indexOf(currentValue);
-    if (currentIndex < options.length - 1) {
-      optionsInput.value = options[currentIndex + 1];
-    }
-  });
-  
-  downArrow.addEventListener('click', () => {
-    const currentValue = optionsInput.value;
-    const options = ['Option 1', 'Option 2', 'Option 3'];
-    const currentIndex = options.indexOf(currentValue);
-    if (currentIndex > 0) {
-      optionsInput.value = options[currentIndex - 1];
-    }
-  });
-  }
+
+}

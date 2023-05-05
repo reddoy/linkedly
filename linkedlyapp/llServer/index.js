@@ -16,8 +16,13 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/email/:name', (req, res) => {
+app.get('/email/:name', async function(req, res){
     res.send(`Hello ${req.params.name}!`);
+    const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
+    const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    res.end(data.data.domain);
 });
 
 
@@ -45,5 +50,3 @@ async function runCompletion(){
         console.log(`Choice ${index + 1}: ${choice.text}`);
     });
 }
-
-runCompletion();

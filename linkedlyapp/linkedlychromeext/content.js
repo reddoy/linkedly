@@ -109,6 +109,7 @@ function calculateLinkScore(){
   
   for(const artdecoItem of artdecoItems) {
     let linkElement = artdecoItem.querySelector('li > div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > div > span > span.visually-hidden');
+    
     if (linkElement != null) {
       console.log(linkElement.textContent.trim());
     }else{
@@ -117,6 +118,7 @@ function calculateLinkScore(){
     }
     
     let timeAtJob = artdecoItem.querySelector("li > div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > span > span.visually-hidden");
+    
     if (timeAtJob != null) {
       console.log(timeAtJob.textContent.trim());
     }else{
@@ -131,5 +133,14 @@ function calculateLinkScore(){
       console.log(job);
       console.log(job.querySelector("li > div > div.display-flex.flex-column.full-width.align-self-center > div.pvs-list__outer-container > ul > li > div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > div > span > span.visually-hidden"));
     }
+  }
+}
+
+function personalInfo(){
+  const pvList = document.querySelector('div.pvs-list__outer-container > ul');
+  const artdecoItems = pvList.querySelectorAll('.artdeco-list__item');
+
+  for( let job of artdecoItems){
+    console.log(job);
   }
 }

@@ -49,7 +49,7 @@ form{
 }
 
 /* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
-#addToListBtn, #genScoresBtn, #downloadPpl, #clearListBtn {
+.buttons button, a{
     border-radius: 12px;
     font-weight: bold;
     background: linear-gradient(to right, #0093E9, #80D0C7);
