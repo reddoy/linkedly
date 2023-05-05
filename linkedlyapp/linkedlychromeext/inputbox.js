@@ -1,8 +1,8 @@
 window.onload = function(){
-    const inputBox = document.querySelector('.input-box');
-const upArrow = inputBox.querySelector('.up-arrow');
-const downArrow = inputBox.querySelector('.down-arrow');
-const optionsInput = inputBox.querySelector('#options');
+  const inputBox = document.querySelector('.input-box');
+  const upArrow = inputBox.querySelector('.up-arrow');
+  const downArrow = inputBox.querySelector('.down-arrow');
+  const optionsInput = inputBox.querySelector('#options');
 
 upArrow.addEventListener('click', () => {
   const currentValue = optionsInput.value;

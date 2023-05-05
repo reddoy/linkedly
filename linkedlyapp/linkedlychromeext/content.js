@@ -61,21 +61,49 @@ function genEmails() {
 }
 
 
+function insertResponseScore(){
+  const nameSection = document.querySelector('div.ph5.pb5 > div.mt2.relative > div:nth-child(1) > div:nth-child(1)')
+  nameSection.style.display = "flex";
+  nameSection.style.flex_direction = "row";
+  const responseScore = document.createElement("p");
+  responseScore.innerText = Math.floor(Math.random() * 100);
+  responseScore.style.background = "linear-gradient(to bottom right, #87CEEB, #7B68EE)";
+  responseScore.style.borderRadius = "10px";
+  responseScore.style.color = "white";
+  responseScore.style.textAlign = "center";
+  responseScore.style.lineHeight = "40px";
+  responseScore.style.width = "40px";
+  responseScore.style.height = "40px";
+  responseScore.style.marginLeft = "10px";
+  nameSection.appendChild(responseScore);
+}
+
 
 function calculateLinkScore(){
-  let curCompany = document.querySelector('#ember802 > div.ph5.pb5 > div.mt2.relative > ul > li:nth-child(1) > button > span > div').innerText.trim();
-  let isMemberPremium = document.querySelector('.pv-member-badge')  || false;
-  var curName = document.querySelector('.text-heading-xlarge').innerText;
-  const distance = document.querySelector('.dist-value').textContent.trim();
-  const curHeadline = document.querySelector('.text-body-medium').textContent.trim();
-  const location = document.querySelector("#ember28 > div.ph5.pb5 > div.mt2.relative > div.pv-text-details__left-panel.mt2 > span.text-body-small.inline.t-black--light.break-words").textContent.trim();
-  const connectCount = document.querySelector("#ember28 > div.ph5.pb5 > ul > li > span").textContent.trim();
-  const about = document.querySelector("#ember282 > div.display-flex.ph5.pv3 > div > div > div > span:nth-child(1)").textContent.trim();
-  const text = document.querySelector().textContent.trim();
-  const followerCount = document.querySelector("#ember301 > div.pvs-header__container > div > div > div > p > span:nth-child(1)").textContent.trim();
-  console.log(followerCount);
-  const experiences = document.querySelector("#ember284 > div.pvs-list__outer-container > ul > li:nth-child(1) > div > div.display-flex.flex-column.full-width.align-self-center").textContent.trim();
-  console.log(experiences);
+  const curCompany = document.querySelector('div.ph5 > div.mt2.relative > ul > li > button > span > div');
+  const possibleSchool = document.querySelector('div.ph5.pb5 > div.mt2.relative > ul > li:nth-child(2) > button > span > div');
+  const isMemberPremium = document.querySelector('.pv-member-badge');
+  const curName = document.querySelector('.text-heading-xlarge');
+  const curDistance = document.querySelector('.dist-value');
+  const curHeadline = document.querySelector('.text-body-medium');
+  const curHashLine = document.querySelector('div.ph5.pb5 > div.mt2.relative > div:nth-child(1) > div.text-body-small.t-black--light.break-words.mt2 > span:nth-child(1)');
+  const curLocation = document.querySelector("div.ph5.pb5 > div.mt2.relative > div.pv-text-details__left-panel.mt2 > span.text-body-small.inline.t-black--light.break-words");
+  const connectCount = document.querySelector("div.ph5.pb5 > ul > li:nth-child(2) > span > span");
+  const about = document.querySelector("div.display-flex.ph5.pv3 > div > div > div > span:nth-child(1)");
+  const followerCount = document.querySelector("div.pvs-header__container > div > div > div > p > span:nth-child(1)");
+  const experiences = document.querySelector("div.pvs-list__outer-container > ul > li:nth-child(1) > div > div.display-flex.flex-column.full-width.align-self-center");
+  
+  let memberInfo = [curName, curCompany, isMemberPremium, curDistance, curHeadline, curLocation, connectCount, about, followerCount];
+
+  for(let info of memberInfo){
+    if (info == null){
+      console.log("this is null");
+    }
+    else{
+      console.log(info.textContent.trim());
+    }
+  }
+
   const pvList = document.querySelector('.pvs-list');
   const artdecoItems = pvList.querySelectorAll('.artdeco-list__item');
   
@@ -103,6 +131,5 @@ function calculateLinkScore(){
       console.log(job);
       console.log(job.querySelector("li > div > div.display-flex.flex-column.full-width.align-self-center > div.pvs-list__outer-container > ul > li > div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > div > span > span.visually-hidden"));
     }
-
   }
 }
