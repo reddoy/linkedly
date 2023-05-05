@@ -99,8 +99,36 @@ window.onload = function(){
             firstMLast = first + '.' + last[0] + last;
             return [first, last, firstLast, firstDotLast, firstDotL, fLast, firstL, firstMLast];
         }
-        
     }
+
+    async function genEmailsPopup() {
+        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+        console.log([tab]);
+        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
+        // do something with response here, not outside the function
+        console.log(response);
+    }
+    genEmailsPopup();
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        var url = tabs[0].url;
+        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
+        document.getElementById('linkUrl').value = url;
+    });
+    
+    // create code that listens for the message from content.js 
+    // that contains the message genEmails
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        console.log(request.message);
+        if (request.message == "genEmails") {
+            console.log("message recieved: " + request.curName);
+            getDomainName(request.curCompany).then(domain => {
+                console.log(domain);
+                let email = request.curName.split(" ")[0] + "@" + domain;
+                document.getElementById('email').value = email;
+            });
+        }
+    });
 
 
     // create a funciton that listens for when the personForm is submitted
