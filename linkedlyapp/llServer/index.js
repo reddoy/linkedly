@@ -1,5 +1,5 @@
 const { Configuration, OpenAIApi } = require('openai');
-require('dotenv').config();
+require('dotenv').config({ path: '../../.env' });
 
 
 //create a simple webserver with express
@@ -21,6 +21,12 @@ app.get('/email/:name', (req, res) => {
 });
 
 
+app.get('get/response/score', (req, res) => {
+    personData = JSON.parse(req.body);
+    res.send('Hello World!');
+});
+
+
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 
@@ -31,7 +37,7 @@ const openai = new OpenAIApi(configuration);
 async function runCompletion(){
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
-        prompt: "This is a test",
+        prompt: "Tell me about yourself: I'm a Data Scientist working at IBM.",
         max_tokens: 100,
     });
 

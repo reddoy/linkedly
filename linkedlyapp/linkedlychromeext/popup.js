@@ -18,6 +18,18 @@ window.onload = function(){
           });
       }
 
+    allEmailFormats = [
+        'first',
+        'flast',
+        'firstl',
+        'firstlast',
+        'first.last',
+        'first.l',
+        'flast',
+        'firstl',
+        'first.m.last',
+        
+    ];
     async function genEmailsPopup() {
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
         console.log([tab]);
@@ -26,8 +38,6 @@ window.onload = function(){
         console.log(response);
     }
     genEmailsPopup();
-
-    const form = document.getElementById('personForm');
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var url = tabs[0].url;
@@ -63,8 +73,7 @@ window.onload = function(){
     // then runs the addPerson(linkedUrl, Name) function and passes in the values
     // from the form
     
-    form.addEventListener('submit', function(e){
-        e.preventDefault();
+    document.getElementById('addToListBtn').addEventListener('click', function(){
         const linkedUrl = document.getElementById('linkUrl').value;
         let email = document.getElementById('email').value;
         let note = document.getElementById('note').value;
@@ -77,6 +86,9 @@ window.onload = function(){
             }
             personArr.push([email, linkedUrl, note]);
             saveListToStorage(personArr);
+            linkedUrl.value = '';
+            email.value = '';
+            note.value = '';
           });
     });
 
@@ -110,6 +122,30 @@ window.onload = function(){
             var encodedUri = encodeURI(csvContent);
             window.open(encodedUri);
           });
-
     });
 }
+
+window.onload = function(){
+    const inputBox = document.querySelector('.emailInput');
+    const upArrow = inputBox.querySelector('.up-arrow');
+    const downArrow = inputBox.querySelector('.down-arrow');
+    const optionsInput = inputBox.querySelector('#email');
+  
+  upArrow.addEventListener('click', () => {
+    const currentValue = optionsInput.value;
+    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const currentIndex = options.indexOf(currentValue);
+    if (currentIndex < options.length - 1) {
+      optionsInput.value = options[currentIndex + 1];
+    }
+  });
+  
+  downArrow.addEventListener('click', () => {
+    const currentValue = optionsInput.value;
+    const options = ['Option 1', 'Option 2', 'Option 3'];
+    const currentIndex = options.indexOf(currentValue);
+    if (currentIndex > 0) {
+      optionsInput.value = options[currentIndex - 1];
+    }
+  });
+  }
