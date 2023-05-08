@@ -3,15 +3,35 @@ window.onload = function(){
 
     // create a const port variable that connects to the port "genEmails"
     // and sends the message "popupGenEmails" and uses chrome.tabs and connects to the most recent tab
-    const port = chrome.tabs.connect({name: "genEmails"});
+    
 
-    let curTabId;
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var tabId = tabs[0].id;
-        console.log(tabId);
-        curTabId = tabId;
-      });
+let port;
+
+async function getCurTab() {
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0) {
+      const tabId = tabs[0].id;
+      port = chrome.tabs.connect(tabId, { name: "genEmails" });
+    } else {
+      throw new Error("No active tab found");
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+(async () => {
+  try {
+    await getCurTab();
+    // do something with the port object
+  } catch (error) {
+    console.error(error);
+  }
+})();
+
 
     // write code to find the current tab Id the user is one 
 
