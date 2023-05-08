@@ -1,9 +1,24 @@
 
 window.onload = function(){
 
+    // create a const port variable that connects to the port "genEmails"
+    // and sends the message "popupGenEmails" and uses chrome.tabs and connects to the most recent tab
+    const port = chrome.tabs.connect({name: "genEmails"});
+
+    let curTabId;
+
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        console.log(tabs[0].url);
-        var url = tabs[0].url;
+        var tabId = tabs[0].id;
+        console.log(tabId);
+        curTabId = tabId;
+      });
+
+    // write code to find the current tab Id the user is one 
+
+    port.query({active: true, currentWindow: true}, function(tabs) {
+        console.log(port);
+        console.log(port.url);
+        var url = port.url;
         url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
         document.getElementById('linkUrl').value = url;
     });
@@ -13,19 +28,16 @@ window.onload = function(){
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
     // write code that avoids this error
 
-    function saveListToStorage(list) {
-        chrome.storage.local.set({ "personList": list }, function() {
-            console.log("Value stored");
-            document.getElementById('email').value = '';
-            document.getElementById('note').value = '';
-            let addListBtn = document.getElementById('subbutton');
-            addListBtn.value = "Added!";
-            setTimeout(function(){
-                addListBtn.value = "Add to List";
-            }, 1000);
-          });
-      }
 
+    document.getElementById('genEmailsBtn').addEventListener('click', function(){
+        chrome.runtime.onConnect.addListener(function(port) {
+            console.assert(port.name == "genEmails");
+            port.onMessage.addListener(function(msg) {
+                console.log(msg);
+                genEmailsPopup();
+            });
+        });
+    });
 
     async function genEmailsPopup() {
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
@@ -35,33 +47,6 @@ window.onload = function(){
         console.log(response);
     }
 
-    document.getElementById('genEmailsBtn').addEventListener('click', function(){
-        genEmailsPopup();
-    });
-    
-    let inputBox = document.querySelector('.emailInput');
-    let upArrow = inputBox.querySelector('.up-arrow');
-    let downArrow = inputBox.querySelector('.down-arrow');
-    let optionsInput = inputBox.querySelector('#email');
-  
-    upArrow.addEventListener('click', () => {
-        let currentValue = optionsInput.value;
-        let options = ['Option 1', 'Option 2', 'Option 3'];
-        let currentIndex = options.indexOf(currentValue);
-        if (currentIndex < options.length - 1) {
-        optionsInput.value = options[currentIndex + 1];
-        }
-    });
-    
-    downArrow.addEventListener('click', () => {
-        let currentValue = optionsInput.value;
-        let options = ['Option 1', 'Option 2', 'Option 3'];
-        let currentIndex = options.indexOf(currentValue);
-        if (currentIndex > 0) {
-        optionsInput.value = options[currentIndex - 1];
-        }
-    });
-
     // create code that listens for the message from content.js 
     // that contains the message genEmails
     chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
@@ -70,7 +55,6 @@ window.onload = function(){
             console.log("message recieved: " + request.curName);
             res = await fetch('127.0.0.1/email/'+ request.curCompany);
             data = await res.json();
-            
         }
     });
 
@@ -101,35 +85,28 @@ window.onload = function(){
         }
     }
 
-    async function genEmailsPopup() {
-        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-        console.log([tab]);
-        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
-        // do something with response here, not outside the function
-        console.log(response);
-    }
-    genEmailsPopup();
-
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        var url = tabs[0].url;
-        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
-        document.getElementById('linkUrl').value = url;
-    });
-    
-    // create code that listens for the message from content.js 
-    // that contains the message genEmails
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        console.log(request.message);
-        if (request.message == "genEmails") {
-            console.log("message recieved: " + request.curName);
-            getDomainName(request.curCompany).then(domain => {
-                console.log(domain);
-                let email = request.curName.split(" ")[0] + "@" + domain;
-                document.getElementById('email').value = email;
-            });
+    let inputBox = document.querySelector('.emailInput');
+    let upArrow = inputBox.querySelector('.up-arrow');
+    let downArrow = inputBox.querySelector('.down-arrow');
+    let optionsInput = inputBox.querySelector('#email');
+  
+    upArrow.addEventListener('click', () => {
+        let currentValue = optionsInput.value;
+        let options = ['Option 1', 'Option 2', 'Option 3'];
+        let currentIndex = options.indexOf(currentValue);
+        if (currentIndex < options.length - 1) {
+        optionsInput.value = options[currentIndex + 1];
         }
     });
-
+    
+    downArrow.addEventListener('click', () => {
+        let currentValue = optionsInput.value;
+        let options = ['Option 1', 'Option 2', 'Option 3'];
+        let currentIndex = options.indexOf(currentValue);
+        if (currentIndex > 0) {
+        optionsInput.value = options[currentIndex - 1];
+        }
+    });
 
     // create a funciton that listens for when the personForm is submitted
     // then runs the addPerson(linkedUrl, Name) function and passes in the values
@@ -153,6 +130,19 @@ window.onload = function(){
             note.value = '';
           });
     });
+
+    function saveListToStorage(list) {
+        chrome.storage.local.set({ "personList": list }, function() {
+            console.log("Value stored");
+            document.getElementById('email').value = '';
+            document.getElementById('note').value = '';
+            let addListBtn = document.getElementById('subbutton');
+            addListBtn.value = "Added!";
+            setTimeout(function(){
+                addListBtn.value = "Add to List";
+            }, 1000);
+          });
+      }
 
     // create a function that listens for when the clearListBtn button is clicked
     // then clears the personList from chrome storage

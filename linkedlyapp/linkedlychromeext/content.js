@@ -1,4 +1,6 @@
-chrome.runtime.onMessage.addListener(
+const port = chrome.runtime.connect({name: "genEmails"});
+
+port.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message === "popupGenEmails"){
       genEmails();
@@ -50,7 +52,7 @@ function genEmails() {
     curName = curName.innerText;
     let curCompany = document.querySelector(' #ember28 > div.ph5.pb5 > div.mt2.relative > ul > li > button > span > div').innerText.trim();
     try {                                   
-      chrome.runtime.sendMessage({message: "genEmails", curName: curName, curCompany: curCompany});
+      port.runtime.sendMessage({message: "genEmails", curName: curName, curCompany: curCompany});
     } catch (error) {
       console.log(error);
     }
