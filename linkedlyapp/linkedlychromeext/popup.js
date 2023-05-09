@@ -14,6 +14,7 @@ async function getCurTab() {
     if (tabs.length > 0) {
       const tabId = tabs[0].id;
       port = chrome.tabs.connect(tabId, { name: "genEmails" });
+      insertLinkUrl(port);
     } else {
       throw new Error("No active tab found");
     }
@@ -35,13 +36,17 @@ async function getCurTab() {
 
     // write code to find the current tab Id the user is one 
 
-    port.query({active: true, currentWindow: true}, function(tabs) {
-        console.log(port);
-        console.log(port.url);
-        var url = port.url;
-        url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
-        document.getElementById('linkUrl').value = url;
-    });
+    function insertLinkUrl(port) {
+        port.query({active: true, currentWindow: true}, function(tabs) {
+            console.log(port);
+            console.log(port.url);
+            var url = port.url;
+            url = url.replace(/^https?:\/\/(www\.)?/i, ''); // Remove https:// and www.
+            document.getElementById('linkUrl').value = url;
+        });
+    }
+
+
 
     // create a funciton that listens for the genScoresBtn to be clicked then
     // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
