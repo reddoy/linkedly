@@ -10,14 +10,13 @@
   "action": {
     "default_popup": "home.html"
   },
-  "background.service_worker": {
-    "service_worker": "background.js",
-    "persistent": true
+  "externally_connectable": {
+    "matches": ["https://%2A/*", "http://%2A/*"]
   },
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://www.linkedin.com/*", "http://www.linkedin.com/*"],
       "js": ["content.js"]
     }
   ]

@@ -1,12 +1,28 @@
-const port = chrome.runtime.connect({name: "genEmails"});
 
-port.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.message === "popupGenEmails"){
-      genEmails();
-    }
-  }
-);
+
+// Listen for messages from the extension
+function waitForMessage() {
+  return new Promise((resolve) => {
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+      console.log(request.message); // "Hello from the extension!"
+      resolve();
+    });
+  });
+}
+
+let port;
+
+async function myAsyncFunction() {
+  console.log("Waiting for message...");
+  await waitForMessage();
+  console.log("Message received!");
+}
+
+
+myAsyncFunction();
+
+
+
 
 console.log("Content script loaded and ready");
 

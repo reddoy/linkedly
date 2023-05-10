@@ -5,33 +5,22 @@ window.onload = function(){
     // and sends the message "popupGenEmails" and uses chrome.tabs and connects to the most recent tab
     
 
+// Send a message to the content script
 
-let port;
+  
 
-async function getCurTab() {
-  try {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length > 0) {
-      const tabId = tabs[0].id;
-      port = chrome.tabs.connect(tabId, { name: "genEmails" });
-      insertLinkUrl(port);
-    } else {
-      throw new Error("No active tab found");
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
+// chrome.runtime.onConnect.addListener(function(port) {
+//     console.assert(port.name == "linkedly");
+//     console.log('made it to the lsiten');
+//     port.onMessage.addListener(function(msg) {
+//         console.log(msg);
+//         console.log('this is tab id: ' + port.sender.tab.id);
+//         console.log("message recieved");
+//         insertLinkUrl(port);
+//     });
+// });
 
-(async () => {
-  try {
-    await getCurTab();
-    // do something with the port object
-  } catch (error) {
-    console.error(error);
-  }
-})();
+
 
 
     // write code to find the current tab Id the user is one 
@@ -55,13 +44,9 @@ async function getCurTab() {
 
 
     document.getElementById('genEmailsBtn').addEventListener('click', function(){
-        chrome.runtime.onConnect.addListener(function(port) {
-            console.assert(port.name == "genEmails");
-            port.onMessage.addListener(function(msg) {
-                console.log(msg);
-                genEmailsPopup();
-            });
-        });
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
+          });
     });
 
     async function genEmailsPopup() {
@@ -71,17 +56,6 @@ async function getCurTab() {
         // do something with response here, not outside the function
         console.log(response);
     }
-
-    // create code that listens for the message from content.js 
-    // that contains the message genEmails
-    chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
-        console.log(request.message);
-        if (request.message == "genEmails") {
-            console.log("message recieved: " + request.curName);
-            res = await fetch('127.0.0.1/email/'+ request.curCompany);
-            data = await res.json();
-        }
-    });
 
     const allEmailFormats = [
         'first',
