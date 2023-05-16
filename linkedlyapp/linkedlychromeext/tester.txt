@@ -1,0 +1,4 @@
+document.querySelector("#ember828").click()
+document.querySelector("#ember870").click()
+document.querySelector("#custom-message").value = 'hey its me'
+
