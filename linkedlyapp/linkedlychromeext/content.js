@@ -1,30 +1,27 @@
-
+console.log("Content script loaded and ready");
 
 // Listen for messages from the extension
-function waitForMessage() {
-  return new Promise((resolve) => {
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-      console.log(request.message); // "Hello from the extension!"
-      resolve();
-    });
-  });
-}
-
-let port;
-
-async function myAsyncFunction() {
-  console.log("Waiting for message...");
-  await waitForMessage();
-  console.log("Message received!");
-}
+// function waitForMessage() {
+//   return new Promise((resolve) => {
+//     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+//       console.log(request.message); // "Hello from the extension!"
+//       resolve();
+//     });
+//   });
+// }
 
 
-myAsyncFunction();
+// async function myAsyncFunction() {
+//   console.log("Waiting for message...");
+//   await waitForMessage();
+//   console.log("Message received!");
+// }
 
+// myAsyncFunction();
 
-
-
-console.log("Content script loaded and ready");
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log(request.message); // "Hello from the extension!"
+});
 
 function addScores(){
   // get all elements with class "entity-result"

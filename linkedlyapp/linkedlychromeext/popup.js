@@ -5,25 +5,12 @@ window.onload = function(){
     // and sends the message "popupGenEmails" and uses chrome.tabs and connects to the most recent tab
     
 
-// Send a message to the content script
+    // Send a message to the content script
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
+    });
 
   
-
-// chrome.runtime.onConnect.addListener(function(port) {
-//     console.assert(port.name == "linkedly");
-//     console.log('made it to the lsiten');
-//     port.onMessage.addListener(function(msg) {
-//         console.log(msg);
-//         console.log('this is tab id: ' + port.sender.tab.id);
-//         console.log("message recieved");
-//         insertLinkUrl(port);
-//     });
-// });
-
-
-
-
-    // write code to find the current tab Id the user is one 
 
     function insertLinkUrl(port) {
         port.query({active: true, currentWindow: true}, function(tabs) {
@@ -42,12 +29,6 @@ window.onload = function(){
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
     // write code that avoids this error
 
-
-    document.getElementById('genEmailsBtn').addEventListener('click', function(){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
-          });
-    });
 
     async function genEmailsPopup() {
         const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
@@ -133,9 +114,7 @@ window.onload = function(){
     function saveListToStorage(list) {
         chrome.storage.local.set({ "personList": list }, function() {
             console.log("Value stored");
-            document.getElementById('email').value = '';
-            document.getElementById('note').value = '';
-            let addListBtn = document.getElementById('subbutton');
+            let addListBtn = document.getElementById('addToListBtn');
             addListBtn.value = "Added!";
             setTimeout(function(){
                 addListBtn.value = "Add to List";
@@ -146,6 +125,10 @@ window.onload = function(){
     // create a function that listens for when the clearListBtn button is clicked
     // then clears the personList from chrome storage
     document.getElementById('clearListBtn').addEventListener('click', function(){
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {message: "Hi this is a message from Google! We scraped 40 million sites and found Katie Drake is the most beautiful girl in the world!"});
+            console.log('sent message');
+          });
         chrome.storage.local.clear(function() {
             console.log("personList cleared");
             // write code that changes the text of clearListBtn to say "List Cleared"
