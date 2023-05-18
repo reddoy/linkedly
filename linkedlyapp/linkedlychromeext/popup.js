@@ -10,7 +10,18 @@ window.onload = function(){
         chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
     });
 
-  
+    document.getElementById('genConnectBtn').addEventListener('click', function() {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, {message: "genConnect"});
+            const curUrl = tabs[0].url;
+            chrome.runtime.onMessage.addListener(function(request) {
+                if (request.message === "genConnect"){
+                    chrome.tabs.create({url: curUrl});
+                }
+            });
+
+        });
+    });
 
     function insertLinkUrl(port) {
         port.query({active: true, currentWindow: true}, function(tabs) {
