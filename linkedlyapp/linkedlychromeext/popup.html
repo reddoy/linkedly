@@ -12,36 +12,37 @@
         <img src="images\chainlogosmall.png" alt="linkedlylogo" id="linkedlylogo">
         <h1>Linkedly</h1>
     </div>
-    <div class="buttons">
-        <button id="genConnectBtn">Generate new Connect</button>
-    </div>
-    <div class="personForm">
-        <div class="question">
-            <label for="linkUrl">Linkedin URL</label>
-            <input type="text" name="linkUrl" id="linkUrl">
+    <div id="main-content">
+        <div class="buttons">
+            <button id="genConnectBtn">Generate new Connect</button>
         </div>
-        <div class="question">
-            <label for="email">Email</label>
-            <div class="emailInput">
-                <input type="text" id="email" name="email" value="Option 1" disabled>
-                <div class="arrows">
-                    <button class="up-arrow">&#9650;</button>
-                    <button class="down-arrow">&#9660;</button>
+        <div class="personForm">
+            <div class="question">
+                <label for="linkUrl">Linkedin URL</label>
+                <input type="text" name="linkUrl" id="linkUrl">
+            </div>
+            <div class="question">
+                <label for="email">Email</label>
+                <div class="emailInput">
+                    <input type="text" id="email" name="email" value="Option 1" disabled>
+                    <div class="arrows">
+                        <button class="up-arrow">&#9650;</button>
+                        <button class="down-arrow">&#9660;</button>
+                    </div>
                 </div>
             </div>
+            <div class="question">
+                <label for="note">Note</label>
+                <textarea name="note" id="note" cols="15" rows="5" id="note"></textarea>
+            </div>
         </div>
-        <div class="question">
-            <label for="note">Note</label>
-            <textarea name="note" id="note" cols="15" rows="5" id="note"></textarea>
+        <div class="buttons">
+            <button id="addToListBtn">Add to List</button>
+            <a href="currentList.html" id="curListBtn">Show Current List</a>
+            <button id="clearListBtn">Clear List</button>
+            <button id="downloadPpl">Download List</button>
         </div>
     </div>
-    <div class="buttons">
-        <button id="addToListBtn">Add to List</button>
-        <a href="currentList.html" id="curListBtn">Show Current List</a>
-        <button id="clearListBtn">Clear List</button>
-        <button id="downloadPpl">Download List</button>
-    </div>
-  
     <div id="displaySect"></div>
     <script src="popup.js"></script>
 </body>

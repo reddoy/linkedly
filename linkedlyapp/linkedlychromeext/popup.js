@@ -8,6 +8,10 @@ window.onload = function(){
     // Send a message to the content script
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
+
+        if (!tabs[0].url.includes("linkedin.com/in/")) {
+            document.getElementById('main-content').innerHTML = '<p id="notProfError">Please go to a LinkedIn profile page to use this extension.</p>';
+        }
     });
 
     document.getElementById('genConnectBtn').addEventListener('click', function() {
@@ -16,8 +20,12 @@ window.onload = function(){
             const curUrl = tabs[0].url;
             chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
                 if (request.message === "grabbedInfo"){
-                    console.log(request.curName);
-                    let response = await fetch('127.0.0.1/email/' + request.curName);
+                    // remove all non-alphanumeric characters and replace spaces with a + from curName
+                    let curName = request.curName.toLowerCase();
+                    curName = curName.replace(/[^a-zA-Z0-9 ]/g, "");
+                    curName = curName.replace(/\s+/g, '+');
+                    console.log(curName);
+                    let response = await fetch('http://127.0.0.1:3000/email/' + curName);
                     let data = await response.json();
                     console.log(data);
                 }
