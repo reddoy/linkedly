@@ -18,6 +18,17 @@ app.get('/', (req, res) => {
 
 app.get('/email/:name', async function(req, res){
     res.send(`Hello ${req.params.name}!`);
+    // come with variations of email formats with the name and make name lowercase
+    // then split first and last name and take out all non-alphanumeric characters
+    let name = req.params.name;
+    let splitName = name.split(" ");
+    let first = splitName[0];
+    let last = splitName[1];
+    let firstLast = first + last;
+    let firstDotLast = first + '.' + last;
+    let firstDotL = first + '.' + last[0];
+    let fLast = first[0] + last;
+    let firstL = first + last[0];
     const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
     const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
     const response = await fetch(url);
