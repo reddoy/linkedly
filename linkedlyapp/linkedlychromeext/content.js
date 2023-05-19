@@ -5,7 +5,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   console.log(request.message); // "Hello from the extension!"
 
   if (request.message === "genConnect"){
-    chrome.runtime.sendMessage({message: "genConnect"});
+    let personArr = getPageEles();
+    console.log(personArr);
+    // add an entry to jsonPerson that is the message : 'grabbedInfo'
+    let jsonPerson = {
+      message: 'grabbedInfo',
+      curName: personArr[0],
+    };
+
+    chrome.runtime.sendMessage(jsonPerson);
   }
 });
 
@@ -32,9 +40,9 @@ function genEmails() {
 }
 
 
+function getPageEles(){
 
-
-function calculateLinkScore(){
+  let personArr = [];
   const curName = document.querySelector('.text-heading-xlarge');
   const curCompany = document.querySelector('div.ph5 > div.mt2.relative > ul > li > button > span > div');
   const possibleSchool = document.querySelector('div.ph5.pb5 > div.mt2.relative > ul > li:nth-child(2) > button > span > div');
@@ -47,18 +55,33 @@ function calculateLinkScore(){
   const connectCount = document.querySelector("div.ph5.pb5 > ul > li:nth-child(2) > span > span");
   const about = document.querySelector("div.display-flex.ph5.pv3 > div > div > div > span:nth-child(1)");
   const followerCount = document.querySelector("div.pvs-header__container > div > div > div > p > span:nth-child(1)");
+
+  for (let ele of [curName, curCompany,possibleSchool, isMemberPremium, curDistance, curHeadline, curHashLine, curLocation, connectCount, about, followerCount]){
+    if (ele == null){
+      personArr.push(null);
+    }
+    else{
+      personArr.push(ele.textContent.trim());
+    }
+  }
+  return personArr;
+}
+
+
+function calculateLinkScore(){
+
   const experiences = document.querySelector("div.pvs-list__outer-container > ul > li:nth-child(1) > div > div.display-flex.flex-column.full-width.align-self-center");
   
   let memberInfo = [curName, curCompany,possibleSchool, isMemberPremium, curDistance, curHeadline, curHashLine, curLocation, connectCount, about, followerCount];
 
-  for(let info of memberInfo){
-    if (info == null){
-      console.log("this is null");
-    }
-    else{
-      console.log(info.textContent.trim());
-    }
-  }
+  // for(let info of memberInfo){
+  //   if (info == null){
+  //     console.log("this is null");
+  //   }
+  //   else{
+  //     console.log(info.textContent.trim());
+  //   }
+  // }
 
   // const pvList = document.querySelector('.pvs-list');
   // const artdecoItems = pvList.querySelectorAll('.artdeco-list__item');

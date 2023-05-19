@@ -16,7 +16,7 @@
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "matches": ["https://www.linkedin.com/*", "http://www.linkedin.com/*"],
+      "matches": ["https://www.linkedin.com/in/*", "http://www.linkedin.com/in/*"],
       "js": ["content.js"]
     }
   ]

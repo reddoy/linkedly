@@ -14,14 +14,18 @@ window.onload = function(){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {message: "genConnect"});
             const curUrl = tabs[0].url;
-            chrome.runtime.onMessage.addListener(function(request) {
-                if (request.message === "genConnect"){
-                    chrome.tabs.create({url: curUrl});
+            chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+                if (request.message === "grabbedInfo"){
+                    console.log(request.curName);
+                    let response = await fetch('127.0.0.1/email/' + request.curName);
+                    let data = await response.json();
+                    console.log(data);
                 }
             });
 
         });
     });
+
 
     function insertLinkUrl(port) {
         port.query({active: true, currentWindow: true}, function(tabs) {
