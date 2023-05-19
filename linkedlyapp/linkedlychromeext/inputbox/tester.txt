@@ -2,3 +2,14 @@ document.querySelector("#ember828").click()
 document.querySelector("#ember870").click()
 document.querySelector("#custom-message").value = 'hey its me'
 
+div[2]/div[2]/ul/li[1]/button/span/div
+
+/div[2]/div[2]/ul/li[1]/button/span/div/text()
+
+var xpath = "/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/ul/li[1]/button/span/div";
+var element = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+var text = element ? element.textContent.trim() || element.innerText.trim() : null;
+console.log(text);
+
+
+/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[1]/div[2]/div[2]/ul

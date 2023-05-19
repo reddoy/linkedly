@@ -20,6 +20,7 @@ window.onload = function(){
             const curUrl = tabs[0].url;
             chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
                 if (request.message === "grabbedInfo"){
+                    console.log(request)
                     // remove all non-alphanumeric characters and replace spaces with a + from curName
                     let curName = request.curName.toLowerCase();
                     curName = curName.replace(/[^a-zA-Z0-9 ]/g, "");
@@ -28,6 +29,9 @@ window.onload = function(){
                     let response = await fetch('http://127.0.0.1:3000/email/' + curName);
                     let data = await response.json();
                     console.log(data);
+                    let reachResponse = await fetch('http://127.0.0.1:3000/get/message/' + JSON.stringify(data));
+                    let reachData = await reachResponse.json();
+                    console.log(reachData);
                 }
             });
 
@@ -52,41 +56,6 @@ window.onload = function(){
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
     // write code that avoids this error
 
-
-    async function genEmailsPopup() {
-        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-        console.log([tab]);
-        const response = await chrome.tabs.sendMessage(tab.id, {message: "popupGenEmails"});
-        // do something with response here, not outside the function
-        console.log(response);
-    }
-
-    const allEmailFormats = [
-        'first',
-        'flast',
-        'firstl',
-        'firstlast',
-        'first.last',
-        'first.l',
-        'flast',
-        'firstl',
-        'first.m.last'
-    ];
-
-    function emailFormatter(curName, domain){
-        splitName = curName.split(" ");
-        if (splitName.length == 2){
-            first = splitName[0];
-            last = splitName[1];
-            firstLast = first + last;
-            firstDotLast = first + '.' + last;
-            firstDotL = first + '.l';
-            fLast = first[0] + last;
-            firstL = first + last[0];
-            firstMLast = first + '.' + last[0] + last;
-            return [first, last, firstLast, firstDotLast, firstDotL, fLast, firstL, firstMLast];
-        }
-    }
 
     let inputBox = document.querySelector('.emailInput');
     let upArrow = inputBox.querySelector('.up-arrow');

@@ -11,6 +11,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let jsonPerson = {
       message: 'grabbedInfo',
       curName: personArr[0],
+      curCompany: personArr[1],
+      possibleSchool: personArr[2],
+      isMemberPremium: personArr[3],
+      curHeadline: personArr[5],
+      curAbout: personArr[9],
     };
 
     chrome.runtime.sendMessage(jsonPerson);
