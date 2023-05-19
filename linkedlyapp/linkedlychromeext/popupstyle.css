@@ -26,6 +26,15 @@ form{
     margin: 5px;
 }
 
+#notProfError{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 5px;
+    font-size: large;
+}
+
 .question{
     display: flex;
     justify-content: center;
