@@ -13,8 +13,14 @@ app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+app.use(express.static(__dirname+'/public_html'));
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
+});
+
+app.get('/get/loginpage', (req, res) => {
+    res.(__dirname + '/public_html/login.html');
 });
 
 app.get('/email/:name', async function(req, res){
