@@ -27,11 +27,46 @@ window.onload = function(){
                     curName = curName.replace(/\s+/g, '+');
                     console.log(curName);
                     let response = await fetch('http://127.0.0.1:3000/email/' + curName);
-                    let data = await response.json();
-                    console.log(data);
-                    let reachResponse = await fetch('http://127.0.0.1:3000/get/message/' + JSON.stringify(data));
-                    let reachData = await reachResponse.json();
+                    let emailOps = await response.json();
+                    
+                    let goal = 'set up a short chat to learn more about their work';
+                    let reachJson = {
+                        curName: request.curName,
+                        curCompany: request.curCompany,
+                        curHeadline: request.curHeadline,
+                        curGoal: request.curGoal,
+                    };
+                  
+                    let reachResponse = await fetch('http://127.0.0.1:3000/get/message/' + JSON.stringify(reachJson));
+                    let reachData = await reachResponse.text();
+                    const mainContentDiv = document.getElementById('main-content');
+                    const personFormDiv = document.createElement('div');
+                    personFormDiv.className = 'personForm';
+                    personFormDiv.innerHTML = `
+                    <div class="question">
+                        <label for="linkUrl">Linkedin URL</label>
+                        <input type="text" name="linkUrl" id="linkUrl">
+                    </div>
+                    <div class="question">
+                        <label for="email">Email</label>
+                        <div class="emailInput">
+                        <input type="text" id="email" name="email" value="Option 1" disabled>
+                        <div class="arrows">
+                            <button class="up-arrow">&#9650;</button>
+                            <button class="down-arrow">&#9660;</button>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <label for="note">Note</label>
+                        <textarea name="note" id="note" cols="15" rows="5"></textarea>
+                    </div>
+                    `;
+                    mainContentDiv.removeChild(mainContentDiv.firstChild);
+                    mainContentDiv.insertBefore(personFormDiv, mainContentDiv.firstChild);
+                    document.getElementById('linkUrl').value = curUrl;
                     console.log(reachData);
+                    katiePretty(emailOps);
                 }
             });
 
@@ -55,30 +90,31 @@ window.onload = function(){
     // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
     // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
     // write code that avoids this error
-
-
-    let inputBox = document.querySelector('.emailInput');
-    let upArrow = inputBox.querySelector('.up-arrow');
-    let downArrow = inputBox.querySelector('.down-arrow');
-    let optionsInput = inputBox.querySelector('#email');
-  
-    upArrow.addEventListener('click', () => {
-        let currentValue = optionsInput.value;
-        let options = ['Option 1', 'Option 2', 'Option 3'];
-        let currentIndex = options.indexOf(currentValue);
-        if (currentIndex < options.length - 1) {
-        optionsInput.value = options[currentIndex + 1];
-        }
-    });
+    function katiePretty(emailOptions) {
+        let inputBox = document.querySelector('.emailInput');
+        let upArrow = inputBox.querySelector('.up-arrow');
+        let downArrow = inputBox.querySelector('.down-arrow');
+        let optionsInput = inputBox.querySelector('#email');
     
-    downArrow.addEventListener('click', () => {
-        let currentValue = optionsInput.value;
-        let options = ['Option 1', 'Option 2', 'Option 3'];
-        let currentIndex = options.indexOf(currentValue);
-        if (currentIndex > 0) {
-        optionsInput.value = options[currentIndex - 1];
-        }
-    });
+        upArrow.addEventListener('click', () => {
+            let currentValue = optionsInput.value;
+            let options = emailOptions;
+            let currentIndex = options.indexOf(currentValue);
+            if (currentIndex < options.length - 1) {
+            optionsInput.value = options[currentIndex + 1];
+            }
+        });
+        
+        downArrow.addEventListener('click', () => {
+            let currentValue = optionsInput.value;
+            let options = emailOptions;
+            let currentIndex = options.indexOf(currentValue);
+            if (currentIndex > 0) {
+            optionsInput.value = options[currentIndex - 1];
+            }
+        });
+    }
+
 
     // create a funciton that listens for when the personForm is submitted
     // then runs the addPerson(linkedUrl, Name) function and passes in the values

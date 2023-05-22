@@ -4,6 +4,7 @@ require('dotenv').config({ path: '../../.env' });
 
 //create a simple webserver with express
 const express = require('express');
+const { run } = require('node:test');
 const app = express();
 const port = 3000;
 const hostname = '127.0.0.1';
@@ -25,15 +26,15 @@ app.get('/email/:name', async function(req, res){
     let splitName = name.split("+");
     let first = splitName[0];
     let last = splitName[1];
-    let jsonNames = {
-        first: splitName[0],
-        last: splitName[1],
-        firstLast: first + last,
-        firstDotLast: first + '.' + last,
-        firstDotL: first + '.' + last[0],
-        fLast: first[0] + last,
-        firstL: first + last[0]
-    }
+    let jsonNames = [
+        splitName[0],
+        splitName[1],
+        first + last,
+        first + '.' + last,
+        first + '.' + last[0],
+        first[0] + last,
+        first + last[0]
+    ];
 
     // const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
     // const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
@@ -51,9 +52,11 @@ app.get('get/response/score', (req, res) => {
 app.get('/get/message/:data', (req, res) => {
     let data = JSON.parse(req.params.data);
     console.log(data);
-    let prompt = `My name is ${curName}, write me a reach out message
-                to ${data.person}, they work at ${data.company} as a ${data.jobTitle}.`;
-    res.end('did it work?');
+    let prompt = `My name is Rohan OMalley, write me a reach out message
+                to ${data.curName}, they work at ${data.curCompany} as a ${data.curTitle}
+                My goal is to ${data.curGoal}. Make it under 300 characters. Use the person I am reaching out to first name in the greeting'`;
+    runCompletion(prompt);
+    res.end('ran message');
 });
 
 
@@ -64,10 +67,10 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-async function runCompletion(){
+async function runCompletion(sentPrompt){
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
-        prompt: "Tell me about yourself: I'm a Data Scientist working at IBM.",
+        prompt: sentPrompt,
         max_tokens: 100,
     });
 
