@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/get/loginpage', (req, res) => {
-    res.(__dirname + '/public_html/login.html');
 });
 
 app.get('/email/:name', async function(req, res){
