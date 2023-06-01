@@ -6,9 +6,11 @@ window.onload = function () {
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.message === 'loggedIn') {
-        document.getElementById('logoutButton').style.display = 'block';
+        window.location.href= "popup.html";
     } else if (request.message === 'loggedOut') {
         document.getElementById('logoutButton').style.display = 'none';
+    } else if(request.message === 'alreadyLoggedIn') {
+        window.location.href= "popup.html";
     }
     });
 

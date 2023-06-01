@@ -7,11 +7,11 @@
   "action": {
     "default_popup": "home.html",
     "default_icon": {
-      "128": "images/chainlogo.png"
+      "128": "images/chainlogosmall.png"
     }
   },
   "oauth2": {
-    "client_id": "434880350039-67qt3f15avk94239rte57eabjehsesdb.apps.googleusercontent.com",
+    "client_id": "434880350039-ualoo3dslhargh6ts99iq41bmvtk0sj7.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]
