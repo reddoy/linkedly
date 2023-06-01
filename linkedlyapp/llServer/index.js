@@ -4,6 +4,7 @@ require('dotenv').config({ path: '../../.env' });
 
 //create a simple webserver with express
 const express = require('express');
+const mongoose = require('mongoose');
 const { run } = require('node:test');
 const app = express();
 const port = 3000;
@@ -12,6 +13,25 @@ const hostname = '127.0.0.1';
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+mongoose.connect('mongodb://localhost/mydatabase', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((error) => {
+  console.error('Error connecting to MongoDB:', error);
+});
+
+const userSchema = new mongoose.Schema({
+    userid: String,
+    name: String,
+    email: String,
+    password: String,
+    edu: String,
+});
+
+const User = mongoose.model('User', userSchema);
 
 app.use(express.static(__dirname+'/public_html'));
 
@@ -63,6 +83,48 @@ app.get('/get/message/:data', (req, res) => {
     runCompletion(prompt);
     res.end('ran message');
 });
+
+app.get('/check/user', (req, res) => {
+    const userid = req.params.userid;
+
+    User.findOne({ userid: userid }, (err, user) => {
+      if (err) {
+        console.error('Error finding user:', err);
+        res.status(500).send('Internal server error');
+      } else if (!user) {
+        res.end('nouser');
+      } else {
+        res.json(user);
+      }
+    });
+});
+
+
+app.get('/create/user', (req, res) => {
+    const userid = req.params.userid;
+    const name = req.params.name;
+    const email = req.params.email;
+    const password = req.params.password;
+    const edu = req.params.edu;
+
+    const user = new User({
+        userid: userid,
+        name: name,
+        email: email,
+        password: password,
+        edu: edu,
+    });
+
+    user.save((err) => {
+        if (err) {
+            console.error('Error saving user:', err);
+            res.status(500).send('Internal server error');
+        } else {
+            res.end('User saved');
+        }
+    });
+});
+
 
 
 const configuration = new Configuration({
