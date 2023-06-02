@@ -1,6 +1,7 @@
+chrome.runtime.sendMessage({message: 'checkLogin'});
 window.onload = function () {
 
-    chrome.runtime.sendMessage({message: 'checkLogin'});
+
 
     document.getElementById("createAcctBtn").onclick = function () {
         chrome.runtime.sendMessage({message: 'login'});

@@ -90,3 +90,15 @@ form{
 .arrows{
     color: #ffffff;
 }
+
+.listBtns , .connect-section{
+    border: darkcyan 1px solid;
+    margin: 5px;
+}
+
+.top-row, .bottom-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}

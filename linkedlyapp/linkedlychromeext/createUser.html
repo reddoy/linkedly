@@ -19,38 +19,38 @@
             * The more info the better the message! *
         </p>
     </div>
-    <form action="http://127.0.0.1:3000/create/user" method="POST">
-        <input type="hidden" id="userId" name="userId" value="">
-        <div class="personInputs">
-          <div class="question">
-            <label for="fName">First Name *</label>
-            <input type="text" id="fName" required>
-          </div>
-          <div class="question">
-            <label for="lName">Last Name</label>
-            <input type="text" id="lName">
-          </div>
-          <div class="question">
-            <label for="school">School</label>
-            <input type="text" id="school" required>
-          </div>
-          <div class="question">
-            <label for="occup-role">Occupation/Role *</label>
-            <input type="text" id="occup" required>
-          </div>
-          <div class="question">
-            <label for="goal">Current Goal? *</label>
-            <p>
-              What is your reach out Goal?
-              <br>
-              (i.e. schedule a quick chat, get a mentor, find leads etc.)
-              <br>
-              * Don't ask for anything concrete: i.e. job referral *
-            </p>
-            <input type="text" id="goal" required>
-          </div>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
+<form action="http://127.0.0.1:3000/create/user" method="POST">
+  <input type="hidden" id="userId" name="userId" value="">
+  <div class="personInputs">
+    <div class="question">
+      <label for="fName">First Name *</label>
+      <input type="text" id="fName" name="firstName" required>
+    </div>
+    <div class="question">
+      <label for="lName">Last Name</label>
+      <input type="text" id="lName" name="lastName">
+    </div>
+    <div class="question">
+      <label for="school">School</label>
+      <input type="text" id="school" name="school" required>
+    </div>
+    <div class="question">
+      <label for="occup-role">Occupation/Role *</label>
+      <input type="text" id="occup" name="occupation" required>
+    </div>
+    <div class="question">
+      <label for="goal">Current Goal? *</label>
+      <p>
+        What is your reach out Goal?
+        <br>
+        (i.e. schedule a quick chat, get a mentor, find leads etc.)
+        <br>
+        * Don't ask for anything concrete: i.e. job referral *
+      </p>
+      <input type="text" id="goal" name="goal" required>
+    </div>
+  </div>
+  <button type="submit">Submit</button>
+</form>
 </body>
 </html>

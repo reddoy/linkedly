@@ -6,9 +6,12 @@ require('dotenv').config({ path: '../../.env' });
 const express = require('express');
 const mongoose = require('mongoose');
 const { run } = require('node:test');
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 const hostname = '127.0.0.1';
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
@@ -25,10 +28,11 @@ mongoose.connect('mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f
 
 const userSchema = new mongoose.Schema({
     userid: String,
-    name: String,
-    email: String,
-    password: String,
+    firstname: String,
+    lastname: String,
     edu: String,
+    occup: String,
+    goal: String
 });
 
 const User = mongoose.model('User', userSchema);
@@ -85,7 +89,8 @@ app.get('/get/message/:data', (req, res) => {
 });
 
 app.get('/check/user/:id', async (req, res) => {
-    const userid = req.params.userid;
+    const userid = req.params.id;
+    console.log(userid);
 
     try {
         const user = await User.findOne({ userid: userid });
@@ -103,31 +108,31 @@ app.get('/check/user/:id', async (req, res) => {
 });
 
 
-app.post('/create/user', (req, res) => {
-    const userid = req.body.userid;
-    const firstName = req.body.fNname;
-    const lastName = req.body.lName;
+app.post('/create/user', async (req, res) => {
+    console.log(req.body);
+    const userid = req.body.userId;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
     const edu = req.body.school;
-    const occup = req.body.occup;
+    const occup = req.body.occupation;
     const goal = req.body.goal;
 
     const user = new User({
         userid: userid,
-        firtsname: firstName,
+        firstname: firstName,
         lastname: lastName,
         edu: edu,
         occup: occup,
         goal: goal,
     });
 
-    user.save((err) => {
-        if (err) {
-            console.error('Error saving user:', err);
-            res.status(500).send('Internal server error');
-        } else {
-            res.end('User saved');
-        }
-    });
+    try {
+        await user.save();
+        res.status(200).send('User saved');
+    } catch (err) {
+        console.error('Error saving user:', err);
+        res.status(500).send('Internal server error');
+    }
 });
 
 
