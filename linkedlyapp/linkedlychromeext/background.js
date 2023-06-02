@@ -17,8 +17,16 @@ async function checkLogin() {
     console.log('User is already logged in');
     try {
       const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + data.token);
-      const data = await response.json();
-      console.log(data);
+      const checkData = await response.json();
+      console.log(checkData);
+      let userid = checkData.id;
+      let userResponse = await fetch('http://localhost:3000/check/user/' + userid);
+      let userData = await userResponse.text();
+      if (userData === 'nouser') {
+        chrome.runtime.sendMessage({message:"newUser"});
+      } else {
+        chrome.runtime.sendMessage({message:"loggedIn"});
+      }
       chrome.runtime.sendMessage({message:"alreadyLoggedIn"});
     } catch (error) {
       console.error('Error:', error);
