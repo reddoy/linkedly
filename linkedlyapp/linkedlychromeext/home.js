@@ -16,17 +16,23 @@ window.onload = function () {
 
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.message === 'loggedIn') {
-        window.location.href= "popup.html";
-    } else if (request.message === 'loggedOut') {
-        document.getElementById('logoutButton').style.display = 'none';
-    } else if(request.message === 'alreadyLoggedIn') {
-        window.location.href= "popup.html";
-    }
+        if (request.message === 'loggedIn') {
+            window.location.href= "popup.html";
+        } else if (request.message === 'loggedOut') {
+            document.getElementById('logoutButton').style.display = 'none';
+        } else if(request.message === 'alreadyLoggedIn') {
+            window.location.href= "popup.html";
+        }
+        else if (request.message === 'newUser') {
+            window.location.href= "createUser.html";
+        }
     });
+
 
     document.getElementById('logoutButton').addEventListener('click', function() {
         console.log('logout button clicked');
     chrome.runtime.sendMessage({message: 'logout'});
     });
+
+
 }
