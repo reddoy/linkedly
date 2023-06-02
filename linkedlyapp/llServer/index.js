@@ -14,7 +14,7 @@ app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-mongoose.connect('mongodb://localhost/mydatabase', {
+mongoose.connect('mongodb://localhost:27017', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -94,13 +94,13 @@ app.get('/check/user', (req, res) => {
       } else if (!user) {
         res.end('nouser');
       } else {
-        res.json(user);
+        res.end('user');
       }
     });
 });
 
 
-app.get('/create/user', (req, res) => {
+app.post('/create/user', (req, res) => {
     const userid = req.params.userid;
     const name = req.params.name;
     const email = req.params.email;
