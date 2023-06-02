@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "jsonwebtoken": "^9.0.0",
     "pdfjs-dist": "^3.5.141"
   }
 }

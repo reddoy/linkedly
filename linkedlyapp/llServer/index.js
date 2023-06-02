@@ -14,7 +14,7 @@ app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-mongoose.connect('mongodb://localhost:27017', {
+mongoose.connect('mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -84,35 +84,40 @@ app.get('/get/message/:data', (req, res) => {
     res.end('ran message');
 });
 
-app.get('/check/user', (req, res) => {
+app.get('/check/user/:id', async (req, res) => {
     const userid = req.params.userid;
 
-    User.findOne({ userid: userid }, (err, user) => {
-      if (err) {
+    try {
+        const user = await User.findOne({ userid: userid });
+        if (!user) {
+          console.log('User not found');
+          res.end('nouser');
+        } else {
+          console.log('User found');
+          res.end('user');
+        }
+      } catch (err) {
         console.error('Error finding user:', err);
         res.status(500).send('Internal server error');
-      } else if (!user) {
-        res.end('nouser');
-      } else {
-        res.end('user');
       }
-    });
 });
 
 
 app.post('/create/user', (req, res) => {
-    const userid = req.params.userid;
-    const name = req.params.name;
-    const email = req.params.email;
-    const password = req.params.password;
-    const edu = req.params.edu;
+    const userid = req.body.userid;
+    const firstName = req.body.fNname;
+    const lastName = req.body.lName;
+    const edu = req.body.school;
+    const occup = req.body.occup;
+    const goal = req.body.goal;
 
     const user = new User({
         userid: userid,
-        name: name,
-        email: email,
-        password: password,
+        firtsname: firstName,
+        lastname: lastName,
         edu: edu,
+        occup: occup,
+        goal: goal,
     });
 
     user.save((err) => {
