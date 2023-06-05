@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="createUser.js"></script>
+    <script src="settings.js"></script>
     <title>Edit User</title>
 </head>
 <body>
@@ -12,14 +12,14 @@
         <h1>Linkedly</h1>
     </div>
     <div class="welcomeMess">
-        <p id="welcome">Welcome!</p>
+        <p id="welcome">Edit your infomation that is used in your messages here.</p>
         <p id="infoMessage">
             Enter in some information about yourself.
             We will use this to curate your personalized messages.
             * The more info the better the message! *
         </p>
     </div>
-<form action="http://127.0.0.1:3000/create/user" method="POST">
+<form action="http://127.0.0.1:3000/edit/user" method="POST">
   <input type="hidden" id="userId" name="userId" value="">
   <div class="personInputs">
     <div class="question">

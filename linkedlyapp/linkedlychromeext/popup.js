@@ -7,71 +7,67 @@ window.onload = function(){
 
     // Send a message to the content script
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
+        chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"}, function(response) {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError.message);
+        } else {
+            console.log(response);
+        }
+});
 
         if (!tabs[0].url.includes("linkedin.com/in/")) {
             document.getElementById('main-content').innerHTML = '<p id="notProfError">Please go to a LinkedIn profile page to use this extension.</p>';
         }
     });
 
-    document.getElementById('genConnectBtn').addEventListener('click', function() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {message: "genConnect"});
-            const curUrl = tabs[0].url;
-            chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
-                if (request.message === "grabbedInfo"){
-                    console.log(request)
-                    // remove all non-alphanumeric characters and replace spaces with a + from curName
-                    let curName = request.curName.toLowerCase();
-                    curName = curName.replace(/[^a-zA-Z0-9 ]/g, "");
-                    curName = curName.replace(/\s+/g, '+');
-                    console.log(curName);
-                    let response = await fetch('http://127.0.0.1:3000/email/' + curName);
-                    let emailOps = await response.json();
-                    
-                    let goal = 'set up a short chat to learn more about their work';
-                    let reachJson = {
-                        curName: request.curName,
-                        curCompany: request.curCompany,
-                        curHeadline: request.curHeadline,
-                        curGoal: request.curGoal,
-                    };
-                  
-                    let reachResponse = await fetch('http://127.0.0.1:3000/get/message/' + JSON.stringify(reachJson));
-                    let reachData = await reachResponse.text();
-                    const mainContentDiv = document.getElementById('main-content');
-                    const personFormDiv = document.createElement('div');
-                    personFormDiv.className = 'personForm';
-                    personFormDiv.innerHTML = `
-                    <div class="question">
-                        <label for="linkUrl">Linkedin URL</label>
-                        <input type="text" name="linkUrl" id="linkUrl">
-                    </div>
-                    <div class="question">
-                        <label for="email">Email</label>
-                        <div class="emailInput">
-                        <input type="text" id="email" name="email" value="Option 1" disabled>
-                        <div class="arrows">
-                            <button class="up-arrow">&#9650;</button>
-                            <button class="down-arrow">&#9660;</button>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="question">
-                        <label for="note">Note</label>
-                        <textarea name="note" id="note" cols="15" rows="5"></textarea>
-                    </div>
-                    `;
-                    mainContentDiv.removeChild(mainContentDiv.firstChild);
-                    mainContentDiv.insertBefore(personFormDiv, mainContentDiv.firstChild);
-                    document.getElementById('linkUrl').value = curUrl;
-                    console.log(reachData);
-                    katiePretty(emailOps);
-                }
-            });
-
-        });
+document.getElementById('genConnectBtn').addEventListener('click', async function() {
+  try {
+    const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+    const curUrl = tabs[0].url;
+    const response = await new Promise(resolve => {
+      chrome.tabs.sendMessage(tabs[0].id, {message: "genConnect"}, resolve);
     });
+    console.log(response);
+    const curName = response.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+');
+    const emailResponse = await fetch(`http://127.0.0.1:3000/email/${curName}`);
+    const emailOps = await emailResponse.json();
+    const reachJson = {
+      curName: response.curName,
+      curCompany: response.curCompany,
+      curHeadline: response.curHeadline,
+      curGoal: response.curGoal,
+    };
+    const reachResponse = await fetch(`http://127.0.0.1:3000/get/message/${JSON.stringify(reachJson)}`);
+    const reachData = await reachResponse.text();
+    const connectDiv = document.getElementById('connect-section');
+    connectDiv.innerHTML = `
+      <div class="question">
+        <label for="linkUrl">Linkedin URL</label>
+        <input type="text" name="linkUrl" id="linkUrl">
+      </div>
+      <div class="question">
+        <label for="email">Email</label>
+        <div class="emailInput">
+          <input type="text" id="email" name="email" value="Use Arrows to look at Emails" disabled>
+          <div class="arrows">
+            <button class="up-arrow">&#9650;</button>
+            <button class="down-arrow">&#9660;</button>
+          </div>
+        </div>
+      </div>
+      <div class="question">
+        <label for="note">Note</label>
+        <textarea name="note" id="note" cols="15" rows="5"></textarea>
+      </div>
+    `;
+    document.getElementById('linkUrl').value = curUrl;
+    console.log(reachData);
+    katiePretty(emailOps);
+  } catch (error) {
+    console.error(error);
+    // Handle the error here
+  }
+});
 
 
     function insertLinkUrl(port) {

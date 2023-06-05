@@ -18,8 +18,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       curAbout: personArr[9],
     };
 
-    chrome.runtime.sendMessage(jsonPerson);
+    // Send the response back to the sender
+    sendResponse(jsonPerson);
   }
+  sendResponse({message: "Response from content script"});
 });
 
 

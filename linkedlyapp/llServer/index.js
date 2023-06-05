@@ -17,7 +17,7 @@ app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-mongoose.connect('mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin', {
+mongoose.connect("mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -84,7 +84,7 @@ app.get('/get/message/:data', (req, res) => {
     let prompt = `My name is Rohan OMalley, write me a reach out message
                 to ${data.curName}, they work at ${data.curCompany} as a ${data.curTitle}
                 My goal is to ${data.curGoal}. Make it under 300 characters. Use the person I am reaching out to first name in the greeting'`;
-    runCompletion(prompt);
+    // runCompletion(prompt);
     res.end('ran message');
 });
 
@@ -135,7 +135,39 @@ app.post('/create/user', async (req, res) => {
     }
 });
 
+app.post('/edit/user', async (req, res) => {
+  console.log(req.body);
+  const userid = req.body.userId;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const edu = req.body.school;
+  const occup = req.body.occupation;
+  const goal = req.body.goal;
 
+  try {
+    const user = await User.findOneAndUpdate(
+      { userid: userid },
+      {
+        firstname: firstName,
+        lastname: lastName,
+        edu: edu,
+        occup: occup,
+        goal: goal,
+      },
+      { new: true } // return the updated document
+    );
+    if (user) {
+      console.log('User updated:', user);
+      res.status(200).send('User updated');
+    } else {
+      console.log('User not found');
+      res.status(404).send('User not found');
+    }
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).send('Internal server error');
+  }
+});
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
