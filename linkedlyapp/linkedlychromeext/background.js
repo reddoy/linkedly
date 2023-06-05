@@ -39,6 +39,7 @@ async function checkLogin() {
       chrome.runtime.sendMessage({message:"loggedIn"});
     }
   } catch (error) {
+    chrome.runtime.sendMessage({message:"notLoggedIn"});
     console.error('Error:', error);
   }
 }
