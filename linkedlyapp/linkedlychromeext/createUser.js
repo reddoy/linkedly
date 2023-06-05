@@ -15,4 +15,9 @@ window.onload = async function () {
   } catch (error) {
     console.error(error);
   }
+
+  document.getElementById('submit').addEventListener('click', async function () {
+    window.location.href = 'popup.html';
+  });
+
 };

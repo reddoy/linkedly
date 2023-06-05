@@ -67,8 +67,9 @@ async function runLogin() {
 async function runLogout() {
   try {
     const token = await chrome.identity.getAuthToken({interactive: false});
-    const response = await fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token);
-    await chrome.identity.removeCachedAuthToken({token: token});
+    console.log('Token acquired:', token.token );
+    const response = await fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token.token);
+    await chrome.identity.removeCachedAuthToken({token: token.token});
     await chrome.storage.local.remove('token');
     console.log('Token revoked:', token);
     console.log('Token removed from local storage.');
