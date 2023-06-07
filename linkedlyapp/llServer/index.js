@@ -5,7 +5,7 @@ require('dotenv').config({ path: '../../.env' });
 //create a simple webserver with express
 const express = require('express');
 const mongoose = require('mongoose');
-const { run } = require('node:test');
+// const { run } = require('node:test');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
@@ -43,8 +43,6 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/get/loginpage', (req, res) => {
-});
 
 app.get('/email/:name', async function(req, res){
     console.log(`Hello ${req.params.name}!`);
@@ -78,9 +76,13 @@ app.get('get/response/score', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/get/message/:data', (req, res) => {
+app.get('/get/message/:data', async (req, res) => {
     let data = JSON.parse(req.params.data);
     console.log(data);
+
+    const user = await User.findOne({ userid: data.curUserId });
+    console.log(user);
+
     let prompt = `My name is Rohan OMalley, write me a reach out message
                 to ${data.curName}, they work at ${data.curCompany} as a ${data.curTitle}
                 My goal is to ${data.curGoal}. Make it under 300 characters. Use the person I am reaching out to first name in the greeting'`;
