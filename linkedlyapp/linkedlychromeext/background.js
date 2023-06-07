@@ -12,6 +12,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log('checking login');
     checkLogin();
   }
+  else if ( request.message === 'tester'){
+    chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
+      if (chrome.runtime.lastError) {
+        console.log(chrome.runtime.lastError);
+        return; // Not signed in
+      }
+    
+      if (token) {
+        // User is signed in.
+        console.log("User is signed in");
+        console.log(token);
+      } else {
+        // User is not signed in.
+        console.log("User is not signed in");
+      }
+    });
+  }
 });
 
 async function checkLogin() {
@@ -26,6 +43,7 @@ async function checkLogin() {
       });
     });
     console.log('User is already logged in');
+    console.log(token);
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const checkData = await response.json();
     let userid = checkData.id;
