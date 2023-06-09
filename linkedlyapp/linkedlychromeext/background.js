@@ -48,6 +48,7 @@ async function checkLogin() {
     const checkData = await response.json();
     let userid = checkData.id;
     console.log('this is the user id:' + userid);
+    chrome.storage.local.set({user: userid});
     const userResponse = await fetch('http://127.0.0.1:3000/check/user/' + userid);
     const userData = await userResponse.text();
     console.log('was a user found? ' + userData);

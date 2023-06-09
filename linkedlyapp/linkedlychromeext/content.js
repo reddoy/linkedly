@@ -11,13 +11,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let jsonPerson = {
       message: 'grabbedInfo',
       curName: personArr[0],
-      curCompany: personArr[1],
-      possibleSchool: getEducation(),
+      schools: getEducation(),
+      workExperience: getWorkExperience(),
       isMemberPremium: personArr[3],
       curHeadline: personArr[5],
       curAbout: personArr[9],
     };
-
+    console.log(jsonPerson);
     // Send the response back to the sender
     sendResponse(jsonPerson);
   }
@@ -105,6 +105,30 @@ function getEducation(){
 
   // Print the text array
   return textArray;
+}
+
+function getWorkExperience() {
+  const mainElement = document.querySelector('main');
+  const sectionElements = mainElement.querySelectorAll('section');
+  const textArray = [];
+
+  sectionElements.forEach(section => {
+    const experienceDiv = section.querySelector('#experience');
+    if (experienceDiv) {
+      const liElements = section.querySelectorAll('div.pvs-list__outer-container > ul > li');
+      console.log(liElements);
+      liElements.forEach(li => {
+        const workTitleElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > div > span > span:nth-child(1)');
+        const workCompanyElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > span:nth-child(2) > span:nth-child(1)');
+        if (workTitleElement|| workCompanyElement) {
+          const workTitle = workTitleElement.textContent.toLowerCase().trim();
+          const workCompany = workCompanyElement.textContent.toLowerCase().trim();
+          console.log(workTitle, workCompany);
+          textArray.push([workTitle, workCompany]);
+        }
+      });
+    }
+  });
 }
 
 
