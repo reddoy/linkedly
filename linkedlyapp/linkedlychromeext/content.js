@@ -8,6 +8,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let personArr = getPageEles();
     console.log(personArr);
     // add an entry to jsonPerson that is the message : 'grabbedInfo'
+    console.log(getWorkExperience());
     let jsonPerson = {
       message: 'grabbedInfo',
       curName: personArr[0],
@@ -129,6 +130,7 @@ function getWorkExperience() {
       });
     }
   });
+  return textArray;
 }
 
 
