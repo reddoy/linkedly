@@ -21,10 +21,13 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
   try {
     const curTab = await grabTab();
     const response = await grabUserDataFromContent(curTab);
+    console.log(response);
     const emailOps = await getEmailOptions(response);
-    const reachData = await getMessage(response);
-
     const connectDiv = document.getElementById('connect-section');
+    connectDiv.innerHTML = '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
+
+    const reachData = await getMessage(response);
+    
     connectDiv.innerHTML = `
       <div class="question">
         <label for="linkUrl">Linkedin URL</label>
@@ -87,11 +90,16 @@ async function getMessage(response) {
     curHeadline: response.curHeadline,
     curAbout: response.curAbout,
   };
-  const reachResponse = await fetch(`http://127.0.0.1:3000/get/message/${JSON.stringify(reachJson)}`);
+  const reachResponse = await fetch('http://127.0.0.1:3000/get/message', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(reachJson)
+  });
   const reachData = await reachResponse.text();
   return reachData;
 }
-
 
 
 

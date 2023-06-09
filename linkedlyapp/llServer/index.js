@@ -13,6 +13,7 @@ const port = 3000;
 const hostname = '127.0.0.1';
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
@@ -77,39 +78,56 @@ app.get('get/response/score', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/get/message/:data', async (req, res) => {
-    let data = JSON.parse(req.params.data);
-    console.log(data);
-    targetFirstName = data.curName.split(" ")[0];
-    targetSchool = data.schools;
-    targetWork = data.workExperience;
-    targetHeadline = data.curHeadline;
-    targetAbout = data.curAbout;
-
+app.post('/get/message', async (req, res) => {
+    let data = req.body;
     const user = await User.findOne({ userid: data.curUserId });
     console.log(user);
-    userFirstName = user.firstname;
-    userEdu = user.edu.toLowerCase();
-    let sameCollege = false;
-    for (let i = 0; i < data.possibleSchool.length; i++) {
-        const similarity = stringSimilarity.compareTwoStrings(data.possibleSchool[i], userEdu);
-        if (similarity >= 0.8) {
-            sameCollege = true;
-            break;
-        }
-        console.log(`Similarity between ${data.possibleSchool[i]} and ${userEdu}: ${similarity}`);
-    }
-    
-    console.log(`Same college: ${sameCollege}`);
-
-    let prompt = `Write a peronalized reach out message under 300 characters to ${targetFirstName}
-     It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
-     ${targetFirstName} went to ${targetSchool} and worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
-     Thier about section is: ${targetAbout}.
-     Use ${targetFirstName}'s school slogan to open the message. My goal with ${targetFirstName} is to ${user.goal}.}`;
-    runCompletion(prompt);
-    res.end('ran message');
+    console.log(data);
+    let userFirstName = user.firstname;
+    let userEdu = user.edu.toLowerCase();
+    let userGoal = user.goal;
+    let targetFirstName = data.curName.split(" ")[0];
+    let targetSchools = data.schools;
+    let targetWork = data.workExperience;
+    let targetHeadline = data.curHeadline;
+    let targetAbout = data.curAbout;
+    let prompt = promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal);
+    let message = await runCompletion(prompt);
+    console.log(message);
+    res.end(message);
 });
+
+
+function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal){
+  let sameCollege = false;
+  for (let i = 0; i < targetSchools.length; i++) {
+      const similarity = targetSchools[i].includes(userEdu);
+      console.log(`Similarity between ${targetSchools[i]} and ${userEdu}: ${similarity}`);
+      if (similarity) {
+          sameCollege = true;
+          break;
+      }
+      
+  }
+  console.log(`Same college: ${sameCollege}`);
+  let prompt = '';
+  if (sameCollege) {
+    prompt = `Write a peronalized reach out message under 300 characters to ${targetFirstName}
+    It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
+    ${targetFirstName} worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
+    Thier about section is: ${targetAbout}.
+    Use ${targetFirstName}'s school, ${userEdu} slogan to open the message. My goal with ${targetFirstName} is to ${userGoal}.
+    Make sure my name is close to the front of the message.`;
+  }
+  else{
+    prompt = `Write a peronalized reach out message for Linkedin under 300 characters to ${targetFirstName}
+    It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
+    ${targetFirstName} worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
+    Thier about section is: ${targetAbout}. My goal with ${targetFirstName} is to ${userGoal}.
+    Make sure my name is close to the front of the message. Make the intro short, use an !, and .`;
+  }
+   return prompt;
+}
 
 app.get('/check/user/:id', async (req, res) => {
     const userid = req.params.id;
@@ -152,7 +170,7 @@ app.post('/create/user', async (req, res) => {
 
     try {
         await user.save();  
-        res.redirect('chrome-extension://cjecmlambnjgphjclflcmcmiebbipmpj/popup.html');
+        res.redirect('chrome-extension://fhbongmeodpnnccflnmomdiebobgpdnm/popup.html');
     } catch (err) {
         console.error('Error saving user:', err);
         res.status(500).send('Internal server error');
@@ -206,8 +224,10 @@ async function runCompletion(sentPrompt){
         prompt: sentPrompt,
         max_tokens: 100,
     });
-
-    completion.data.choices.forEach((choice, index) => {
-        console.log(`Choice ${index + 1}: ${choice.text}`);
+    let curChoices = [];
+    const choices = completion.data.choices.map((choice, index) => {
+        curChoices.push(choice.text);
     });
+    console.log(curChoices);
+    return curChoices[0];
 }
