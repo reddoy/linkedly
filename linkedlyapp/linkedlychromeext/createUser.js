@@ -8,16 +8,13 @@ window.onload = async function () {
     if (!curUser) {
       throw new Error('User not found in storage');
     }
-    const userId = curUser.id;
-    console.log(`this is the user id in create User: ${userId}`);
+    const userId = curUser;
+    console.log(`this is the user id in create User: ${curUser}`);
     const userIdInput = document.getElementById('userId');
     userIdInput.value = userId;
   } catch (error) {
     console.error(error);
   }
 
-  document.getElementById('submit').addEventListener('click', async function () {
-    window.location.href = 'popup.html';
-  });
 
 };

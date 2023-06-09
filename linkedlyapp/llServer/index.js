@@ -7,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 // const { run } = require('node:test');
 const bodyParser = require('body-parser');
+const stringSimilarity = require('string-similarity');
 const app = express();
 const port = 3000;
 const hostname = '127.0.0.1';
@@ -79,14 +80,34 @@ app.get('get/response/score', (req, res) => {
 app.get('/get/message/:data', async (req, res) => {
     let data = JSON.parse(req.params.data);
     console.log(data);
+    targetFirstName = data.curName.split(" ")[0];
+    targetSchool = data.schools;
+    targetWork = data.workExperience;
+    targetHeadline = data.curHeadline;
+    targetAbout = data.curAbout;
 
     const user = await User.findOne({ userid: data.curUserId });
     console.log(user);
+    userFirstName = user.firstname;
+    userEdu = user.edu.toLowerCase();
+    let sameCollege = false;
+    for (let i = 0; i < data.possibleSchool.length; i++) {
+        const similarity = stringSimilarity.compareTwoStrings(data.possibleSchool[i], userEdu);
+        if (similarity >= 0.8) {
+            sameCollege = true;
+            break;
+        }
+        console.log(`Similarity between ${data.possibleSchool[i]} and ${userEdu}: ${similarity}`);
+    }
+    
+    console.log(`Same college: ${sameCollege}`);
 
-    let prompt = `My name is Rohan OMalley, write me a reach out message
-                to ${data.curName}, they work at ${data.curCompany} as a ${data.curTitle}
-                My goal is to ${data.curGoal}. Make it under 300 characters. Use the person I am reaching out to first name in the greeting'`;
-    // runCompletion(prompt);
+    let prompt = `Write a peronalized reach out message under 300 characters to ${targetFirstName}
+     It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
+     ${targetFirstName} went to ${targetSchool} and worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
+     Thier about section is: ${targetAbout}.
+     Use ${targetFirstName}'s school slogan to open the message. My goal with ${targetFirstName} is to ${user.goal}.}`;
+    runCompletion(prompt);
     res.end('ran message');
 });
 
@@ -113,6 +134,7 @@ app.get('/check/user/:id', async (req, res) => {
 app.post('/create/user', async (req, res) => {
     console.log(req.body);
     const userid = req.body.userId;
+    console.log(userid);
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const edu = req.body.school;
@@ -129,8 +151,8 @@ app.post('/create/user', async (req, res) => {
     });
 
     try {
-        await user.save();
-        res.status(200).send('User saved');
+        await user.save();  
+        res.redirect('chrome-extension://cjecmlambnjgphjclflcmcmiebbipmpj/popup.html');
     } catch (err) {
         console.error('Error saving user:', err);
         res.status(500).send('Internal server error');

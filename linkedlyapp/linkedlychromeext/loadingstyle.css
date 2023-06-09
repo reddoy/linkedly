@@ -1,5 +1,20 @@
 body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
     background-color: black;
+    width:362px;
+    height: 252px;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .lds-roller {
