@@ -81,6 +81,7 @@ form{
     align-items: center;
     flex-direction: column;
     margin: 5px;
+    border: darkcyan 1px solid;
 }
 
 .question{
@@ -93,7 +94,7 @@ form{
 
 .buttons{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     margin: 5px;
     flex-direction: column;
@@ -106,7 +107,7 @@ form{
 }
 
 /* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
-.buttons button, a{
+.buttons button, .buttons a{
     border-radius: 12px;
     font-weight: bold;
     background: linear-gradient(to right, #0093E9, #80D0C7);
@@ -114,15 +115,17 @@ form{
     color: #ffffff;
     text-align: center;
     font-size: 14px;
-    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     width: 150px;
     transition: 0.5s;
     margin: 5px;
+    text-decoration: none;
 }
 
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
-#addToListBtn:hover, #genScoresBtn:hover, #downloadPpl:hover, #clearListBtn:hover {
+#addToListBtn:hover, #curListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
     background-color: #ffffff;
     color: #000000;
     transition: 0.5s;
@@ -139,7 +142,7 @@ form{
     color: #ffffff;
 }
 
-.listBtns , .connect-section{
+.listBtns{
     border: darkcyan 1px solid;
     margin: 5px;
 }
@@ -150,6 +153,8 @@ form{
     align-items: center;
     flex-direction: row;
 }
+
+/*Loading roller is here------------------------------------------*/
 
 .lds-roller {
     display: inline-block;
