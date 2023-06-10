@@ -130,7 +130,7 @@ function getWorkExperience() {
       });
     }
   });
-  return textArray;
+   console.log(textArray);
 }
 
 

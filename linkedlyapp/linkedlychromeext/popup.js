@@ -45,11 +45,14 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
       </div>
       <div class="question">
         <label for="note">Note</label>
-        <textarea name="note" id="note" cols="15" rows="5"></textarea>
+        <p>Copy and Paste into the Connection Note:</p>
+        <textarea name="note" id="note" cols="60" rows="8"></textarea>
+        <button id="regenBtn">Regenerate</button>
       </div>
     `;
-    document.getElementById('linkUrl').value = curTab.url;
-    console.log(reachData);
+    document.getElementById('linkUrl').value = curTab.url.replace(/^(https?:\/\/)?/, '');
+    document.getElementById('note').value = reachData.replace(/\n/g, '');
+    emailOpsArr = emailOps;
     katiePretty(emailOps);
   } catch (error) {
     console.error(error);
@@ -68,6 +71,8 @@ async function grabUserDataFromContent(curTab){
     chrome.tabs.sendMessage(curTab.id, {message: "genConnect"}, resolve);
   });
   console.log(response);
+  document.getElementById('fullname').innerText = response.curName;
+  document.getElementById('currentCompany').innerText = response.workExperience[0][1];
   return response;
 }
 
@@ -101,13 +106,12 @@ async function getMessage(response) {
   return reachData;
 }
 
-
-
-
   // create a funciton that listens for the genScoresBtn to be clicked then
   // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
   // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
   // write code that avoids this error
+let emailOpsArr = [];
+
 function katiePretty(emailOptions) {
     let inputBox = document.querySelector('.emailInput');
     let upArrow = inputBox.querySelector('.up-arrow');
@@ -139,8 +143,10 @@ function katiePretty(emailOptions) {
     // from the form
     
     document.getElementById('addToListBtn').addEventListener('click', function(){
-        const linkedUrl = document.getElementById('linkUrl').value;
-        let email = document.getElementById('email').value;
+      const fullname = document.getElementById('fullname').innerText;
+      const currentCompany = document.getElementById('currentCompany').innerText; 
+      const linkedUrl = document.getElementById('linkUrl').value;
+        let emailString = emailOpsArr.join(',');
         let note = document.getElementById('note').value;
         chrome.storage.local.get(["personList"], function(result) {
             console.log(result.personList);
@@ -149,11 +155,8 @@ function katiePretty(emailOptions) {
             } else {
                 personArr = [];
             }
-            personArr.push([email, linkedUrl, note]);
+            personArr.push([fullname, currentCompany, emailString, linkedUrl, note]);
             saveListToStorage(personArr);
-            linkedUrl.value = '';
-            email.value = '';
-            note.value = '';
           });
     });
 
