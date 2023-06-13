@@ -11,11 +11,11 @@
     <div class="logo">
         <img src="images\chainlogosmall.png" alt="linkedlylogo" id="linkedlylogo">
         <h1>Linkedly</h1>
+        <button id="homeBtn">🏠</button>
     </div>
     <div class="welcomeMess">
         <p id="welcome">Edit your infomation that is used in your messages here.</p>
         <p id="infoMessage">
-            Enter in some information about yourself.
             We will use this to curate your personalized messages.
             * The more info the better the message! *
         </p>
@@ -39,24 +39,27 @@
       <label for="occup-role">Occupation/Role *</label>
       <input type="text" id="occup" name="occupation" required>
     </div>
-    <div class="question">
-      <label for="goal">Current Goal? *</label>
-      <p>
-        What is your reach out Goal?
-        <br>
-        (i.e. schedule a quick chat, get a mentor, find leads etc.)
-        <br>
-        * Don't ask for anything concrete: i.e. job referral *
-      </p>
-      <input type="text" id="goal" name="goal" required>
+    <div class="goal-section">
+      <div class="question">
+        <label for="goal">Current Goal? *</label>
+        <p>
+          What is your reach out Goal?
+          <br>
+          (i.e. schedule a quick chat, get a mentor, find leads etc.)
+          <br>
+          * Don't ask for anything concrete: i.e. job referral *
+        </p>
+        <input type="text" id="goal" name="goal" required>
+      </div>
     </div>
   </div>
   <button type="submit">Submit</button>
 </form>
-<div class="buttons">
+<div class="bottom-buttons">
+  <div class="buttons">
     <button id="payment-info">Payment Info</button>
     <button id="logout">Logout</button>
-    <button id="homeBtn">⌂</button>
+</div>
 </div>
 </body>
 </html>

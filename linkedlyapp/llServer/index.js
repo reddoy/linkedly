@@ -112,19 +112,19 @@ function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, t
   console.log(`Same college: ${sameCollege}`);
   let prompt = '';
   if (sameCollege) {
-    prompt = `Write a peronalized reach out message under 300 characters to ${targetFirstName}
-    It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
-    ${targetFirstName} worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
-    Thier about section is: ${targetAbout}.
-    Use ${targetFirstName}'s school, ${userEdu} slogan to open the message. My goal with ${targetFirstName} is to ${userGoal}.
-    Make sure my name is close to the front of the message.`;
+    prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}.Please provide a response with a 300 character limit. Do not go over this limit.
+    Here is some information about ${targetFirstName}:
+    ${targetFirstName} is currently a ${targetHeadline}.
+    Use my school ${userEdu} slogan to open the message. In this format "<school slogan>! ${targetFirstName}!".
+    My goal with ${targetFirstName} is to ${userGoal} include this after the greeting.
+    Do not use my name and do not put a closing.`;
   }
   else{
-    prompt = `Write a peronalized reach out message for Linkedin under 300 characters to ${targetFirstName}
-    It is from me, ${userFirstName}. Here is some information about ${targetFirstName}:
-    ${targetFirstName} worked at ${targetWork}. ${targetFirstName} is currently a ${targetHeadline}.
-    Thier about section is: ${targetAbout}. My goal with ${targetFirstName} is to ${userGoal}.
-    Make sure my name is close to the front of the message. Make the intro short, use an !, and .`;
+    prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}. Please provide a response with a 300 character limit. Do not go over this limit.
+    Here is some information about ${targetFirstName}:
+    ${targetFirstName} is currently a ${targetHeadline}.
+    My goal with ${targetFirstName} is to ${userGoal} include this after the greeting.
+    Do not use my name and do not put a closing.`;
   }
    return prompt;
 }
@@ -222,7 +222,7 @@ async function runCompletion(sentPrompt){
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: sentPrompt,
-        max_tokens: 100,
+        max_tokens: 75,
     });
     let curChoices = [];
     const choices = completion.data.choices.map((choice, index) => {
