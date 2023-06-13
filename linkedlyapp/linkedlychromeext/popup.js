@@ -72,7 +72,6 @@ async function grabUserDataFromContent(curTab){
   });
   console.log(response);
   document.getElementById('fullname').innerText = response.curName;
-  document.getElementById('currentCompany').innerText = response.workExperience[0][1];
   return response;
 }
 
@@ -144,7 +143,6 @@ function katiePretty(emailOptions) {
     
     document.getElementById('addToListBtn').addEventListener('click', function(){
       const fullname = document.getElementById('fullname').innerText;
-      const currentCompany = document.getElementById('currentCompany').innerText; 
       const linkedUrl = document.getElementById('linkUrl').value;
         let emailString = emailOpsArr.join(',');
         let note = document.getElementById('note').value;
@@ -155,7 +153,7 @@ function katiePretty(emailOptions) {
             } else {
                 personArr = [];
             }
-            personArr.push([fullname, currentCompany, emailString, linkedUrl, note]);
+            personArr.push([fullname, linkedUrl, emailString, note]);
             saveListToStorage(personArr);
           });
     });
@@ -193,7 +191,7 @@ function katiePretty(emailOptions) {
     // create a function that listens for when the downloadPpl button is clicked
     // then conversts each array in the personArr to a csv file and downloads it
     // to the users computer
-    document.getElementById('downloadPpl').addEventListener('click', function(){
+    document.getElementById('downloadListBtn').addEventListener('click', function(){
         chrome.storage.local.get(["personList"], function(result) {
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Email,LinkedIn URL,Note\r\n";

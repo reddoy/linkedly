@@ -99,3 +99,10 @@ async function runLogout() {
   }
 }
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action == "openLink") {
+    console.log('opening link');
+    console.log(request.url);
+      chrome.tabs.create({url: request.url});
+  }
+});
