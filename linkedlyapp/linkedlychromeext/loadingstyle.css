@@ -6,6 +6,7 @@ body{
     background-color: black;
     width:362px;
     height: 252px;
+    color: #fff;
 }
 
 @keyframes fadeOut {

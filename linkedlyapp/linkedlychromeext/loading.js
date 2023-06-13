@@ -1,5 +1,13 @@
 window.onload = function () {
-    chrome.runtime.sendMessage({message: 'checkLogin'});
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        if (!tabs[0].url.includes("linkedin.com/in/")) {
+            document.getElementById('main-content').innerHTML = '<p id="notProfError">Please go to a LinkedIn profile page to use this extension.</p>';
+        }
+        else{
+            chrome.runtime.sendMessage({message: 'checkLogin'});
+        }
+    });
+    
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (request.message === 'notLoggedIn') {

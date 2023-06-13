@@ -3,7 +3,7 @@ body{
     font-family: 'Noto Sans', sans-serif;
     background-color: black;
     color: white;
-    width: 362px;
+    width: 400px;
 }
 
 .logo{
@@ -17,14 +17,31 @@ body{
     margin: 5px;
 }
 
-.info{
-    white-space: nowrap;
-    display: flex;
-}
 
 .top{
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 5px;
+}
+
+
+.table{
+    width: 100%;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  width : 100%;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  width: 75px;
+  border: #0093E9 1px solid;
+  margin-right: -1px;
+  margin-bottom: -1px;
 }
