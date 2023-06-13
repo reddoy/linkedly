@@ -90,12 +90,13 @@ function getEducation(){
     const educationDiv = section.querySelector('#education');
     if (educationDiv) {
       // Find all the li tags within the ul inside the education div
-      const liElements = section.querySelectorAll('div.pvs-list__outer-container > ul > li');
+      const liElements = section.querySelectorAll('div.pvs-list__outer-container > ul > li.artdeco-list__item.pvs-list__item--line-separated.pvs-list__item--one-column');
+      console.log(liElements);
       
       // Loop through the li elements and grab the desired text
-      liElements.forEach(li => {
-        const textElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > div > span > span:nth-child(1)');
-        
+      liElements.forEach(li => {              
+        const textElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div.display-flex.flex-row.justify-space-between > a > div > div > div > div > span:nth-child(1)');
+        console.log(textElement);
         if (textElement) {
           const text = textElement.textContent.toLowerCase().trim();
           textArray.push(text);
@@ -108,6 +109,8 @@ function getEducation(){
   return textArray;
 }
 
+
+
 function getWorkExperience() {
   const mainElement = document.querySelector('main');
   const sectionElements = mainElement.querySelectorAll('section');
@@ -115,22 +118,20 @@ function getWorkExperience() {
 
   sectionElements.forEach(section => {
     const experienceDiv = section.querySelector('#experience');
-    if (experienceDiv) {
-      const liElements = section.querySelectorAll('div.pvs-list__outer-container > ul > li');
-      console.log(liElements);
-      liElements.forEach(li => {
-        const workTitleElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > div > span > span:nth-child(1)');
+    if (experienceDiv) {                                                                   
+      const liElements = section.querySelectorAll('div.pvs-list__outer-container > ul > li.artdeco-list__item.pvs-list__item--line-separated.pvs-list__item--one-column');
+      liElements.forEach(li => { 
+        const workTitleElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > div > div > div > div > span:nth-child(1)');
         const workCompanyElement = li.querySelector('div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > span:nth-child(2) > span:nth-child(1)');
         if (workTitleElement|| workCompanyElement) {
           const workTitle = workTitleElement.textContent.toLowerCase().trim();
           const workCompany = workCompanyElement.textContent.toLowerCase().trim();
-          console.log(workTitle, workCompany);
           textArray.push([workTitle, workCompany]);
         }
       });
     }
   });
-   console.log(textArray);
+   return textArray;
 }
 
 

@@ -45,14 +45,46 @@ function displayCurList(){
             row.appendChild(emailCell);
 
             let noteCell = document.createElement('div');
-            noteCell.className = 'cell note';
+            noteCell.className = 'cell';
             noteCell.textContent = note;
             row.appendChild(noteCell);
 
+            let deleteCell = document.createElement('div');
+            deleteCell.className = 'cell';
+            let deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteCell.appendChild(deleteButton);
+            row.appendChild(deleteCell);
+
             // Add the row to the table body
             tableBody.appendChild(row);
+            deleteButton.addEventListener('click', function() {
+                // Replace the delete button with a confirmation
+                deleteCell.innerHTML = 'Are you sure? <button class="confirm">Yes</button> <button class="cancel">No</button>';
+
+                // Add event listeners to the confirmation buttons
+                deleteCell.querySelector('.confirm').addEventListener('click', function() {
+                    // Remove the person from the array
+                    personArr.splice(personArr.indexOf(person), 1);
+
+                    // Update the array in chrome.storage
+                    chrome.storage.local.set({personList: personArr}, function() {
+                        console.log('Person deleted.');
+
+                        // Refresh the table
+                        displayCurList();
+                    });
+                });
+
+                deleteCell.querySelector('.cancel').addEventListener('click', function() {
+                    // Cancel the deletion - replace the confirmation with the delete button
+                    deleteCell.innerHTML = '';
+                    deleteCell.appendChild(deleteButton);
+                });
+            });
         }
 
+        // ... (same as before)
         let links = document.getElementsByClassName('person-link');
         for (let link of links) {
             link.addEventListener('click', function(event) {
