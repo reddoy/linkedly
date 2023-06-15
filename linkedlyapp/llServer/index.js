@@ -37,7 +37,13 @@ const userSchema = new mongoose.Schema({
     goal: String
 });
 
+const emailDomainSchema = new mongoose.Schema({
+  companyname: String,
+    domain: String,
+});
+
 const User = mongoose.model('User', userSchema);
+const EmailDomain = mongoose.model('EmailDomain', emailDomainSchema);
 
 app.use(express.static(__dirname+'/public_html'));
 
@@ -45,32 +51,49 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+async function checkPaidUser(userid){
+  const user = await User.findOne({ userid: userid });
+  if (user.paid == 'firsttier') {
+    console.log('A paid user');
+    return -10;
+  }
+  else if(user.paid == 'notpaid'){
+    console.log('Not a paid user');
+    let userTriesLeft = user.tries;
+    return userTriesLeft;
+  }
+}
 
-app.get('/email/:name', async function(req, res){
-    console.log(`Hello ${req.params.name}!`);
-    // come with variations of email formats with the name and make name lowercase
-    // then split first and last name and take out all non-alphanumeric characters
 
-    let name = req.params.name;
-    let splitName = name.split("+");
-    let first = splitName[0];
-    let last = splitName[1];
-    let jsonNames = [
-        splitName[0],
-        splitName[1],
-        first + last,
-        first + '.' + last,
-        first + '.' + last[0],
-        first[0] + last,
-        first + last[0]
-    ];
+async function getEmails(name,companyName){
+  console.log(`Hello ${name}!`);
+  let splitName = name.split("+");
+  let first = splitName[0];
+  let last = splitName[1];
 
-    // const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
-    // const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
-    // const response = await fetch(url);
-    // const data = await response.json();
-    res.end(JSON.stringify(jsonNames));
-});
+  let doesDomainExist = await EmailDomain.findOne({ companyname: companyName });
+  let domain;
+  if (doesDomainExist) {
+    domain = doesDomainExist.domain;
+  }else{
+  // const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
+  // const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
+  // const response = await fetch(url);
+  // const domain = await response.json();
+  }
+
+  let jsonNames = [
+    splitName[0] + domain,
+    splitName[1],
+    first + last,
+    first + '.' + last,
+    first + '.' + last[0],
+    first[0] + last,
+    first + last[0]
+];
+  res.end(JSON.stringify(jsonNames));
+}
+
 
 
 app.get('get/response/score', (req, res) => {
@@ -81,8 +104,30 @@ app.get('get/response/score', (req, res) => {
 app.post('/get/message', async (req, res) => {
     let data = req.body;
     const user = await User.findOne({ userid: data.curUserId });
+    if (checkPaidUser(data.curUserId) != -10) {
+      
+      let userTriesLeft = user.tries;
+      if (userTriesLeft > 0) {
+        user.tries = userTriesLeft - 1;
+        user.save();
+      }
+    }
+    else{
+      
+    }
+
+    let x;
+
+    if (data.curName.includes(" ")) {
+      x = 5;
+    }else{
+      x = 3;
+    }
+    console.log(x);
+    
     console.log(user);
     console.log(data);
+    getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
     let userFirstName = user.firstname;
     let userEdu = user.edu.toLowerCase();
     let userGoal = user.goal;
