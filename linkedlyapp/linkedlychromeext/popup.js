@@ -22,7 +22,7 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
     const curTab = await grabTab();
     const response = await grabUserDataFromContent(curTab);
     console.log(response);
-    const emailOps = await getEmailOptions(response);
+    // const emailOps = await getEmailOptions(response);
     const connectDiv = document.getElementById('connect-section');
     connectDiv.innerHTML = '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
 

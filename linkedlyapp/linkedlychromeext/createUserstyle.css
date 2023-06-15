@@ -19,9 +19,10 @@ body{
 
 p{
     margin: 2px;
+    text-align: center;
 }
 
-.logo{
+header{
 display: flex;
 color: #ffffff;
 justify-content: center;
@@ -101,7 +102,7 @@ form{
     margin-top: 5px;
 }
 
-.buttons button, .buttons a{
+#submit{
     border-radius: 12px;
     font-weight: bold;
     background: linear-gradient(to right, #0093E9, #80D0C7);
@@ -117,7 +118,7 @@ form{
     text-decoration: none;
 }
 
-#payment-info:hover, #logout:hover, #submit:hover{
+#submit:hover{
     background-color: #ffffff;
     color: #000000;
     transition: 0.5s;

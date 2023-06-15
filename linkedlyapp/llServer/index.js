@@ -1,13 +1,9 @@
 const { Configuration, OpenAIApi } = require('openai');
 require('dotenv').config({ path: '../../.env' });
 
-
-//create a simple webserver with express
 const express = require('express');
 const mongoose = require('mongoose');
-// const { run } = require('node:test');
 const bodyParser = require('body-parser');
-const stringSimilarity = require('string-similarity');
 const app = express();
 const port = 3000;
 const hostname = '127.0.0.1';
@@ -29,17 +25,19 @@ mongoose.connect("mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f
 });
 
 const userSchema = new mongoose.Schema({
-    userid: String,
-    firstname: String,
-    lastname: String,
-    edu: String,
-    occup: String,
-    goal: String
+  userid: String,
+  firstname: String,
+  lastname: String,
+  edu: String,
+  occup: String,
+  goal: String,
+  paid: String,
+  tries: Number,
 });
 
 const emailDomainSchema = new mongoose.Schema({
   companyname: String,
-    domain: String,
+  domain: String,
 });
 
 const User = mongoose.model('User', userSchema);
@@ -51,19 +49,70 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-async function checkPaidUser(userid){
-  const user = await User.findOne({ userid: userid });
-  if (user.paid == 'firsttier') {
-    console.log('A paid user');
-    return -10;
-  }
-  else if(user.paid == 'notpaid'){
-    console.log('Not a paid user');
+app.post('/get/message', async (req, res) => {
+    let targetData = req.body;
+    console.log(targetData);
+    const user = await User.findOne({ userid: targetData.curUserId });
+    const userStatus = checkPaidUserTriesMain(user);
+    const userTag = userStatus[0];
+    if (userTag == 'ntl') {
+      res.json(['ntl', 0]);
+    }
+    else if(userTag == 'ntlnp'){
+      res.json(['ntlnp', 0]);
+    }
+    else if(userTag == 'usertl'){
+      let popupFills = emailAndMessageMain(user, targetData);
+      let message = popupFills[0];
+      let emailOptions = popupFills[1];
+      res.json(['usertl', userStatus[1], message, emailOptions]);
+    }
+    else if(userTag == 'error'){
+      res.json(['error', 0]);
+    }
+});
+
+
+function checkPaidUserTriesMain(user){
+  if (checkIfPaidUser(user) == 'paiduser') {
     let userTriesLeft = user.tries;
-    return userTriesLeft;
+    if (userTriesLeft > 0) {
+      user.tries = userTriesLeft - 1;
+      user.save();
+      return ['usertl', userTriesLeft - 1];
+    }else{
+      return ['ntl'];
+    }
+  }
+  else if (checkIfPaidUser(user) == 'notpaiduser'){
+    let userTriesLeft = user.tries;
+    if (userTriesLeft > 0) {
+      user.tries = userTriesLeft - 1;
+      user.save();
+      return ['usertl', userTriesLeft - 1];
+    }else{
+      return ['ntlnp'];
+    }
+  }
+  else{
+    return ['error'];
   }
 }
 
+async function emailAndMessageMain(user, data){
+  let userFirstName = user.firstname;
+  let userEdu = user.edu.toLowerCase();
+  let userGoal = user.goal;
+  let targetFirstName = data.curName.split(" ")[0];
+  let targetSchools = data.schools;
+  let targetWork = data.workExperience;
+  let targetHeadline = data.curHeadline;
+  let targetAbout = data.curAbout;
+  let prompt = promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal);
+  let message = await runCompletion(prompt);
+  let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
+  return [message, generatedEmails]; 
+}
 
 async function getEmails(name,companyName){
   console.log(`Hello ${name}!`);
@@ -93,55 +142,6 @@ async function getEmails(name,companyName){
 ];
   res.end(JSON.stringify(jsonNames));
 }
-
-
-
-app.get('get/response/score', (req, res) => {
-    personData = JSON.parse(req.body);
-    res.send('Hello World!');
-});
-
-app.post('/get/message', async (req, res) => {
-    let data = req.body;
-    const user = await User.findOne({ userid: data.curUserId });
-    if (checkPaidUser(data.curUserId) != -10) {
-      
-      let userTriesLeft = user.tries;
-      if (userTriesLeft > 0) {
-        user.tries = userTriesLeft - 1;
-        user.save();
-      }
-    }
-    else{
-      
-    }
-
-    let x;
-
-    if (data.curName.includes(" ")) {
-      x = 5;
-    }else{
-      x = 3;
-    }
-    console.log(x);
-    
-    console.log(user);
-    console.log(data);
-    getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
-    let userFirstName = user.firstname;
-    let userEdu = user.edu.toLowerCase();
-    let userGoal = user.goal;
-    let targetFirstName = data.curName.split(" ")[0];
-    let targetSchools = data.schools;
-    let targetWork = data.workExperience;
-    let targetHeadline = data.curHeadline;
-    let targetAbout = data.curAbout;
-    let prompt = promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal);
-    let message = await runCompletion(prompt);
-    console.log(message);
-    res.end(message);
-});
-
 
 function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal){
   let sameCollege = false;
@@ -211,6 +211,8 @@ app.post('/create/user', async (req, res) => {
         edu: edu,
         occup: occup,
         goal: goal,
+        paid: 'false',
+        tries: 15
     });
 
     try {
