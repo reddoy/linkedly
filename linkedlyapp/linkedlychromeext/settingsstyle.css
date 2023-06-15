@@ -117,7 +117,7 @@ form{
     text-decoration: none;
 }
 
-#payment-info:hover, #logout:hover{
+#payment-info:hover, #logout:hover, #submit:hover{
     background-color: #ffffff;
     color: #000000;
     transition: 0.5s;

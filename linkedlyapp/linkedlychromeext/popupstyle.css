@@ -31,7 +31,6 @@ form{
 
 .logo{
     display: flex;
-    color: #ffffff;
     justify-content: center;
     align-items: center;
 }
@@ -110,7 +109,6 @@ form{
     font-weight: bold;
     background: linear-gradient(to right, #0093E9, #80D0C7);
     border: none;
-    color: #ffffff;
     text-align: center;
     font-size: 14px;
     padding-top: 5px;
@@ -124,8 +122,8 @@ form{
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
 #addToListBtn:hover, #curListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #FFD788;
+    color: #FFD788;
     transition: 0.5s;
 }
 
