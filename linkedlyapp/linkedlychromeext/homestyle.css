@@ -3,6 +3,17 @@ body{
     font-family: 'Noto Sans', sans-serif;
     background-color: black;
     color: white;
+    width: 365px;
+    height: 252px;
+}
+
+.body-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    height: 100%;
 }
 
 .logo{
@@ -16,7 +27,7 @@ body{
     margin: 5px;
 }
 
-.login{
+#main-content{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,25 +36,19 @@ body{
     margin: 5px;
 }
 
-/* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
-#loginBtn, #createAcctBtn {
-    border-radius: 12px;
-    font-weight: bold;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
-    border: none;
-    color: #ffffff;
-    text-align: center;
-    font-size: 14px;
-    padding: 10px;
-    width: 150px;
-    transition: 0.5s;
-    margin: 5px;
+
+button{
+    all: unset;
 }
 
+#googSign{
+    border-radius: 2.5%;
+}
 
-/* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
-#loginBtn:hover, #createAcctBtn:hover {
-    background-color: #ffffff;
-    color: #000000;
-    transition: 0.5s;
+button:active {
+    transform: translateY(2px);
+  }
+
+button:hover {
+cursor: pointer;
 }
