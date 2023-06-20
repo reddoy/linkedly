@@ -4,12 +4,11 @@ require('dotenv').config({ path: '../../.env' });
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const Stripe = require('stripe');
 const app = express();
 const port = 3000;
 const hostname = '127.0.0.1';
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
@@ -49,53 +48,103 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.post('/get/message', async (req, res) => {
+const stripe = new Stripe('');
+const endpointSecret = '';
+
+app.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
+  const sig = request.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+  } catch (err) {
+    console.log('this is the error' + err.message);
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'charge.captured':
+      const chargeCaptured = event.data.object;
+      // Then define and call a function to handle the event charge.captured
+      break;
+    // ... handle other event types
+    case 'checkout.session.completed':
+      console.log(event.data.object.client_reference_id);
+      let user = await User.findOne({ userid: event.data.object.client_reference_id });
+      user.paid = 'true';
+      user.tries = 750;
+      // changeUserToPaid(event.data.object.client_reference_id);
+      break;
+    case 'customer.subscription.updated':
+      console.log('-------------------------------------------new event-------------------------------------------')
+      console.log(event.data);
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+  response.send();
+});
+
+async function changeUserToPaid(id){
+  const user = await User.findOne({ userid: id });
+  user.paid = 'paiduser';
+}
+
+app.post('/get/message',bodyParser.json(), async (req, res) => {
     let targetData = req.body;
     console.log(targetData);
     const user = await User.findOne({ userid: targetData.curUserId });
-    const userStatus = checkPaidUserTriesMain(user);
-    const userTag = userStatus[0];
-    if (userTag == 'ntl') {
-      res.json(['ntl', 0]);
+    if (user.tries == 0) {
+      res.json('limit reached');
     }
-    else if(userTag == 'ntlnp'){
-      res.json(['ntlnp', 0]);
-    }
-    else if(userTag == 'usertl'){
-      let popupFills = emailAndMessageMain(user, targetData);
+    else{
+      user.tries = user.tries - 1;
+      user.save();
+      const userStatus = checkPaidUserTriesMain(user);
+      let popupFills = await emailAndMessageMain(user, targetData);
+      console.log('popupFills: ' + popupFills);
       let message = popupFills[0];
-      let emailOptions = popupFills[1];
-      res.json(['usertl', userStatus[1], message, emailOptions]);
-    }
-    else if(userTag == 'error'){
-      res.json(['error', 0]);
+      // let emailOptions = popupFills[1];
+      res.json([userStatus, message]);
     }
 });
 
+app.get('/get/userstat/:id', async (req, res) => {
+  const user = await User.findOne({ userid: req.params.id });
+  console.log(user);
+  const userStatus = checkPaidUserTriesMain(user);
+  res.send(userStatus);
+});
 
 function checkPaidUserTriesMain(user){
-  if (checkIfPaidUser(user) == 'paiduser') {
-    let userTriesLeft = user.tries;
+  let ifPaid = user.paid;
+  let userTriesLeft = user.tries;
+  let url = 'https://buy.stripe.com/test_cN2eYOcmH24DgDe6oo?client_reference_id=' + user.userid;
+  if (ifPaid === 'true') {
+
     if (userTriesLeft > 0) {
-      user.tries = userTriesLeft - 1;
-      user.save();
-      return ['usertl', userTriesLeft - 1];
+      tl = `<p>You have ${userTriesLeft}/750 connections left to generate this month.</p>`;
+      return tl;
     }else{
-      return ['ntl'];
+      tl = '<p>You have reached your generation limit for the month!</p>';
+      return tl;
     }
   }
-  else if (checkIfPaidUser(user) == 'notpaiduser'){
-    let userTriesLeft = user.tries;
+  else if (ifPaid === 'false'){
     if (userTriesLeft > 0) {
-      user.tries = userTriesLeft - 1;
-      user.save();
-      return ['usertl', userTriesLeft - 1];
+      tl = `You have ${userTriesLeft}/15 connections left to generate with the free trial.<br>
+      To upgrade, <a href=${url} id="payment-link">Click here</a>`;
+      return tl;
     }else{
-      return ['ntlnp'];
+      tl = `<p>You have 0/15 connections left to generate with the free trial.<br>
+      To upgrade, <a href=${url} id="payment-link">Click here</p>`;
+      return tl;
     }
   }
   else{
-    return ['error'];
+    return 'error';
   }
 }
 
@@ -111,7 +160,10 @@ async function emailAndMessageMain(user, data){
   let prompt = promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal);
   let message = await runCompletion(prompt);
   let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
-  return [message, generatedEmails]; 
+  console.log('below are the generated emails and message');
+  console.log(message);
+  console.log(generatedEmails);
+  return [message.trim()]; 
 }
 
 async function getEmails(name,companyName){
@@ -140,7 +192,7 @@ async function getEmails(name,companyName){
     first[0] + last,
     first + last[0]
 ];
-  res.end(JSON.stringify(jsonNames));
+  return JSON.stringify(jsonNames);
 }
 
 function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal){
@@ -166,6 +218,8 @@ function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, t
   }
   else{
     prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}. Please provide a response with a 300 character limit. Do not go over this limit.
+    Follow this structure for the messagee:
+    "Beardown Shane! I have been exploring careers for after college and I found your profile when looking for Alumni on Docusigns page. I have an interest in Sales/Soultions Consulting and I would to chat with you about your experiences. Let me know if you would be available!"
     Here is some information about ${targetFirstName}:
     ${targetFirstName} is currently a ${targetHeadline}.
     My goal with ${targetFirstName} is to ${userGoal} include this after the greeting.
@@ -194,7 +248,7 @@ app.get('/check/user/:id', async (req, res) => {
 });
 
 
-app.post('/create/user', async (req, res) => {
+app.post('/create/user', bodyParser.urlencoded({ extended: true }), async (req, res) => {
     console.log(req.body);
     const userid = req.body.userId;
     console.log(userid);
@@ -224,7 +278,7 @@ app.post('/create/user', async (req, res) => {
     }
 });
 
-app.post('/edit/user', async (req, res) => {
+app.post('/edit/user', bodyParser.urlencoded({ extended: true }), async (req, res) => {
   console.log(req.body);
   const userid = req.body.userId;
   const firstName = req.body.firstName;
