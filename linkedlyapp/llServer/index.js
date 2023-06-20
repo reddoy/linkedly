@@ -209,12 +209,18 @@ function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, t
   console.log(`Same college: ${sameCollege}`);
   let prompt = '';
   if (sameCollege) {
-    prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}.Please provide a response with a 300 character limit. Do not go over this limit.
-    Here is some information about ${targetFirstName}:
-    ${targetFirstName} is currently a ${targetHeadline}.
-    Use my school ${userEdu} slogan to open the message. In this format "<school slogan>! ${targetFirstName}!".
-    My goal with ${targetFirstName} is to ${userGoal} include this after the greeting.
-    Do not use my name and do not put a closing.`;
+    prompt = `write me a reach out message for Linkedin with a 300 character limit. Follow this structure:
+
+    (school slogan) (name of target)!, (purpose) and (role). (goal).
+    
+    Here is the information for the structure:
+    School: ${userEdu}
+    Name of Target: ${targetFirstName}
+    Information about Target: ${targetHeadline}
+    
+    My purpose: exploring careers
+    My goal: set up time to chat
+    My role: student`;
   }
   else{
     prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}. Please provide a response with a 300 character limit. Do not go over this limit.

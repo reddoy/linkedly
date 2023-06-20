@@ -1,3 +1,0 @@
-div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > div > span > span:nth-child(1)
-#ember59 > div.pvs-list__outer-container > ul > li:nth-child(1)
-div > div.display-flex.flex-column.full-width.align-self-center > div > div.display-flex.flex-column.full-width > span:nth-child(2) > span:nth-child(1)
