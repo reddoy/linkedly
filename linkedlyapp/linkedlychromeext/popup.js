@@ -2,6 +2,29 @@
 
 
 window.onload = function(){
+
+  function getStatOnload(){
+    let tl = document.getElementById('tL');
+    chrome.storage.local.get('user', async function(result) {
+      let userid = result.user;
+      console.log(userid);
+      console.log('hey')
+      let stat = await fetch('http://127.0.0.1:3000/get/userstat/' + userid);
+      let statTag= await stat.text();
+      console.log(statTag);
+      tl.innerHTML = statTag;
+      let link = document.getElementById('payment-link');
+      link.addEventListener('click', function() {
+        console.log('clicked payment link');
+        chrome.runtime.sendMessage({action: "openLink", url: this.getAttribute('href')});
+      }
+      );
+    });
+  }
+
+  getStatOnload();
+  
+
   document.querySelector('html').classList.add('fade-in');
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"}, function(response) {
@@ -23,12 +46,14 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
     const response = await grabUserDataFromContent(curTab);
     console.log(response);
     // const emailOps = await getEmailOptions(response);
-    const connectDiv = document.getElementById('connect-section');
+    const connectDiv = document.getElementById('info-section');
     connectDiv.innerHTML = '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
 
     const reachData = await getMessage(response);
-    
-    connectDiv.innerHTML = `
+    console.log(reachData);
+
+    if (reachData != 'limit') {
+      connectDiv.innerHTML = `
       <div class="question">
         <label for="linkUrl">Linkedin URL</label>
         <input type="text" name="linkUrl" id="linkUrl">
@@ -51,14 +76,49 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
       </div>
     `;
     document.getElementById('linkUrl').value = curTab.url.replace(/^(https?:\/\/)?/, '');
-    document.getElementById('note').value = reachData.replace(/\n/g, '');
-    emailOpsArr = emailOps;
-    katiePretty(emailOps);
+    document.getElementById('note').value = reachData[1].replace(/\n/g, '');
+    document.getElementById('tL').innerHTML = reachData[0];
+    let link = document.getElementById('payment-link');
+    link.addEventListener('click', function() {
+      console.log('clicked payment link');
+      chrome.runtime.sendMessage({action: "openLink", url: this.getAttribute('href')});
+    });
+    katiePretty([]);
+    }
   } catch (error) {
     console.error(error);
     // Handle the error here
   }
 });
+
+async function getUserStatusLine(userStat){
+  let userMess = userStat[0];
+  let triesMess;
+  if (userMess == 'ntl'){
+    triesMess = '<p>You have reached your generation limit for the month!</p>';
+  }
+  else if (userMess == 'ntlnp'){
+    let userid = await getUserId();
+    let url = 'https://buy.stripe.com/8wMcOe3VUdIm0CsfYY?client_reference_id=' + userid;
+    triesMess = `<p>You have reached your free generation limit!<br>To upgrade <a href="${url}">click here</a></p>`;
+  }else if(userMess == 'usertl'){
+    triesMess = `<p>You have ${userStat[1]}/750 generations left!</p>`;
+  }
+  console.log(triesMess);
+  return triesMess;
+}
+
+async function getUserId() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get('user', function(result) {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result.user.id);
+      }
+    });
+  });
+}
 
 async function grabTab() {
   const tabs = await chrome.tabs.query({active: true, currentWindow: true});
@@ -101,7 +161,7 @@ async function getMessage(response) {
     },
     body: JSON.stringify(reachJson)
   });
-  const reachData = await reachResponse.text();
+  const reachData = await reachResponse.json();
   return reachData;
 }
 

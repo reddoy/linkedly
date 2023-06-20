@@ -20,7 +20,7 @@ body {
 body{
     background-color: #0093E9;
     font-family: 'Noto Sans', sans-serif;
-    background-color: black;
+    background-color: #ff9a63;
     color: white;
     overflow: hidden;
 }
@@ -89,6 +89,16 @@ form{
     margin: 5px;
 }
 
+#tL{
+  color: #ffffff;
+  text-align: center;
+  font-size: 10px;
+}
+
+#tL a{
+  color: #ffffff;
+}
+
 .buttons{
     display: flex;
     justify-content: space-evenly;
@@ -122,8 +132,7 @@ form{
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
 #addToListBtn:hover, #curListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
-    background-color: #FFD788;
-    color: #FFD788;
+    color: #ff9a63;
     transition: 0.5s;
 }
 
