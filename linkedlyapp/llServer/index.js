@@ -120,6 +120,7 @@ app.get('/get/userstat/:id', async (req, res) => {
 
 function checkPaidUserTriesMain(user){
   let ifPaid = user.paid;
+  console.log('This is ifPaid value:' + ifPaid);
   let userTriesLeft = user.tries;
   let url = 'https://buy.stripe.com/test_cN2eYOcmH24DgDe6oo?client_reference_id=' + user.userid;
   if (ifPaid === 'true') {
