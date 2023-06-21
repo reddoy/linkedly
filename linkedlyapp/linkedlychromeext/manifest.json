@@ -5,7 +5,7 @@
   "description": "Linkedly is a chrome extension that helps you find the most relevant LinkedIn profiles for your target companies.",
   "permissions": ["tabs", "storage", "identity"],
   "action": {
-    "default_popup": "loadingPage/loading.html",
+    "default_popup": "pageLoading/loading.html",
     "default_icon": {
       "128": "images/chainlogosmall.png"
     }

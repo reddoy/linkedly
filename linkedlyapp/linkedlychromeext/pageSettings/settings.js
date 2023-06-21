@@ -2,7 +2,7 @@
 
 window.onload = function() {
     document.getElementById('homeBtn').onclick = function() {
-        window.location.href = 'popup.html';
+        window.location.href = '../pageMainPopup/popup.html';
     };
     insertCurUserInfo();
 
@@ -13,6 +13,18 @@ window.onload = function() {
         console.log('Form data saved to Chrome storage');
       });
     });
+
+document.getElementById('logout').addEventListener('click', async function() {
+  try {
+    const response = await new Promise(resolve => {
+      chrome.runtime.sendMessage({message: "logout"}, resolve);
+    });
+    console.log('this is the response from background:' + response);
+    window.location.href = '../pageLogin/home.html';
+  } catch (error) {
+    console.error(error);
+  }
+});
 };
 
 async function insertCurUserInfo(){
@@ -25,3 +37,4 @@ async function insertCurUserInfo(){
         document.getElementById('goal').value = userInfo.goal;
     });
 }
+

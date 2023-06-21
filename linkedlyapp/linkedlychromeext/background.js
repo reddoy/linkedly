@@ -72,7 +72,7 @@ async function runLogin() {
     const data = await response.json();
     console.log(data);
     let userid = data.id;
-    let userResponse = await fetch('http://localhost:3000/check/user/' + userid);
+    let userResponse = await fetch('http://127.0.0.1:3000/check/user/' + userid);
     let userData = await userResponse.text();
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
@@ -88,6 +88,9 @@ async function runLogout() {
   try {
     const token = await chrome.identity.getAuthToken({interactive: false});
     console.log('Token acquired:', token.token );
+    if (!await isTokenValid(token)) {
+      throw new Error('Token is not valid');
+    }
     const response = await fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token.token);
     await chrome.identity.removeCachedAuthToken({token: token.token});
     await chrome.storage.local.remove('token');
@@ -106,3 +109,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       chrome.tabs.create({url: request.url});
   }
 });
+
+async function isTokenValid(token) {
+  const response = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
+  const data = await response.json();
+
+  // If the token is invalid, Google's API will return an error message in the response.
+  if (data.error) {
+    console.error('Token validation error:', data.error);
+    return false;
+  }
+
+  // If the token is valid, the response will include information about the token, such as its expiry time and the user it belongs to.
+  console.log('Token is valid. Token info:', data);
+  return true;
+}

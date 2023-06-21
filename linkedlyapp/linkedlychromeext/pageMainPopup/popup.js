@@ -33,11 +33,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     } else {
         console.log(response);
     }
-});
-
-    if (!tabs[0].url.includes("linkedin.com/in/")) {
-        document.getElementById('main-content').innerHTML = '<p id="notProfError">Please go to a LinkedIn profile page to use this extension.</p>';
-    }
+  });
 });
 
 document.getElementById('genConnectBtn').addEventListener('click', async function() {
@@ -91,34 +87,34 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
   }
 });
 
-async function getUserStatusLine(userStat){
-  let userMess = userStat[0];
-  let triesMess;
-  if (userMess == 'ntl'){
-    triesMess = '<p>You have reached your generation limit for the month!</p>';
-  }
-  else if (userMess == 'ntlnp'){
-    let userid = await getUserId();
-    let url = 'https://buy.stripe.com/8wMcOe3VUdIm0CsfYY?client_reference_id=' + userid;
-    triesMess = `<p>You have reached your free generation limit!<br>To upgrade <a href="${url}">click here</a></p>`;
-  }else if(userMess == 'usertl'){
-    triesMess = `<p>You have ${userStat[1]}/750 generations left!</p>`;
-  }
-  console.log(triesMess);
-  return triesMess;
-}
+// async function getUserStatusLine(userStat){
+//   let userMess = userStat[0];
+//   let triesMess;
+//   if (userMess == 'ntl'){
+//     triesMess = '<p>You have reached your generation limit for the month!</p>';
+//   }
+//   else if (userMess == 'ntlnp'){
+//     let userid = await getUserId();
+//     let url = 'https://buy.stripe.com/8wMcOe3VUdIm0CsfYY?client_reference_id=' + userid;
+//     triesMess = `<p>You have reached your free generation limit!<br>To upgrade <a href="${url}">click here</a></p>`;
+//   }else if(userMess == 'usertl'){
+//     triesMess = `<p>You have ${userStat[1]}/750 generations left!</p>`;
+//   }
+//   console.log(triesMess);
+//   return triesMess;
+// }
 
-async function getUserId() {
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.get('user', function(result) {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-      } else {
-        resolve(result.user.id);
-      }
-    });
-  });
-}
+// async function getUserId() {
+//   return new Promise((resolve, reject) => {
+//     chrome.storage.local.get('user', function(result) {
+//       if (chrome.runtime.lastError) {
+//         reject(chrome.runtime.lastError);
+//       } else {
+//         resolve(result.user.id);
+//       }
+//     });
+//   });
+// }
 
 async function grabTab() {
   const tabs = await chrome.tabs.query({active: true, currentWindow: true});
@@ -135,13 +131,13 @@ async function grabUserDataFromContent(curTab){
   return response;
 }
 
-async function getEmailOptions(response) {
-  console.log(response);
-  const curName = response.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+');
-  const emailResponse = await fetch(`http://127.0.0.1:3000/email/${curName}`);
-  const emailOps = await emailResponse.json();
-  return emailOps;
-}
+// async function getEmailOptions(response) {
+//   console.log(response);
+//   const curName = response.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+');
+//   const emailResponse = await fetch(`http://127.0.0.1:3000/email/${curName}`);
+//   const emailOps = await emailResponse.json();
+//   return emailOps;
+// }
 
 async function getMessage(response) {
   const userid = await isUserLoggedIn();
@@ -165,10 +161,7 @@ async function getMessage(response) {
   return reachData;
 }
 
-  // create a funciton that listens for the genScoresBtn to be clicked then
-  // runs the addScores() function in content.js. I am building a chrome extension. I keep getting an error
-  // saying that Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
-  // write code that avoids this error
+
 let emailOpsArr = [];
 
 function katiePretty(emailOptions) {
@@ -202,21 +195,34 @@ function katiePretty(emailOptions) {
     // from the form
     
     document.getElementById('addToListBtn').addEventListener('click', function(){
+      const addButton = document.getElementById('addToListBtn');
+      const originalText = addButton.innerText;
+    
       const fullname = document.getElementById('fullname').innerText;
       const linkedUrl = document.getElementById('linkUrl').value;
-        let emailString = emailOpsArr.join(',');
-        let note = document.getElementById('note').value;
-        chrome.storage.local.get(["personList"], function(result) {
-            console.log(result.personList);
-            if (result.personList) {
-                personArr = result.personList;
-            } else {
-                personArr = [];
-            }
-            personArr.push([fullname, linkedUrl, emailString, note]);
-            saveListToStorage(personArr);
-          });
+      let emailString = emailOpsArr.join(',');
+      let note = document.getElementById('note').value;
+    
+      chrome.storage.local.get(["personList"], function(result) {
+        console.log(result.personList);
+        if (result.personList) {
+          personArr = result.personList;
+        } else {
+          personArr = [];
+        }
+        personArr.push([fullname, linkedUrl, emailString, note]);
+        saveListToStorage(personArr);
+    
+        // Change button text to "Added to List"
+        addButton.innerText = "Added to List";
+    
+        // Reset button text after 1 second
+        setTimeout(function() {
+          addButton.innerText = originalText;
+        }, 1000);
+      });
     });
+    
 
     function saveListToStorage(list) {
         chrome.storage.local.set({ "personList": list }, function() {
