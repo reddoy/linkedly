@@ -17,6 +17,7 @@
         <p id="welcome">Edit your infomation that is used in your messages here.</p>
         <p id="infoMessage">
             We will use this to curate your personalized messages.
+            <br>
             * The more info the better the message! *
         </p>
     </div>
@@ -39,21 +40,31 @@
       <label for="occup-role">Occupation/Role *</label>
       <input type="text" id="occup" name="occupation" required>
     </div>
-    <div class="goal-section">
-      <div class="question">
-        <label for="goal">Current Goal? *</label>
-        <p>
-          What is your reach out Goal?
-          <br>
-          (i.e. schedule a quick chat, get a mentor, find leads etc.)
-          <br>
-          * Don't ask for anything concrete: i.e. job referral *
-        </p>
-        <input type="text" id="goal" name="goal" required>
-      </div>
+    <div class="question">
+      <label for="purpose">Purpose *</label>
+      <p>
+        What is your purpose for reaching out?
+        <br>
+        i.e (exploring careers at Wells Fargo,<br>
+              learning about the industry,<br>
+              interested in switching to SWE etc.)
+      </p>
+      <input type="text" id="purp" required name="purpose">
+    </div>
+    <div class="question">
+      <label for="goal">Current Goal? *</label>
+      <p>
+        What is your reach out Goal?
+        <br>
+        (i.e. schedule a quick chat, find a mentor, look at resume etc.)
+        <br>
+      </p>
+      <input type="text" id="goal" name="goal" required>
     </div>
   </div>
-  <button type="submit" id="submit">Update</button>
+  <div class="buttons">
+    <button type="submit" id="submit">Update</button>
+  </div>
 </form>
 <div class="bottom-buttons">
   <div class="buttons">

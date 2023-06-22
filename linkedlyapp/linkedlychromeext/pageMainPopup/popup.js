@@ -41,14 +41,13 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
     const curTab = await grabTab();
     const response = await grabUserDataFromContent(curTab);
     console.log(response);
-    // const emailOps = await getEmailOptions(response);
     const connectDiv = document.getElementById('info-section');
     connectDiv.innerHTML = '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
 
     const reachData = await getMessage(response);
     console.log(reachData);
 
-    if (reachData != 'limit') {
+    if (reachData[0] != 'limit reached') {
       connectDiv.innerHTML = `
       <div class="question">
         <label for="linkUrl">Linkedin URL</label>
@@ -73,14 +72,24 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
     `;
     document.getElementById('linkUrl').value = curTab.url.replace(/^(https?:\/\/)?/, '');
     document.getElementById('note').value = reachData[1].replace(/\n/g, '');
-    document.getElementById('tL').innerHTML = reachData[0];
+    
     let link = document.getElementById('payment-link');
     link.addEventListener('click', function() {
       console.log('clicked payment link');
       chrome.runtime.sendMessage({action: "openLink", url: this.getAttribute('href')});
     });
     katiePretty([]);
-    }
+    }else {
+      connectDiv.innerHTML = `<div class="buttons">
+      <button id="genConnectBtn">Generate new Connect</button>
+      </div>`;
+      const tL = document.getElementById('tL');
+      tL.innerHTML = reachData[1];
+      tL.classList.add('flash');
+      setTimeout(() => {
+        tL.classList.remove('flash');
+      }, 1000);
+}
   } catch (error) {
     console.error(error);
     // Handle the error here

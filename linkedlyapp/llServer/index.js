@@ -88,22 +88,18 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (request, re
   response.send();
 });
 
-async function changeUserToPaid(id){
-  const user = await User.findOne({ userid: id });
-  user.paid = 'paiduser';
-}
 
 app.post('/get/message',bodyParser.json(), async (req, res) => {
     let targetData = req.body;
     console.log(targetData);
     const user = await User.findOne({ userid: targetData.curUserId });
+    const userStatus = checkPaidUserTriesMain(user);
     if (user.tries == 0) {
-      res.json('limit reached');
+      res.json(['limit reached', userStatus ]);
     }
     else{
       user.tries = user.tries - 1;
       user.save();
-      const userStatus = checkPaidUserTriesMain(user);
       let popupFills = await emailAndMessageMain(user, targetData);
       console.log('popupFills: ' + popupFills);
       let message = popupFills[0];
@@ -341,4 +337,11 @@ async function runCompletion(sentPrompt){
     });
     console.log(curChoices);
     return curChoices[0];
+}
+
+
+async function zaza (){ 
+const response = await fetch('https://www.zyxware.com/articles/4344/list-of-fortune-500-companies-and-their-websites');
+const text = await response.text();
+
 }

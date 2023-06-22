@@ -17,10 +17,34 @@ body {
     }
   }
 
+
+  @keyframes flash {
+    0% {
+      color: red;
+      opacity: 1;
+    }
+    50% {
+      color: red;
+      opacity: 0.5;
+    }
+    100% {
+      color: red;
+      opacity: 1;
+    }
+  }
+  
+  .flash {
+    animation-name: flash;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+  }
+
 body{
     background-color: #0093E9;
     font-family: 'Noto Sans', sans-serif;
-    background-color: #ff9a63;
+    width: 600px;
+    height: 400px;
+    background-color: #000000;
     color: white;
     overflow: hidden;
 }
@@ -78,7 +102,8 @@ form{
     align-items: center;
     flex-direction: column;
     margin: 5px;
-    border: darkcyan 1px solid;
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
 }
 
 .question{
@@ -148,7 +173,8 @@ form{
 }
 
 .listBtns{
-    border: darkcyan 1px solid;
+border: 2px solid transparent;
+border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
     margin: 5px;
 }
 

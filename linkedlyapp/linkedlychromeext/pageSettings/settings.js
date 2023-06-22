@@ -34,6 +34,7 @@ async function insertCurUserInfo(){
         document.getElementById('lName').value = userInfo.lastName;
         document.getElementById('school').value = userInfo.school;
         document.getElementById('occup').value = userInfo.occupation;
+        document.getElementById('purp').value = userInfo.purpose;
         document.getElementById('goal').value = userInfo.goal;
     });
 }
