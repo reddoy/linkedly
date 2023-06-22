@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
   lastname: String,
   edu: String,
   occup: String,
+  purpose: String,
   goal: String,
   paid: String,
   tries: Number,
@@ -262,6 +263,7 @@ app.post('/create/user', bodyParser.urlencoded({ extended: true }), async (req, 
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const edu = req.body.school;
+    const purpose = req.body.purpose;
     const occup = req.body.occupation;
     const goal = req.body.goal;
 
@@ -271,6 +273,7 @@ app.post('/create/user', bodyParser.urlencoded({ extended: true }), async (req, 
         lastname: lastName,
         edu: edu,
         occup: occup,
+        purpose: purpose,
         goal: goal,
         paid: 'false',
         tries: 15

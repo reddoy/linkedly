@@ -14,11 +14,17 @@
   </header>
   <main>
     <div class="welcome-message">
-      <p id="welcome">Welcome!</p>
+      <p id="welcome">Welcome to Linkedly!</p>
       <p id="info-message">
         Enter in some information about yourself.
-        <br>We will use this to curate your personalized messages.
-       <br> * The more info the better the message! *
+      <br>
+        We will use this to curate your personalized messages.
+      <br>
+        * Don't worry, we won't share this with anyone! *
+      <br>
+        You can edit the information at any time in the setting menu.
+      <br>
+       * The more info the better the message! *
       </p>
     </div>
     <form action="http://127.0.0.1:3000/create/user" method="POST" id="userForm">
@@ -41,13 +47,22 @@
           <input type="text" id="occup" name="occupation" required>
         </div>
         <div class="question">
+          <label for="purpose">Purpose *</label>
+          <p>
+            What is your purpose for reaching out?
+            <br>
+            i.e (exploring careers at Wells Fargo, learning about the industry,
+            <br> interested in switching to SWE etc.)
+          </p>
+          <input type="text" required name="purpose">
+        </div>
+        <div class="question">
           <label for="goal">Current Goal? *</label>
           <p>
             What is your reach out Goal?
             <br>
-            (i.e. schedule a quick chat, get a mentor, find leads etc.)
+            (i.e. schedule a quick chat, find a mentor, look at resume etc.)
             <br>
-            * Don't ask for anything concrete: i.e. job referral *
           </p>
           <input type="text" id="goal" name="goal" required>
         </div>
