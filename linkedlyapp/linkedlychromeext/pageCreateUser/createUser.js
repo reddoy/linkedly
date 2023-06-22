@@ -3,6 +3,7 @@
 window.onload = async function () {
   try {
     const data = await chrome.storage.local.get('user');
+    console.log(data);
     const curUser = data.user;
     console.log(curUser);
     if (!curUser) {
