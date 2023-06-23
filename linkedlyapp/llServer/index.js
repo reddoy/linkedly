@@ -149,13 +149,14 @@ function checkPaidUserTriesMain(user){
 async function emailAndMessageMain(user, data){
   let userFirstName = user.firstname;
   let userEdu = user.edu.toLowerCase();
+  let userPurp = user.purpose;
   let userGoal = user.goal;
   let targetFirstName = data.curName.split(" ")[0];
   let targetSchools = data.schools;
   let targetWork = data.workExperience;
   let targetHeadline = data.curHeadline;
   let targetAbout = data.curAbout;
-  let prompt = promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal);
+  let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
   let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
   console.log('below are the generated emails and message');
@@ -193,7 +194,7 @@ async function getEmails(name,companyName){
   return JSON.stringify(jsonNames);
 }
 
-function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, targetFirstName, userFirstName, userEdu, userGoal){
+function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal){
   let sameCollege = false;
   for (let i = 0; i < targetSchools.length; i++) {
       const similarity = targetSchools[i].includes(userEdu);
@@ -207,18 +208,17 @@ function promptCreator(targetSchools, targetWork, targetHeadline, targetAbout, t
   console.log(`Same college: ${sameCollege}`);
   let prompt = '';
   if (sameCollege) {
-    prompt = `write me a reach out message for Linkedin with a 300 character limit. Follow this structure:
+    prompt = `write me a reach out message for Linkedin with a 300 character limit use the full amount. Follow this structure:
 
-    (school slogan) (name of target)!, (purpose) and (role). (goal).
+    (school slogan) (name of target)!, I'm (purpose). (goal).
     
     Here is the information for the structure:
     School: ${userEdu}
     Name of Target: ${targetFirstName}
     Information about Target: ${targetHeadline}
     
-    My purpose: exploring careers
-    My goal: set up time to chat
-    My role: student`;
+    My purpose: ${userPurp}
+    My goal: ${userGoal}`;
   }
   else{
     prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}. Please provide a response with a 300 character limit. Do not go over this limit.
@@ -325,19 +325,21 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-async function runCompletion(sentPrompt){
-    const completion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt: sentPrompt,
-        max_tokens: 75,
-    });
-    let curChoices = [];
-    const choices = completion.data.choices.map((choice, index) => {
-        curChoices.push(choice.text);
-    });
-    console.log(curChoices);
-    return curChoices[0];
+async function runCompletion(sentPrompt) {
+  const completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: sentPrompt,
+      max_tokens: 75,
+  });
+
+  const curChoices = completion.data.choices.map((choice) => choice.text);
+  const extractedSentence = curChoices[0].replace(/[\n\r]+/g, '').trim();
+
+  console.log(extractedSentence);
+
+  return extractedSentence;
 }
+
 
 
 async function zaza (){ 

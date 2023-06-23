@@ -75,7 +75,7 @@ form{
     border-radius: 12px;
     font-weight: bold;
     text-align: center;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
+    background-color: linear-gradient(to right, #0093E9, #80D0C7);
     border: none;
     text-align: center;
     font-size: 20px;
@@ -96,14 +96,29 @@ form{
     font-size: large;
 }
 
+#main-content{
+  height: 100%;
+}
+
 #connect-section{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    height: 80%;
     margin: 5px;
     border: 2px solid transparent;
     border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
+}
+
+#genConnectBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#genConnectBtn img{
+    margin-left: 3px;
 }
 
 .question{
@@ -117,7 +132,7 @@ form{
 #tL{
   color: #ffffff;
   text-align: center;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 #tL a{
@@ -140,9 +155,10 @@ form{
 
 /* Round the edges, make the font bold, and and the background color a blue gradient for #subbutton, #genScoresBtn and #downloadPpl */
 .buttons button, .buttons a{
+  color: white;
     border-radius: 12px;
     font-weight: bold;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
+    background-color: #126C9E;
     border: none;
     text-align: center;
     font-size: 14px;
@@ -156,9 +172,10 @@ form{
 
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
-#addToListBtn:hover, #curListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
-    color: #ff9a63;
+#addToListBtn:hover, #showCurListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
+    color: #000000;
     transition: 0.5s;
+    cursor: pointer;
 }
 
 .emailInput{
@@ -173,9 +190,24 @@ form{
 }
 
 .listBtns{
+  height: 25%;
 border: 2px solid transparent;
 border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
     margin: 5px;
+}
+
+.listBtns button{
+  width: 150px;
+  height: 80px;
+}
+
+.listBtns a{
+  padding: 0px;
+  width: 150px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .top-row, .bottom-row{

@@ -66,7 +66,7 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
       <div class="question">
         <label for="note">Note</label>
         <p>Copy and Paste into the Connection Note:</p>
-        <textarea name="note" id="note" cols="60" rows="8"></textarea>
+        <textarea name="note" id="note" cols="60" rows="5"></textarea>
         <button id="regenBtn">Regenerate</button>
       </div>
     `;
