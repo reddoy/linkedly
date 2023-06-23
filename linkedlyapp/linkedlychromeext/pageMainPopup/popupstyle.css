@@ -173,7 +173,7 @@ form{
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
 #addToListBtn:hover, #showCurListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
-    color: #000000;
+    border:#80D0C7 solid 2px;
     transition: 0.5s;
     cursor: pointer;
 }
