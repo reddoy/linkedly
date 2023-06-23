@@ -110,6 +110,28 @@ body{
     }
 }
 
+.bottom-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.bottom-row button{
+    color: white;
+    border-radius: 12px;
+    font-weight: bold;
+    background-color: #126C9E;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 150px;
+    transition: 0.5s;
+    margin: 5px;
+    text-decoration: none;
+}
 
 a{
     text-decoration: none;

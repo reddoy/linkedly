@@ -101,7 +101,6 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
       user.tries = user.tries - 1;
       user.save();
       let popupFills = await emailAndMessageMain(user, targetData);
-      console.log('popupFills: ' + popupFills);
       let message = popupFills[0];
       // let emailOptions = popupFills[1];
       res.json([userStatus, message]);
@@ -159,9 +158,6 @@ async function emailAndMessageMain(user, data){
   let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
   let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
-  console.log('below are the generated emails and message');
-  console.log(message);
-  console.log(generatedEmails);
   return [message.trim()]; 
 }
 
@@ -221,13 +217,16 @@ function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, 
     My goal: ${userGoal}`;
   }
   else{
-    prompt = `Write a peronalized reach out message for Linkedin to ${targetFirstName}. Please provide a response with a 300 character limit. Do not go over this limit.
-    Follow this structure for the messagee:
-    "Beardown Shane! I have been exploring careers for after college and I found your profile when looking for Alumni on Docusigns page. I have an interest in Sales/Soultions Consulting and I would to chat with you about your experiences. Let me know if you would be available!"
-    Here is some information about ${targetFirstName}:
-    ${targetFirstName} is currently a ${targetHeadline}.
-    My goal with ${targetFirstName} is to ${userGoal} include this after the greeting.
-    Do not use my name and do not put a closing.`;
+    prompt = `write me a reach out message for Linkedin with a 300 character limit use the full amount. Follow this structure:
+
+    "Hi (name of target)!, I'm (purpose). (goal)."
+    
+    Here is the information for the structure:
+    Name of Target: ${targetFirstName}
+    Information about Target: ${targetHeadline}
+    
+    My purpose: ${userPurp}
+    My goal: ${userGoal}`;
   }
    return prompt;
 }
@@ -329,21 +328,23 @@ async function runCompletion(sentPrompt) {
   const completion = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: sentPrompt,
-      max_tokens: 75,
+      max_tokens: 100,
   });
 
-  const curChoices = completion.data.choices.map((choice) => choice.text);
-  const extractedSentence = curChoices[0].replace(/[\n\r]+/g, '').trim();
+  const curChoices = completion.data.choices;
+  const textChoices = [];
+  for (let i = 0; i < curChoices.length; i++) {
+    const choice = curChoices[i];
+    textChoices.push(choice.text);
+  }
 
-  console.log(extractedSentence);
+  const mess = textChoices[0].trim();
+  console.log('before newline removal: '+ mess);
+  console.log('---------------++');
+  const index = mess.indexOf('\n');
+  const extractedString = index !== -1 ? mess.substring(index + 1) : mess;
 
-  return extractedSentence;
-}
-
-
-
-async function zaza (){ 
-const response = await fetch('https://www.zyxware.com/articles/4344/list-of-fortune-500-companies-and-their-websites');
-const text = await response.text();
-
+  console.log(extractedString);
+  console.log('---------------++');
+  return extractedString;
 }

@@ -1,5 +1,32 @@
 window.onload = function(){
     displayCurList();
+
+    document.getElementById('clearListBtn').addEventListener('click', function(){
+        chrome.storage.local.clear(function() {
+            console.log("personList cleared");
+            // write code that changes the text of clearListBtn to say "List Cleared"
+            // for 1 second then changes back to "Clear List"
+            let clearListBtn = document.getElementById('clearListBtn');
+            clearListBtn.innerHTML = "List Cleared";
+            setTimeout(function(){
+                clearListBtn.innerHTML = "Clear List";
+            }, 1000);
+        });
+    });
+
+    document.getElementById('downloadListBtn').addEventListener('click', function(){
+        chrome.storage.local.get(["personList"], function(result) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Email,LinkedIn URL,Note\r\n";
+            console.log(result.personList);
+            result.personList.forEach(function(rowArray){
+                let row = rowArray.join(",");
+                csvContent += row + "\r\n";
+            });
+            var encodedUri = encodeURI(csvContent);
+            window.open(encodedUri);
+          });
+    });
 }
 
 // create a function that gets the current personList from chrome storage

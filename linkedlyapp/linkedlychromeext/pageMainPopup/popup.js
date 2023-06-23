@@ -96,34 +96,7 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
   }
 });
 
-// async function getUserStatusLine(userStat){
-//   let userMess = userStat[0];
-//   let triesMess;
-//   if (userMess == 'ntl'){
-//     triesMess = '<p>You have reached your generation limit for the month!</p>';
-//   }
-//   else if (userMess == 'ntlnp'){
-//     let userid = await getUserId();
-//     let url = 'https://buy.stripe.com/8wMcOe3VUdIm0CsfYY?client_reference_id=' + userid;
-//     triesMess = `<p>You have reached your free generation limit!<br>To upgrade <a href="${url}">click here</a></p>`;
-//   }else if(userMess == 'usertl'){
-//     triesMess = `<p>You have ${userStat[1]}/750 generations left!</p>`;
-//   }
-//   console.log(triesMess);
-//   return triesMess;
-// }
 
-// async function getUserId() {
-//   return new Promise((resolve, reject) => {
-//     chrome.storage.local.get('user', function(result) {
-//       if (chrome.runtime.lastError) {
-//         reject(chrome.runtime.lastError);
-//       } else {
-//         resolve(result.user.id);
-//       }
-//     });
-//   });
-// }
 
 async function grabTab() {
   const tabs = await chrome.tabs.query({active: true, currentWindow: true});
@@ -140,13 +113,6 @@ async function grabUserDataFromContent(curTab){
   return response;
 }
 
-// async function getEmailOptions(response) {
-//   console.log(response);
-//   const curName = response.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+');
-//   const emailResponse = await fetch(`http://127.0.0.1:3000/email/${curName}`);
-//   const emailOps = await emailResponse.json();
-//   return emailOps;
-// }
 
 async function getMessage(response) {
   const userid = await isUserLoggedIn();
@@ -199,9 +165,6 @@ function katiePretty(emailOptions) {
 }
 
 
-    // create a funciton that listens for when the personForm is submitted
-    // then runs the addPerson(linkedUrl, Name) function and passes in the values
-    // from the form
     
     document.getElementById('addToListBtn').addEventListener('click', function(){
       const addButton = document.getElementById('addToListBtn');
@@ -244,41 +207,7 @@ function katiePretty(emailOptions) {
           });
       }
 
-    // create a function that listens for when the clearListBtn button is clicked
-    // then clears the personList from chrome storage
-    document.getElementById('clearListBtn').addEventListener('click', function(){
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {message: "Hi this is a message from Google! We scraped 40 million sites and found Katie Drake is the most beautiful girl in the world!"});
-            console.log('sent message');
-          });
-        chrome.storage.local.clear(function() {
-            console.log("personList cleared");
-            // write code that changes the text of clearListBtn to say "List Cleared"
-            // for 1 second then changes back to "Clear List"
-            let clearListBtn = document.getElementById('clearListBtn');
-            clearListBtn.innerHTML = "List Cleared";
-            setTimeout(function(){
-                clearListBtn.innerHTML = "Clear List";
-            }, 1000);
-        });
-    });
-        
-    // create a function that listens for when the downloadPpl button is clicked
-    // then conversts each array in the personArr to a csv file and downloads it
-    // to the users computer
-    document.getElementById('downloadListBtn').addEventListener('click', function(){
-        chrome.storage.local.get(["personList"], function(result) {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Email,LinkedIn URL,Note\r\n";
-            console.log(result.personList);
-            result.personList.forEach(function(rowArray){
-                let row = rowArray.join(",");
-                csvContent += row + "\r\n";
-            });
-            var encodedUri = encodeURI(csvContent);
-            window.open(encodedUri);
-          });
-    });
+
 
 async function isUserLoggedIn() {
   try {
