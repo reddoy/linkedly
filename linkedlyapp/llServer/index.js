@@ -33,6 +33,8 @@ const userSchema = new mongoose.Schema({
   goal: String,
   paid: String,
   tries: Number,
+  subid: String,
+  status: String,
 });
 
 const emailDomainSchema = new mongoose.Schema({
@@ -49,8 +51,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-const stripe = new Stripe('');
-const endpointSecret = '';
+const stripe = new Stripe('whsec_d3c04e45fffbed0756cf7e39807adba9ede94b7f34f17889d0ac1ac67f0942a5');
+const endpointSecret = 'whsec_d3c04e45fffbed0756cf7e39807adba9ede94b7f34f17889d0ac1ac67f0942a5';
 
 app.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
   const sig = request.headers['stripe-signature'];
@@ -64,24 +66,29 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (request, re
     return;
   }
 
-  // Handle the event
   switch (event.type) {
-    case 'charge.captured':
-      const chargeCaptured = event.data.object;
-      // Then define and call a function to handle the event charge.captured
-      break;
-    // ... handle other event types
+    // case 'charge.captured':
+    //   const chargeCaptured = event.data.object;
+    //   console.log('charge captured: --------------------------')
+    //   console.log(charge)
+    //   // Then define and call a function to handle the event charge.captured
+    //   break;
+    // // ... handle other event types
     case 'checkout.session.completed':
-      console.log(event.data.object.client_reference_id);
+      console.log(event.data.object.client_reference_id + '-----------------------');
       let user = await User.findOne({ userid: event.data.object.client_reference_id });
       user.paid = 'true';
+      console.log(event.data.object.subscription);
+      user.subid = event.data.object.subscription;
       user.tries = 750;
+      user.save();
       // changeUserToPaid(event.data.object.client_reference_id);
       break;
-    case 'customer.subscription.updated':
-      console.log('-------------------------------------------new event-------------------------------------------')
-      console.log(event.data);
-      break;
+    // case 'customer.subscription.updated':
+    //   console.log('-------------------------------------------new event-------------------------------------------')
+    //   console.log(event.data);
+
+    //   break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
