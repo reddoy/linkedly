@@ -1,9 +1,13 @@
 
 
-window.onload = function() {
+window.onload = async function() {
+
+  const userid = await chrome.storage.local.get('user');
     document.getElementById('homeBtn').onclick = function() {
         window.location.href = '../pageMainPopup/popup.html';
     };
+    console.log(userid);
+    document.getElementById('userId').value = userid.user;
     insertCurUserInfo();
 
     const form = document.getElementById('userForm');
@@ -29,6 +33,7 @@ document.getElementById('logout').addEventListener('click', async function() {
 
 async function insertCurUserInfo(){
     chrome.storage.local.get('formData', function(data) {
+      console.log(data);
         const userInfo = data.formData;
         document.getElementById('fName').value = userInfo.firstName;
         document.getElementById('lName').value = userInfo.lastName;
