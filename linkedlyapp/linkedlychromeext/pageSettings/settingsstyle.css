@@ -38,20 +38,18 @@ margin: 5px;
 }
 
 #homeBtn{
+    background-color: #000000;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
     font-weight: bold;
     text-align: center;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
     border: none;
     text-align: center;
-    font-size: 20px;
+    font-size: 50px;
     padding: 5px;
     width: 50px;
     height: 50px;
-    transition: 0.5s;
     margin: 5px;
     text-decoration: none;
 }

@@ -8,6 +8,7 @@ window.onload = function(){
             // for 1 second then changes back to "Clear List"
             let clearListBtn = document.getElementById('clearListBtn');
             clearListBtn.innerHTML = "List Cleared";
+            displayCurList();
             setTimeout(function(){
                 clearListBtn.innerHTML = "Clear List";
             }, 1000);

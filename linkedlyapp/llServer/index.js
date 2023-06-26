@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
   paid: String,
   tries: Number,
   subid: String,
+  cusId: String,
   status: String,
 });
 
@@ -65,30 +66,23 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (request, re
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
-
+  let user;
   switch (event.type) {
-    // case 'charge.captured':
-    //   const chargeCaptured = event.data.object;
-    //   console.log('charge captured: --------------------------')
-    //   console.log(charge)
-    //   // Then define and call a function to handle the event charge.captured
-    //   break;
-    // // ... handle other event types
     case 'checkout.session.completed':
       console.log(event.data.object.client_reference_id + '-----------------------');
-      let user = await User.findOne({ userid: event.data.object.client_reference_id });
-      user.paid = 'true';
-      console.log(event.data.object.subscription);
+      console.log(event.data.object.subscription+ '-----------sub num here');
+      user = await User.findOne({ userid: event.data.object.client_reference_id });
       user.subid = event.data.object.subscription;
+      user.save();
+      break;
+    case 'invoice.payment_succeeded':
+      console.log('invoice.payment_succeded: --------------------------')
+      console.log(event.data.object)
+      user = await User.findOne({ subid: event.data.object.subscription });
+      user.paid = 'true';
       user.tries = 750;
       user.save();
-      // changeUserToPaid(event.data.object.client_reference_id);
       break;
-    // case 'customer.subscription.updated':
-    //   console.log('-------------------------------------------new event-------------------------------------------')
-    //   console.log(event.data);
-
-    //   break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
@@ -115,6 +109,7 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
 });
 
 app.get('/get/userstat/:id', async (req, res) => {
+  console.log('this is the id passed in from getuserstat: ' + req.params.id);
   const user = await User.findOne({ userid: req.params.id });
   console.log(user);
   const userStatus = checkPaidUserTriesMain(user);
