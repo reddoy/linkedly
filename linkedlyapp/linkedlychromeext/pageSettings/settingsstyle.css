@@ -1,14 +1,11 @@
 
-
-body{
-    width: 600px;
-    height: 400px;
-    overflow: hidden;
+ body {
     background-color: black;
     color: #ffffff;
     font-size: 14px;
     animation: fadeIn 1s ease-in-out forwards;
 }
+
 
 @keyframes fadeIn {
     from {
@@ -37,6 +34,11 @@ padding-right: 5px;
 
 #linkedlylogo{
 margin: 5px;
+}
+
+.main-content{
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
 }
 
 #homeBtn{

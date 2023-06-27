@@ -1,4 +1,6 @@
-
+p{
+  margin: 0px;
+}
 
 body {
     opacity: 0;
@@ -38,7 +40,6 @@ body {
   }
 
 body{
-    background-color: #0093E9;
     width: 600px;
     height: 400px;
     font-weight: bolder;
@@ -58,9 +59,10 @@ form{
 }
 
 .logo h1{
-    border-right: #ffffff solid 1px;
     padding-right: 5px;
+    padding-left: 5px;
     font-weight: bold;
+    font-size: 25px;
 }
 
 #linkedlylogo{
@@ -74,16 +76,23 @@ form{
     border-radius: 12px;
     font-weight: bold;
     text-align: center;
-    background-color: linear-gradient(to right, #0093E9, #80D0C7);
     border: none;
     text-align: center;
     font-size: 50px;
-    padding: 5px;
     width: 50px;
     height: 50px;
     transition: 0.5s;
     margin: 5px;
     text-decoration: none;
+}
+input, textarea {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+  background-color: #454545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  resize: none;
 }
 
 #notProfError{
@@ -109,6 +118,16 @@ form{
     padding: 10px;
     border: 2px solid transparent;
     border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
+}
+
+#linkUrl{
+  width: 385px;
+  text-align: center;
+}
+
+#email{
+  width: 351px;
+  text-align: center;
 }
 
 #genConnectBtn{
@@ -148,6 +167,23 @@ form{
     margin: 5px;
 }
 
+.arrows{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px;
+}
+
+.arrows button{
+  margin: 2px;
+  background-color: #126C9E;
+  color:#ffffff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
 #clearListBtn{
     text-decoration: none;
     color: inherit;
@@ -172,7 +208,9 @@ form{
 
 
 /* Create a cool, smooth and modern hover animation for the background for #subbutton, #genScoresBtn and #downloadPpl */
-#addToListBtn:hover, #showCurListBtn:hover, #downloadPpl:hover, #clearListBtn:hover, #genConnectBtn:hover {
+#addToListBtn:hover, #showCurListBtn:hover,
+#downloadPpl:hover, #clearListBtn:hover,
+#genConnectBtn:hover, #regenBtn:hover {
   border: #80D0C7 solid 2px;
   cursor: pointer;
 }
@@ -208,6 +246,7 @@ border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
   justify-content: center;
   align-items: center;
 }
+
 
 .top-row, .bottom-row{
     display: flex;
