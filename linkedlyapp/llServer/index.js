@@ -127,10 +127,10 @@ function checkPaidUserTriesMain(user){
   if (ifPaid === 'true') {
 
     if (userTriesLeft > 0) {
-      tl = `<p>You have ${userTriesLeft}/750 connections left to generate this month.</p>`;
+      tl = `You have ${userTriesLeft}/750 connections left to generate this month.`;
       return tl;
     }else{
-      tl = '<p>You have reached your generation limit for the month!</p>';
+      tl = 'You have reached your generation limit for the month!';
       return tl;
     }
   }
@@ -140,8 +140,8 @@ function checkPaidUserTriesMain(user){
       To upgrade, <a href=${url} id="payment-link">Click here</a>`;
       return tl;
     }else{
-      tl = `<p>You have 0/15 connections left to generate with the free trial.<br>
-      To upgrade, <a href=${url} id="payment-link">Click here</p>`;
+      tl = `You have 0/15 connections left to generate with the free trial.<br>
+      To upgrade, <a href=${url} id="payment-link">Click here</a>`;
       return tl;
     }
   }
@@ -163,7 +163,9 @@ async function emailAndMessageMain(user, data){
   let targetAbout = data.curAbout;
   let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
-  let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'), curCompany);
+  let generatedEmails = await getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, '+'), curCompany);
+  console.log(generatedEmails[0]);
+  console.log('these are generated emails: ' + generatedEmails);
   return [message.trim(), generatedEmails]; 
 }
 
@@ -182,23 +184,23 @@ async function getEmails(name,companyName){
     domain = doesDomainExist.domain;
     console.log('domain exists in MongoDB: '+ domain);
   }else{
-  // const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
-  // const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
-  // const response = await fetch(url);
-  // const domain = await response.json();
+    const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
+    const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
+    const response = await fetch(url);
+    domain = await response.json();
+    console.log('domain does not exist in MongoDB: '+ domain);
   }
 
   let jsonNames = [
     `${splitName[0]}@${domain}`,
-    `${splitName[0]}@${domain}`,
     `${first}${last}@${domain}`,
     `${firstLetter}${last}@${domain}`,
     `${first}.${last}@${domain}`,
-    first[0] + last,
-    first + last[0]
-];
-console.log(jsonNames);
-  return JSON.stringify(jsonNames);
+    `${firstLetter}.${last}@${domain}`,
+    `${firstLetter}_${last}@${domain}`
+    ];
+  console.log(jsonNames);
+  return jsonNames;
 }
 
 function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal){

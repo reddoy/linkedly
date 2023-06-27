@@ -67,22 +67,19 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
         <label for="note">Note</label>
         <p>Copy and Paste into the Connection Note:</p>
         <textarea name="note" id="note" cols="60" rows="5"></textarea>
-        <button id="regenBtn">Regenerate</button>
+        <div class="buttons">
+          <button id="regenBtn">Regenerate</button>
+        </div>
       </div>
     `;
     document.getElementById('linkUrl').value = curTab.url.replace(/^(https?:\/\/)?/, '');
     document.getElementById('note').value = reachData[1].replace(/\n/g, '');
-    connectDiv.classList.add('fade-in');
-    setTimeout(() => {
-      connectDiv.classList.add('show');
-    }, 0);
-    
+    katiePretty(reachData[2]);
     let link = document.getElementById('payment-link');
     link.addEventListener('click', function() {
       console.log('clicked payment link');
       chrome.runtime.sendMessage({action: "openLink", url: this.getAttribute('href')});
     });
-    katiePretty([]);
     }else {
       connectDiv.innerHTML = `<div class="buttons">
       <button id="genConnectBtn">Generate new Connect</button>
@@ -144,6 +141,7 @@ async function getMessage(response) {
 let emailOpsArr = [];
 
 function katiePretty(emailOptions) {
+    emailOpsArr = emailOptions;
     let inputBox = document.querySelector('.emailInput');
     let upArrow = inputBox.querySelector('.up-arrow');
     let downArrow = inputBox.querySelector('.down-arrow');
