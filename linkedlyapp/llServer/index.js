@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const emailDomainSchema = new mongoose.Schema({
-  companyname: String,
+  company_name: String,
   domain: String,
 });
 
@@ -98,13 +98,16 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
     if (user.tries == 0) {
       res.json(['limit reached', userStatus ]);
     }
-    else{
+    else if(user.tries > 0){
       user.tries = user.tries - 1;
       user.save();
       let popupFills = await emailAndMessageMain(user, targetData);
       let message = popupFills[0];
       // let emailOptions = popupFills[1];
-      res.json([userStatus, message]);
+      res.json([userStatus, message, popupFills[1]]);
+    }
+    else{
+      res.send('error');
     }
 });
 
@@ -155,24 +158,29 @@ async function emailAndMessageMain(user, data){
   let targetFirstName = data.curName.split(" ")[0];
   let targetSchools = data.schools;
   let targetWork = data.workExperience;
+  let curCompany = targetWork[0][1].split(' · ')[0];
   let targetHeadline = data.curHeadline;
   let targetAbout = data.curAbout;
   let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
-  let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'));
-  return [message.trim()]; 
+  let generatedEmails = getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, '+'), curCompany);
+  return [message.trim(), generatedEmails]; 
 }
 
 async function getEmails(name,companyName){
   console.log(`Hello ${name}!`);
+  console.log(`Hello ${companyName}!`)
   let splitName = name.split("+");
   let first = splitName[0];
   let last = splitName[1];
+  let firstLetter = first[0];
 
-  let doesDomainExist = await EmailDomain.findOne({ companyname: companyName });
+  let doesDomainExist = await EmailDomain.findOne({ company_name: companyName });
+  console.log(doesDomainExist);
   let domain;
   if (doesDomainExist) {
     domain = doesDomainExist.domain;
+    console.log('domain exists in MongoDB: '+ domain);
   }else{
   // const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
   // const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
@@ -181,14 +189,15 @@ async function getEmails(name,companyName){
   }
 
   let jsonNames = [
-    splitName[0] + domain,
-    splitName[1],
-    first + last,
-    first + '.' + last,
-    first + '.' + last[0],
+    `${splitName[0]}@${domain}`,
+    `${splitName[0]}@${domain}`,
+    `${first}${last}@${domain}`,
+    `${firstLetter}${last}@${domain}`,
+    `${first}.${last}@${domain}`,
     first[0] + last,
     first + last[0]
 ];
+console.log(jsonNames);
   return JSON.stringify(jsonNames);
 }
 
