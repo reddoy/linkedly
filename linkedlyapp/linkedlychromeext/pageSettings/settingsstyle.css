@@ -1,7 +1,9 @@
+
+
 body{
     width: 600px;
-    height: 252px;
-    overflow: scroll;
+    height: 400px;
+    overflow: hidden;
     background-color: black;
     color: #ffffff;
     font-size: 14px;

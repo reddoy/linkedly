@@ -73,6 +73,9 @@ document.getElementById('genConnectBtn').addEventListener('click', async functio
     document.getElementById('linkUrl').value = curTab.url.replace(/^(https?:\/\/)?/, '');
     document.getElementById('note').value = reachData[1].replace(/\n/g, '');
     connectDiv.classList.add('fade-in');
+    setTimeout(() => {
+      connectDiv.classList.add('show');
+    }, 0);
     
     let link = document.getElementById('payment-link');
     link.addEventListener('click', function() {

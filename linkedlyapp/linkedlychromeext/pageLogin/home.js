@@ -4,15 +4,12 @@ window.onload = function () {
 
 
     document.getElementById("createAcctBtn").onclick = function () {
+        document.getElementById('main-content').innerHTML = '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
         chrome.runtime.sendMessage({message: 'login'});
     }
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {message: "Hello from the extension!"});
-
-        if (!tabs[0].url.includes("linkedin.com/in/")) {
-            document.getElementById('main-content').innerHTML = '<p id="notProfError">Please go to a LinkedIn profile page to use this extension.</p>';
-        }
     });
 
 
