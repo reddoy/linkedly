@@ -1,5 +1,27 @@
+html{
+    overflow-y: scroll;
+    overflow-x: hidden;
 
+    /* This will change the scrollbar's track (background) */
+    scrollbar-color:  #126C9E; /* For Firefox */
+    scrollbar-width: thin; /* For Firefox */
+
+    /* This will change the scrollbar's thumb (the part you drag) */
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: black;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color:  #126C9E;
+        border-radius: 20px;
+    }
+}
  body {
+    width: 600px;
     background-color: black;
     color: #ffffff;
     font-size: 14px;
