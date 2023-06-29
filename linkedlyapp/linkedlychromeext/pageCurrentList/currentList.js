@@ -18,15 +18,23 @@ window.onload = function(){
     document.getElementById('downloadListBtn').addEventListener('click', function(){
         chrome.storage.local.get(["personList"], function(result) {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Email,LinkedIn URL,Note\r\n";
-            console.log(result.personList);
-            result.personList.forEach(function(rowArray){
-                let row = rowArray.join(",");
-                csvContent += row + "\r\n";
-            });
-            var encodedUri = encodeURI(csvContent);
-            window.open(encodedUri);
-          });
+            csvContent += "Name,Profile Link,Email,Note\r\n";
+            for (let rowArray of result.personList) {
+                let name = rowArray[0];
+                let profLink = rowArray[1];
+                let emails = rowArray[2];
+                let note = rowArray[3];
+                csvContent += `${name}, ${profLink}, "${emails}", "${note}"\r\n`;
+            }
+            console.log(csvContent);
+            // var encodedUri = encodeURI(csvContent);
+            // var link = document.createElement('a');
+            // link.setAttribute('href', encodedUri);
+            // link.setAttribute('download', 'personList.csv');
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
+        });
     });
 }
 

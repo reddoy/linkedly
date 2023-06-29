@@ -160,6 +160,7 @@ border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
     transition: 0.5s;
     margin: 5px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 a{
