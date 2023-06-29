@@ -3,12 +3,12 @@
 window.onload = async function() {
 
   const userid = await chrome.storage.local.get('user');
-    document.getElementById('homeBtn').onclick = function() {
-        window.location.href = '../pageMainPopup/popup.html';
-    };
-    console.log(userid);
+  insertCurUserInfo(userid.user);
+  document.getElementById('homeBtn').onclick = function() {
+      window.location.href = '../pageMainPopup/popup.html';
+  };
     document.getElementById('userId').value = userid.user;
-    insertCurUserInfo();
+    
 
     const form = document.getElementById('userForm');
     form.addEventListener('submit', function (event) {
@@ -31,16 +31,16 @@ document.getElementById('logout').addEventListener('click', async function() {
 });
 };
 
-async function insertCurUserInfo(){
-    chrome.storage.local.get('formData', function(data) {
-      console.log(data);
-        const userInfo = data.formData;
-        document.getElementById('fName').value = userInfo.firstName;
-        document.getElementById('lName').value = userInfo.lastName;
-        document.getElementById('school').value = userInfo.school;
-        document.getElementById('occup').value = userInfo.occupation;
-        document.getElementById('purp').value = userInfo.purpose;
-        document.getElementById('goal').value = userInfo.goal;
-    });
+async function insertCurUserInfo(userid){
+  console.log(userid);
+  let userinfo = await fetch('http://127.0.0.1:3000/get/userinfo/'+ userid);
+  let userJson = await userinfo.json();
+  console.log(userJson);
+  document.getElementById('fName').value = userJson.firstname;
+  document.getElementById('lName').value = userJson.lastname;
+  document.getElementById('school').value = userJson.edu;
+  document.getElementById('occup').value = userJson.occup;
+  document.getElementById('purp').value = userJson.purpose;
+  document.getElementById('goal').value = userJson.goal;
 }
 

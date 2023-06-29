@@ -103,7 +103,6 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
       user.save();
       let popupFills = await emailAndMessageMain(user, targetData);
       let message = popupFills[0];
-      // let emailOptions = popupFills[1];
       res.json([userStatus, message, popupFills[1]]);
     }
     else{
@@ -111,12 +110,51 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
     }
 });
 
+app.post('/regen/message/', bodyParser.json(), async (req, res) => {
+  let targetData = req.body;
+  console.log(targetData);
+  const user = await User.findOne({ userid: targetData.curUserId });
+  let userStatus = checkPaidUserTriesMain(user);
+  if (user.tries == 0) {
+    res.json(['limit reached', userStatus ]);
+  }
+  else if(user.tries > 0){
+    user.tries = user.tries - 1;
+    user.save();
+    userStatus = checkPaidUserTriesMain(user);
+    let popupFills = await emailAndMessageMain(user, targetData);
+    let message = popupFills[0];
+    res.json([userStatus, message]);
+  }
+  else{
+    res.send('error');
+  }
+});
+
 app.get('/get/userstat/:id', async (req, res) => {
   console.log('this is the id passed in from getuserstat: ' + req.params.id);
-  const user = await User.findOne({ userid: req.params.id });
-  console.log(user);
-  const userStatus = checkPaidUserTriesMain(user);
-  res.send(userStatus);
+  if(req.params.id == 'undefined'){
+    res.send('error');
+  }else{
+    const user = await User.findOne({ userid: req.params.id });
+    console.log(user);
+    const userStatus = checkPaidUserTriesMain(user);
+    res.send(userStatus);
+  }
+});
+
+app.get('/get/userinfo/:id', async (req, res) => {
+  let userid = req.params.id;
+  const user = await User.findOne({ userid: userid });
+  let userObj = {
+    firstname: user.firstname,
+    lastname: user.lastname,
+    edu: user.edu,
+    occup: user.occup,
+    purpose: user.purpose,
+    goal: user.goal,
+  }
+  res.send(userObj);
 });
 
 function checkPaidUserTriesMain(user){
@@ -163,10 +201,23 @@ async function emailAndMessageMain(user, data){
   let targetAbout = data.curAbout;
   let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
+  let targetName = data.curName;
   let generatedEmails = await getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, '+'), curCompany);
   console.log(generatedEmails[0]);
   console.log('these are generated emails: ' + generatedEmails);
   return [message.trim(), generatedEmails]; 
+}
+
+async function regenMessage(user, data){
+  let userEdu = user.edu.toLowerCase();
+  let userPurp = user.purpose;
+  let userGoal = user.goal;
+  let targetFirstName = data.curName.split(" ")[0];
+  let targetSchools = data.schools;
+  let targetHeadline = data.curHeadline;
+  let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
+  let message = await runCompletion(prompt);
+  return [message.trim()]; 
 }
 
 async function getEmails(name,companyName){
@@ -187,8 +238,14 @@ async function getEmails(name,companyName){
     const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
     const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
     const response = await fetch(url);
-    domain = await response.json();
+    let hunterRes = await response.json();
+    domain = hunterRes.data.domain;
     console.log('domain does not exist in MongoDB: '+ domain);
+    const newDomain = new EmailDomain({
+      company_name: companyName.toLowerCase(),
+      domain: domain
+    });
+    newDomain.save();
   }
 
   let jsonNames = [
