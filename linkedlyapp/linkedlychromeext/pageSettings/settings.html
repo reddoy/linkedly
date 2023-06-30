@@ -26,6 +26,14 @@
       <input type="hidden" id="userId" name="userId" value="">
       <div class="personInputs">
         <div class="question">
+          <label for="fName">First Name *</label>
+          <input type="text" id="fName" name="firstName" required>
+        </div>
+        <div class="question">
+          <label for="lName">Last Name *</label>
+          <input type="text" id="lName" name="lastName" required>
+        </div>
+        <div class="question">
           <label for="school">School</label>
           <input type="text" id="school" name="school" required>
         </div>
@@ -36,10 +44,12 @@
         <div class="question">
           <label for="purpose">Purpose *</label>
           <p>
-            What is your purpose for reaching out? <br>
-            i.e. (exploring careers at Wells Fargo,
-            learning about the industry,
-            interested in switching to SWE, etc.)
+            What is your purpose for reaching out?
+          </p>
+          <p class="info-tag">
+          i.e. (exploring careers at Wells Fargo,
+          learning about the industry,
+          interested in switching to SWE, etc.)
           </p>
           <input type="text" id="purp" required name="purpose">
         </div>
@@ -47,9 +57,9 @@
           <label for="goal">Current Goal? *</label>
           <p>
             What is your reach out Goal?
-            <br>
+          </p>
+          <p class="info-tag">
             (i.e., schedule a quick chat, find a mentor, look at resume, etc.)
-            <br>
           </p>
           <input type="text" id="goal" name="goal" required>
         </div>

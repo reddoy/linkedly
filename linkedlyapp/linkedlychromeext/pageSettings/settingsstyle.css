@@ -51,7 +51,8 @@ align-items: center;
 }
 
 .logo h1{
-border-right: #ffffff solid 1px;
+font-size: 25px;
+padding-left: 5px;
 padding-right: 5px;
 }
 
@@ -105,6 +106,10 @@ form{
     margin: 2px;
 }
 
+.info-tag{
+    font-size: 12px;
+}
+
 .goal-section{
     display: flex;
     justify-content: center;
@@ -129,7 +134,7 @@ form{
 .buttons button, .buttons a{
     border-radius: 12px;
     font-weight: bold;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
+    background-color: #126C9E;
     border: none;
     color: #ffffff;
     text-align: center;
@@ -140,10 +145,11 @@ form{
     transition: 0.5s;
     margin: 5px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #payment-info:hover, #logout:hover, #submit:hover{
     background-color: #ffffff;
-    color: #000000;
+    color: #126C9E;
     transition: 0.5s;
 }

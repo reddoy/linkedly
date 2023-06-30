@@ -1,33 +1,11 @@
-console.log("Background script loaded and ready");
-
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.message === 'logout') {
-    console.log('logging out');
     runLogout();
   } else if (request.message === 'login') {
-    console.log('logging in');
     runLogin();
   } else if (request.message === 'checkLogin'){
-    console.log('checking login');
     checkLogin();
-  }
-  else if ( request.message === 'tester'){
-    chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
-      if (chrome.runtime.lastError) {
-        console.log(chrome.runtime.lastError);
-        return; // Not signed in
-      }
-    
-      if (token) {
-        // User is signed in.
-        console.log("User is signed in");
-        console.log(token);
-      } else {
-        // User is not signed in.
-        console.log("User is not signed in");
-      }
-    });
   }
 });
 
@@ -42,16 +20,12 @@ async function checkLogin() {
         }
       });
     });
-    console.log('User is already logged in');
-    console.log(token);
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const checkData = await response.json();
     let userid = checkData.id;
-    console.log('this is the user id:' + userid);
-    chrome.storage.local.set({user: userid});
+    await chrome.storage.local.set({user: userid});
     const userResponse = await fetch('http://127.0.0.1:3000/check/user/' + userid);
     const userData = await userResponse.text();
-    console.log('was a user found? ' + userData);
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
     } else {
@@ -74,14 +48,9 @@ async function runLogin() {
         }
       });
     });
-    console.log('Token acquired:', token);
-    console.log( 'this is the token id: ' + token.id);
-    
-    
     await chrome.storage.local.set({token: token}); // Store the token in chrome.storage
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const data = await response.json();
-    console.log(data);
     let userid = data.id;
     await chrome.storage.local.set({user: userid}); // Store the token in chrome.storage
     let userResponse = await fetch('http://127.0.0.1:3000/check/user/' + userid);
@@ -108,34 +77,21 @@ async function runLogout() {
       });
     });
 
-    console.log('Token acquired:', token);
-
     if (!await isTokenValid(token)) {
       throw new Error('Token is not valid');
     }
-
-    // Revoke the token
     const response = await fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token);
-    console.log('this is response from google revoke: ' + response);
-
-    // Remove the token from the cache
     await new Promise((resolve, reject) => {
       chrome.identity.removeCachedAuthToken({token: token}, function() {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
           resolve();
-          console.log('token removed from cache');
         }
       });
     });
-
     await chrome.storage.local.remove('token');
     await chrome.storage.local.remove('user');
-
-    console.log('Token revoked:', token);
-    console.log('Token removed from local storage.');
-
     chrome.runtime.sendMessage({message: 'loggedOut'});
   } catch (error) {
     console.error('Error:', error);
@@ -145,24 +101,15 @@ async function runLogout() {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action == "openLink") {
-    console.log('opening link');
-    console.log(request.url);
-      chrome.tabs.create({url: request.url});
+    chrome.tabs.create({url: request.url});
   }
 });
 
 async function isTokenValid(token) {
-  console.log('token in isTokenValid: ' + token);
   const response = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
   const data = await response.json();
-
-  // If the token is invalid, Google's API will return an error message in the response.
   if (data.error) {
-    console.error('Token validation error:', data.error);
     return false;
   }
-
-  // If the token is valid, the response will include information about the token, such as its expiry time and the user it belongs to.
-  console.log('Token is valid. Token info:', data);
   return true;
 }

@@ -13,8 +13,7 @@ const hostname = '127.0.0.1';
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-mongoose.connect("mongodb+srv://doadmin:78q1Aj0px6352kcm@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin", {
+mongoose.connect(process.env.MONG, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -94,41 +93,53 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
     let targetData = req.body;
     console.log(targetData);
     const user = await User.findOne({ userid: targetData.curUserId });
-    const userStatus = checkPaidUserTriesMain(user);
-    if (user.tries == 0) {
-      res.json(['limit reached', userStatus ]);
-    }
-    else if(user.tries > 0){
-      user.tries = user.tries - 1;
-      user.save();
-      let popupFills = await emailAndMessageMain(user, targetData);
-      let message = popupFills[0];
-      res.json([userStatus, message, popupFills[1]]);
-    }
-    else{
+    if(!user){
+      console.log('error');
       res.send('error');
+    }else{
+      const userStatus = checkPaidUserTriesMain(user);
+      if (user.tries == 0) {
+        res.json(['limit reached', userStatus ]);
+      }
+      else if(user.tries > 0){
+        user.tries = user.tries - 1;
+        user.save();
+        let popupFills = await emailAndMessageMain(user, targetData);
+        let message = popupFills[0];
+        res.json([userStatus, message, popupFills[1]]);
+      }
+      else{
+        res.send('error');
+      }
     }
+
 });
 
 app.post('/regen/message/', bodyParser.json(), async (req, res) => {
   let targetData = req.body;
   console.log(targetData);
   const user = await User.findOne({ userid: targetData.curUserId });
-  let userStatus = checkPaidUserTriesMain(user);
-  if (user.tries == 0) {
-    res.json(['limit reached', userStatus ]);
-  }
-  else if(user.tries > 0){
-    user.tries = user.tries - 1;
-    user.save();
-    userStatus = checkPaidUserTriesMain(user);
-    let popupFills = await emailAndMessageMain(user, targetData);
-    let message = popupFills[0];
-    res.json([userStatus, message]);
-  }
-  else{
+  if(!user){
     res.send('error');
+  }else{
+    let userStatus = checkPaidUserTriesMain(user);
+    if (user.tries == 0) {
+      res.json(['limit reached', userStatus ]);
+    }
+    else if(user.tries > 0){
+      user.tries = user.tries - 1;
+      user.save();
+      userStatus = checkPaidUserTriesMain(user);
+      let popupFills = await emailAndMessageMain(user, targetData);
+      let message = popupFills[0];
+      res.json([userStatus, message]);
+    }
+    else{
+      res.send('error');
+    }
   }
+
+
 });
 
 app.get('/get/userstat/:id', async (req, res) => {
@@ -189,20 +200,18 @@ function checkPaidUserTriesMain(user){
 }
 
 async function emailAndMessageMain(user, data){
-  let userFirstName = user.firstname;
   let userEdu = user.edu.toLowerCase();
   let userPurp = user.purpose;
   let userGoal = user.goal;
   let targetFirstName = data.curName.split(" ")[0];
   let targetSchools = data.schools;
   let targetWork = data.workExperience;
-  let curCompany = targetWork[0][1].split(' · ')[0];
+  let curCompany = targetWork[0];
   let targetHeadline = data.curHeadline;
-  let targetAbout = data.curAbout;
   let prompt = promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, userPurp, userGoal);
   let message = await runCompletion(prompt);
-  let targetName = data.curName;
-  let generatedEmails = await getEmails(data.curName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, '+'), curCompany);
+  let targetName = data.curName.replace(/['.]/g, "");
+  let generatedEmails = await getEmails(targetName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, '+'), curCompany);
   console.log(generatedEmails[0]);
   console.log('these are generated emails: ' + generatedEmails);
   return [message.trim(), generatedEmails]; 
@@ -229,7 +238,6 @@ async function getEmails(name,companyName){
   let firstLetter = first[0];
 
   let doesDomainExist = await EmailDomain.findOne({ company_name: companyName });
-  console.log(doesDomainExist);
   let domain;
   if (doesDomainExist) {
     domain = doesDomainExist.domain;
@@ -241,11 +249,16 @@ async function getEmails(name,companyName){
     let hunterRes = await response.json();
     domain = hunterRes.data.domain;
     console.log('domain does not exist in MongoDB: '+ domain);
-    const newDomain = new EmailDomain({
-      company_name: companyName.toLowerCase(),
-      domain: domain
-    });
-    newDomain.save();
+    if(!domain){
+      domain = ['Could not find domain for this company.']
+      return domain;
+    }else{
+      const newDomain = new EmailDomain({
+        company_name: companyName.toLowerCase(),
+        domain: domain
+      });
+      newDomain.save();
+    }
   }
 
   let jsonNames = [
@@ -284,7 +297,8 @@ function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, 
     Information about Target: ${targetHeadline}
     
     My purpose: ${userPurp}
-    My goal: ${userGoal}`;
+    My goal: ${userGoal}
+    Do not use any commas.`;
   }
   else{
     prompt = `write me a reach out message for Linkedin with a 300 character limit use the full amount. Follow this structure:
@@ -296,7 +310,8 @@ function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, 
     Information about Target: ${targetHeadline}
     
     My purpose: ${userPurp}
-    My goal: ${userGoal}`;
+    My goal: ${userGoal}
+    Do not use any commas.`;
   }
    return prompt;
 }

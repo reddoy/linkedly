@@ -11,23 +11,19 @@ window.onload = function () {
 
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         if (request.message === 'notLoggedIn') {
-            document.body.classList.add('fadeOut');
-            console.log('redirecting to login page');
             setTimeout(function() {
                 window.location.href= "../pageLogin/home.html";
-            }, 1000); // Wait for 1 second for the animation to complete
+            }, 1000);
         } else if (request.message === 'loggedIn') {
-            document.body.classList.add('fadeOut');
             console.log('redirecting to main popup');
             setTimeout(function() {
                 window.location.href= "../pageMainPopup/popup.html";
-            }, 1000); // Wait for 1 second for the animation to complete
+            }, 1000);
         } else if (request.message === 'newUser') {
-            document.body.classList.add('fadeOut');
             console.log('redirecting to create user page');
             setTimeout(function() {
                 window.location.href= "../pageCreateUser/createUser.html";
-            }, 1000); // Wait for 1 second for the animation to complete
+            }, 1000);
         }
     });
 };

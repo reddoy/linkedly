@@ -5,11 +5,12 @@ body{
   font-weight: bolder;
   font-size: 20px;
   flex-direction: column;
-    background-color: black;
-    width:600px;
-    height: 550px;
-    color: #fff;
+  background-color: black;
+  width:600px;
+  height: 515px;
+  color: #fff;
 }
+
 
 @keyframes fadeOut {
   from {
