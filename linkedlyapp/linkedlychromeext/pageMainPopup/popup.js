@@ -1,14 +1,20 @@
-window.onload = function () {
-  const tl = document.getElementById("tL");
-  // const connectDiv = document.getElementById("info-section");
-  // const addButton = document.getElementById("addToListBtn");
-  // const originalText = addButton.innerText;
-  function getStatOnload() {
 
-      chrome.storage.local.get("user", async function (result) {
-          let userid = result.user;
-          console.log(userid);
-          console.log("hey");
+window.onload = async function () {
+  const tl = document.getElementById("tL");
+  const connectDiv = document.getElementById("info-section");
+  const addButton = document.getElementById("addToListBtn");
+  const originalText = addButton.innerText;
+  let emailOpsArr = [];
+  const userid = await isUserLoggedIn();
+  const curTab = await grabTab();
+  const targetContent = await grabUserDataFromContent(curTab);
+
+  getStatOnload(userid, tl);
+  handleConnectBtnClick(userid, curTab, targetContent, connectDiv, tl);
+
+  document.querySelector("html").classList.add("fade-in");
+
+  async function getStatOnload(userid, tl) {
           let stat = await fetch(
               "http://127.0.0.1:3000/get/userstat/" + userid
           );
@@ -25,90 +31,76 @@ window.onload = function () {
                   });
               });
           }
-      });
   }
 
-  getStatOnload();
+  function handleConnectBtnClick(userid, curTab, targetContent, connectDiv, tL) {
+    document.getElementById("genConnectBtn").addEventListener("click", async function () {
+        try {
+            connectDiv.innerHTML =
+                '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
+            const reachData = await getMessage(targetContent);
 
-  document.querySelector("html").classList.add("fade-in");
+            if (reachData[0] != "limit reached") {
+                connectDiv.innerHTML = `
+                    <div class="question">
+                      <label for="linkUrl">Linkedin URL</label>
+                      <input type="text" name="linkUrl" id="linkUrl">
+                    </div>
+                    <div class="question">
+                      <label for="email">Email</label>
+                      <div class="emailInput">
+                        <input type="text" id="email" name="email" value="Use Arrows to look at Emails" disabled>
+                        <div class="arrows">
+                          <button class="up-arrow">&#9650;</button>
+                          <button class="down-arrow">&#9660;</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="question">
+                      <label for="note">Note</label>
+                      <p>Copy and Paste into the Connection Note:</p>
+                      <div id="note-container">
+                        <textarea name="note" id="note" cols="60" rows="5"></textarea>
+                        <div class="buttons">
+                          <button id="regenBtn">Regenerate</button>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                document.getElementById("linkUrl").value = curTab.url.replace(/^(https?:\/\/)?/, "");
+                document.getElementById("note").value = reachData[1].replace(/\n/g, "");
+                tL.value = reachData[0];
+                katiePretty(reachData[2]);
+                addRegen();
+                if (reachData[0].includes("trial")) {
+                    let link = document.getElementById("payment-link");
+                    link.addEventListener("click", function () {
+                        console.log("clicked payment link");
+                        chrome.runtime.sendMessage({
+                            action: "openLink",
+                            url: this.getAttribute("href"),
+                        });
+                    });
+                }
+            }
+            else {
+                connectDiv.innerHTML =
+                    '<div class="buttons"><button id="genConnectBtn">Generate <img src="../images/chainlogonobg.png" alt="linkedlylogo"></button></div>';
 
-  document
-      .getElementById("genConnectBtn")
-      .addEventListener("click", async function () {
-          try {
-              const curTab = await grabTab();
-              const response = await grabUserDataFromContent(curTab);
-              console.log(response);
-              const connectDiv = document.getElementById("info-section");
-              connectDiv.innerHTML =
-                  '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
+                tL.innerHTML = reachData[1];
+                tL.classList.add("flash");
+                setTimeout(() => {
+                    tL.classList.remove("flash");
+                }, 1000);
+            }
+        }
+        catch (error) {
+            console.error(error);
+            // Handle the error here
+        }
+    });
+  }
 
-              const reachData = await getMessage(response);
-              console.log(reachData);
-
-              if (reachData[0] != "limit reached") {
-                  connectDiv.innerHTML = `
-            <div class="question">
-              <label for="linkUrl">Linkedin URL</label>
-              <input type="text" name="linkUrl" id="linkUrl">
-            </div>
-            <div class="question">
-              <label for="email">Email</label>
-              <div class="emailInput">
-                <input type="text" id="email" name="email" value="Use Arrows to look at Emails" disabled>
-                <div class="arrows">
-                  <button class="up-arrow">&#9650;</button>
-                  <button class="down-arrow">&#9660;</button>
-                </div>
-              </div>
-            </div>
-            <div class="question">
-              <label for="note">Note</label>
-              <p>Copy and Paste into the Connection Note:</p>
-              <div id="note-container">
-                <textarea name="note" id="note" cols="60" rows="5"></textarea>
-                <div class="buttons">
-                  <button id="regenBtn">Regenerate</button>
-                </div>
-              </div>
-            </div>
-          `;
-                  document.getElementById(
-                      "linkUrl"
-                  ).value = curTab.url.replace(/^(https?:\/\/)?/, "");
-                  document.getElementById(
-                      "note"
-                  ).value = reachData[1].replace(/\n/g, "");
-                  document.getElementById("tL").value = reachData[0];
-                  katiePretty(reachData[2]);
-                  addRegen();
-                  if (reachData[0].includes("trial")) {
-                      let link = document.getElementById("payment-link");
-                      link.addEventListener("click", function () {
-                          console.log("clicked payment link");
-                          chrome.runtime.sendMessage({
-                              action: "openLink",
-                              url: this.getAttribute("href"),
-                          });
-                      });
-                  }
-              }
-              else {
-                  connectDiv.innerHTML =
-                      '<div class="buttons"><button id="genConnectBtn">Generate <img src="../images/chainlogonobg.png" alt="linkedlylogo"></button></div>';
-                  const tL = document.getElementById("tL");
-                  tL.innerHTML = reachData[1];
-                  tL.classList.add("flash");
-                  setTimeout(() => {
-                      tL.classList.remove("flash");
-                  }, 1000);
-              }
-          }
-          catch (error) {
-              console.error(error);
-              // Handle the error here
-          }
-      });
 
   async function grabTab() {
       const tabs = await chrome.tabs.query({
@@ -199,7 +191,7 @@ window.onload = function () {
       });
   }
 
-  let emailOpsArr = [];
+
 
   function katiePretty(emailOptions) {
       emailOpsArr = emailOptions;
