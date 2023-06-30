@@ -1,41 +1,66 @@
 window.onload = function(){
     displayCurList();
 
-    document.getElementById('clearListBtn').addEventListener('click', function(){
-        chrome.storage.local.clear(function() {
-            console.log("personList cleared");
-            // write code that changes the text of clearListBtn to say "List Cleared"
-            // for 1 second then changes back to "Clear List"
-            let clearListBtn = document.getElementById('clearListBtn');
-            clearListBtn.innerHTML = "List Cleared";
-            displayCurList();
-            setTimeout(function(){
-                clearListBtn.innerHTML = "Clear List";
-            }, 1000);
+    let clearListBtn = document.getElementById('clearListBtn');
+    let downloadListBtn = document.getElementById('downloadListBtn');
+    
+    clearListBtn.addEventListener('click', function(){
+        let confirmationMsg = document.createElement('div');
+        confirmationMsg.innerHTML = "Are you sure you want to clear the list?";
+        let yesBtn = document.createElement('button');
+        yesBtn.innerHTML = "Yes";
+        let noBtn = document.createElement('button');
+        noBtn.innerHTML = "No";
+        confirmationMsg.appendChild(yesBtn);
+        confirmationMsg.appendChild(noBtn);
+        clearListBtn.replaceWith(confirmationMsg);
+        downloadListBtn.style.display = "none";
+    
+        yesBtn.addEventListener('click', function() {
+            chrome.storage.local.clear(function() {
+                console.log("personList cleared");
+                confirmationMsg.innerHTML = "";
+                displayCurList();
+                setTimeout(function(){
+                    confirmationMsg.replaceWith(clearListBtn);
+                    clearListBtn.innerHTML = "Clear List";
+                    downloadListBtn.style.display = "inline-block";
+                }, 1000);
+            });
+        });
+    
+        noBtn.addEventListener('click', function() {
+            confirmationMsg.replaceWith(clearListBtn);
+            downloadListBtn.style.display = "inline-block";
         });
     });
 
     document.getElementById('downloadListBtn').addEventListener('click', function(){
         chrome.storage.local.get(["personList"], function(result) {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Name,Profile Link,Email,Note\r\n";
-            for (let rowArray of result.personList) {
-                let name = rowArray[0];
-                let profLink = rowArray[1];
-                let emails = rowArray[2];
-                let note = rowArray[3];
-                csvContent += `${name}, ${profLink}, "${emails}", "${note}"\r\n`;
+            if(result.personList){
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Name,Profile Link,Email,Note\r\n";
+                for (let rowArray of result.personList) {
+                    let name = rowArray[0];
+                    let profLink = rowArray[1];
+                    let emails = rowArray[2].replace(/,/g, ';');
+                    let note = rowArray[3].replace(/,/g, ';').replace(/"/g, '""');
+                    csvContent += `${name}, ${profLink}, ${emails}, "${note}"\r\n`;
+                }
+                console.log(csvContent);
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', 'Linkedly.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-            console.log(csvContent);
-            // var encodedUri = encodeURI(csvContent);
-            // var link = document.createElement('a');
-            // link.setAttribute('href', encodedUri);
-            // link.setAttribute('download', 'personList.csv');
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
         });
     });
+    
+    
+    
 }
 
 // create a function that gets the current personList from chrome storage

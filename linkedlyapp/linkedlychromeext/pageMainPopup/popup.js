@@ -2,8 +2,6 @@
 window.onload = async function () {
   const tl = document.getElementById("tL");
   const connectDiv = document.getElementById("info-section");
-  const addButton = document.getElementById("addToListBtn");
-  const originalText = addButton.innerText;
   let emailOpsArr = [];
   const userid = await isUserLoggedIn();
   const curTab = await grabTab();
@@ -19,12 +17,10 @@ window.onload = async function () {
               "http://127.0.0.1:3000/get/userstat/" + userid
           );
           let statTag = await stat.text();
-          console.log(statTag);
           tl.innerHTML = statTag;
           if (statTag.includes("trial")) {
               let link = document.getElementById("payment-link");
               link.addEventListener("click", function () {
-                  console.log("clicked payment link");
                   chrome.runtime.sendMessage({
                       action: "openLink",
                       url: this.getAttribute("href"),
@@ -68,14 +64,15 @@ window.onload = async function () {
                     </div>
                   `;
                 document.getElementById("linkUrl").value = curTab.url.replace(/^(https?:\/\/)?/, "");
+                reachData[1] = reachData[1].replace(/"/g, "");
                 document.getElementById("note").value = reachData[1].replace(/\n/g, "");
+                document.getElementById("fullname").innerText = targetContent.curName.trim();
                 tL.value = reachData[0];
                 katiePretty(reachData[2]);
                 addRegen();
                 if (reachData[0].includes("trial")) {
                     let link = document.getElementById("payment-link");
                     link.addEventListener("click", function () {
-                        console.log("clicked payment link");
                         chrome.runtime.sendMessage({
                             action: "openLink",
                             url: this.getAttribute("href"),
@@ -125,7 +122,6 @@ window.onload = async function () {
 
   async function getMessage(response) {
       const userid = await isUserLoggedIn();
-      console.log(userid);
       const reachJson = {
           curUserId: userid,
           curName: response.curName,
@@ -171,17 +167,13 @@ window.onload = async function () {
               }
           );
           const regenData = await regenResponse.json();
-          noteContainer.innerHTML =
-              '<textarea name="note" id="note" cols="60" rows="5"></textarea><div class="buttons"><button id="regenBtn">Regenerate</button></div>';
-          document.getElementById("note").value = regenData[1]
-              .replace(/^"(.*)"$/, "$1")
-              .replace(/\n/g, "");
+          noteContainer.innerHTML ='<textarea name="note" id="note" cols="60" rows="5"></textarea><div class="buttons"><button id="regenBtn">Regenerate</button></div>';       
+          document.getElementById("note").value = regenData[1].replace(/^"(.*)"$/, "$1").replace(/\n/g, "");
           document.getElementById("tL").value = regenData[0];
           addRegen();
           if (reachData[0].includes("trial")) {
               let link = document.getElementById("payment-link");
               link.addEventListener("click", function () {
-                  console.log("clicked payment link");
                   chrome.runtime.sendMessage({
                       action: "openLink",
                       url: this.getAttribute("href"),
@@ -219,44 +211,39 @@ window.onload = async function () {
       });
   }
 
-  document
-      .getElementById("addToListBtn")
-      .addEventListener("click", function () {
-          const addButton = document.getElementById("addToListBtn");
-          const originalText = addButton.innerText;
+  document.getElementById("addToListBtn").addEventListener("click", function () {
+    let linkedUrl = document.getElementById("linkUrl");
+    if(linkedUrl){
+        const addButton = document.getElementById("addToListBtn");
+        const originalText = addButton.innerText;
 
-          const fullname = document.getElementById("fullname").innerText;
-          const linkedUrl = document.getElementById("linkUrl").value;
-          let emailString = emailOpsArr.join(",");
-          let note = document.getElementById("note").value;
+        const fullname = document.getElementById("fullname").innerText;
+        linkedUrl = linkedUrl.value;
+        let emailString = emailOpsArr.join(",");
+        let note = document.getElementById("note").value;
 
-          chrome.storage.local.get(["personList"], function (result) {
-              console.log(result.personList);
-              if (result.personList) {
-                  personArr = result.personList;
-              }
-              else {
-                  personArr = [];
-              }
-              personArr.push([fullname, linkedUrl, emailString, note]);
-              saveListToStorage(personArr);
-
-              // Change button text to "Added to List"
-              addButton.innerText = "Added to List";
-
-              // Reset button text after 1 second
-              setTimeout(function () {
-                  addButton.innerText = originalText;
-              }, 1000);
-          });
-      });
+        chrome.storage.local.get(["personList"], function (result) {
+            if (result.personList) {
+                personArr = result.personList;
+            }
+            else {
+                personArr = [];
+            }
+            personArr.push([fullname, linkedUrl, emailString, note]);
+            saveListToStorage(personArr);
+            addButton.innerText = "Added to List";
+            setTimeout(function () {
+                addButton.innerText = originalText;
+            }, 1000);
+        });
+    }
+});
 
   function saveListToStorage(list) {
       chrome.storage.local.set({
               personList: list,
           },
           function () {
-              console.log("Value stored");
               let addListBtn = document.getElementById("addToListBtn");
               addListBtn.value = "Added!";
               setTimeout(function () {
@@ -272,23 +259,15 @@ window.onload = async function () {
               interactive: false,
           });
           if (!token) {
-              // User is not signed in.
-              console.log("User is not signed in");
               window.location.href = "home.html";
               return null;
           }
-
-          // User is signed in.
-          console.log("User is signed in");
-          console.log(token);
           const response = await fetch(
               "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" +
               token.token
           );
           const data = await response.json();
-          console.log(data);
           const userId = data.id;
-          console.log(userId);
           return userId;
       }
       catch (error) {

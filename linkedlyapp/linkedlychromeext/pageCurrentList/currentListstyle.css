@@ -3,7 +3,8 @@ body{
     background-color: black;
     color: white;
     border-radius: 15px;
-    width: 650px;
+    width: 770px;
+    animation: fadeIn 1s ease-in-out forwards;
 }
 
 .logo{
@@ -13,8 +14,23 @@ body{
     align-items: center;
 }
 
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
 #linkedlylogo{
     margin: 5px;
+}
+
+.logo h1{
+    font-size: 25px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #homeBtn{
@@ -82,11 +98,12 @@ body{
     flex-direction: column;
     width: 25%; /* Adjust as needed */
     border: 2px solid transparent;
-border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
+    border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
     padding: 5px;
     margin-right: -1px;
     margin-bottom: -1px;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .confirm, .cancel{
@@ -166,4 +183,10 @@ border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
 a{
     text-decoration: none;
     color: white;
+}
+
+#clearListBtn:hover, #downloadListBtn:hover{
+    background-color: #ffffff;
+    color: #126C9E;
+    transition: 0.5s;
 }

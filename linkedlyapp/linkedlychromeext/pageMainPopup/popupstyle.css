@@ -151,7 +151,8 @@ input, textarea {
 #tL{
   color: #ffffff;
   text-align: center;
-  font-size: 15px;
+  font-size: 13px;
+  margin-bottom: 5px;
 }
 
 #tL a{
@@ -211,7 +212,9 @@ input, textarea {
 #addToListBtn:hover, #showCurListBtn:hover,
 #downloadPpl:hover, #clearListBtn:hover,
 #genConnectBtn:hover, #regenBtn:hover {
-  border: #80D0C7 solid 2px;
+  background-color: #ffffff;
+  color: #126C9E;
+  transition: 0.5s;
   cursor: pointer;
 }
 
