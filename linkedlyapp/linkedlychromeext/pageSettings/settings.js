@@ -37,6 +37,7 @@ window.onload = async function() {
 
 async function insertCurUserInfo(){
   let userid = await chrome.storage.local.get('user');
+  console.log(userid.user);
   let userinfo = await fetch('http://127.0.0.1:3000/get/userinfo/'+ userid.user);
   let userJson = await userinfo.json();
   document.getElementById('fName').value = userJson.firstname;

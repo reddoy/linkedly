@@ -17,7 +17,7 @@ window.onload = function(){
         downloadListBtn.style.display = "none";
     
         yesBtn.addEventListener('click', function() {
-            chrome.storage.local.clear(function() {
+            chrome.storage.local.remove('personList',function() {
                 console.log("personList cleared");
                 confirmationMsg.innerHTML = "";
                 displayCurList();

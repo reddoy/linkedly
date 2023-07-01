@@ -23,6 +23,7 @@ async function checkLogin() {
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const checkData = await response.json();
     let userid = checkData.id;
+    console.log('got a user'+ userid);
     await chrome.storage.local.set({user: userid});
     const userResponse = await fetch('http://127.0.0.1:3000/check/user/' + userid);
     const userData = await userResponse.text();
