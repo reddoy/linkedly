@@ -13,7 +13,7 @@ const hostname = '127.0.0.1';
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-mongoose.connect(process.env.MONG, {
+mongoose.connect('mongodb+srv://doadmin:4951nu8ah32QV0Pj@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin&replicaSet=db-mongodb-nyc1-51418', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -247,12 +247,11 @@ async function getEmails(name,companyName){
     const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
     const response = await fetch(url);
     let hunterRes = await response.json();
-    domain = hunterRes.data.domain;
-    console.log('domain does not exist in MongoDB: '+ domain);
-    if(!domain){
+    if(!hunterRes.data){
       domain = ['Could not find domain for this company.']
       return domain;
     }else{
+      domain = hunterRes.data.domain;
       const newDomain = new EmailDomain({
         company_name: companyName.toLowerCase(),
         domain: domain
@@ -298,7 +297,7 @@ function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, 
     
     My purpose: ${userPurp}
     My goal: ${userGoal}
-    Do not use any commas.`;
+    Do not use any commas or hashtags.`;
   }
   else{
     prompt = `write me a reach out message for Linkedin with a 300 character limit use the full amount. Follow this structure:
@@ -311,7 +310,7 @@ function promptCreator(targetSchools, targetHeadline, targetFirstName, userEdu, 
     
     My purpose: ${userPurp}
     My goal: ${userGoal}
-    Do not use any commas.`;
+    Do not use any commas or hashtags.`;
   }
    return prompt;
 }
