@@ -2,6 +2,7 @@
 window.onload = async function () {
   const tl = document.getElementById("tL");
   const connectDiv = document.getElementById("info-section");
+  let connectDivHTML = connectDiv.innerHTML;
   let emailOpsArr = [];
   const userid = await isUserLoggedIn();
   const curTab = await grabTab();
@@ -32,6 +33,16 @@ window.onload = async function () {
   function handleConnectBtnClick(userid, curTab, targetContent, connectDiv, tL) {
     document.getElementById("genConnectBtn").addEventListener("click", async function () {
         try {
+            curStat = document.getElementById("tL").innerHTML;
+            console.log(curStat);
+            if (curStat.includes(" 0/")) {
+                tL.classList.add("flash");
+                setTimeout(() => {
+                    tL.classList.remove("flash");
+                }, 1000);
+                handleConnectBtnClick(userid, curTab, targetContent, connectDiv, tL);
+                return;
+            }
             connectDiv.innerHTML =
                 '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
             const reachData = await getMessage(targetContent);
@@ -67,7 +78,8 @@ window.onload = async function () {
                 reachData[1] = reachData[1].replace(/"/g, "");
                 document.getElementById("note").value = reachData[1].replace(/\n/g, "");
                 document.getElementById("fullname").innerText = targetContent.curName.trim();
-                tL.value = reachData[0];
+                console.log(reachData[0]);
+                tL.innerHTML = reachData[0];
                 katiePretty(reachData[2]);
                 addRegen();
                 if (reachData[0].includes("trial")) {
@@ -81,14 +93,12 @@ window.onload = async function () {
                 }
             }
             else {
-                connectDiv.innerHTML =
-                    '<div class="buttons"><button id="genConnectBtn">Generate <img src="../images/chainlogonobg.png" alt="linkedlylogo"></button></div>';
-
                 tL.innerHTML = reachData[1];
                 tL.classList.add("flash");
                 setTimeout(() => {
                     tL.classList.remove("flash");
                 }, 1000);
+                handleConnectBtnClick(userid, curTab, targetContent, connectDiv, tL);
             }
         }
         catch (error) {
@@ -167,9 +177,13 @@ window.onload = async function () {
               }
           );
           const regenData = await regenResponse.json();
+          if(regenData[0] == "limit reached"){
+            connectDiv.innerHTML = connectDivHTML;
+            tL.innerHTML = regenData[1];
+          }
           noteContainer.innerHTML ='<textarea name="note" id="note" cols="60" rows="5"></textarea><div class="buttons"><button id="regenBtn">Regenerate</button></div>';       
           document.getElementById("note").value = regenData[1].replace(/^"(.*)"$/, "$1").replace(/\n/g, "");
-          document.getElementById("tL").value = regenData[0];
+          document.getElementById("tL").innerHTML = regenData[0];
           addRegen();
           if (reachData[0].includes("trial")) {
               let link = document.getElementById("payment-link");

@@ -22,6 +22,12 @@ p{
     text-align: center;
 }
 
+#info-message p{
+    margin: 2px;
+    text-align: center;
+    font-size: 12px;
+}
+
 header{
 display: flex;
 color: #ffffff;
@@ -83,6 +89,10 @@ form{
     margin: 2px;
 }
 
+.info-tag{
+    font-size: 12px;
+}
+
 .goal-section{
     display: flex;
     justify-content: center;
@@ -107,7 +117,7 @@ form{
 #submit{
     border-radius: 12px;
     font-weight: bold;
-    background: linear-gradient(to right, #0093E9, #80D0C7);
+    background-color: #126C9E;
     border: none;
     color: #ffffff;
     text-align: center;
@@ -122,6 +132,7 @@ form{
 
 #submit:hover{
     background-color: #ffffff;
-    color: #000000;
+    color: #126C9E;
     transition: 0.5s;
+    cursor: pointer;
 }
