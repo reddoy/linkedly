@@ -95,21 +95,25 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
     const user = await User.findOne({ userid: targetData.curUserId });
     if(!user){
       console.log('error');
-      res.send('error');
+      res.send('Sorry! There was an error. Please try again later.');
     }else{
-      const userStatus = checkPaidUserTriesMain(user);
+      let userPaid = user.paid;
+      let userTries = user.tries;
+      let userStatus = checkPaidUserTriesMain(userPaid, userTries, user.userid);
       if (user.tries == 0) {
         res.json(['limit reached', userStatus ]);
       }
       else if(user.tries > 0){
-        user.tries = user.tries - 1;
+        userTries = userTries - 1;
+        user.tries = userTries;
         user.save();
+        userStatus = checkPaidUserTriesMain(userPaid, userTries, user.userid);
         let popupFills = await emailAndMessageMain(user, targetData);
         let message = popupFills[0];
         res.json([userStatus, message, popupFills[1]]);
       }
       else{
-        res.send('error');
+        res.send('Sorry! There was an error. Please try again later.');
       }
     }
 
@@ -117,25 +121,27 @@ app.post('/get/message',bodyParser.json(), async (req, res) => {
 
 app.post('/regen/message/', bodyParser.json(), async (req, res) => {
   let targetData = req.body;
-  console.log(targetData);
   const user = await User.findOne({ userid: targetData.curUserId });
   if(!user){
-    res.send('error');
+    res.send('Sorry! There was an error. Please try again later.');
   }else{
-    let userStatus = checkPaidUserTriesMain(user);
+    let userPaid = user.paid;
+    let userTries = user.tries;
+    let userStatus = checkPaidUserTriesMain(userPaid, userTries, user.userid);
     if (user.tries == 0) {
       res.json(['limit reached', userStatus ]);
     }
     else if(user.tries > 0){
-      user.tries = user.tries - 1;
+      userTries = userTries - 1;
+      user.tries = userTries;
       user.save();
-      userStatus = checkPaidUserTriesMain(user);
+      userStatus = checkPaidUserTriesMain(userPaid, userTries, user.userid);
       let popupFills = await emailAndMessageMain(user, targetData);
       let message = popupFills[0];
       res.json([userStatus, message]);
     }
     else{
-      res.send('error');
+      res.send('Sorry! There was an error. Please try again later.');
     }
   }
 
@@ -149,7 +155,7 @@ app.get('/get/userstat/:id', async (req, res) => {
   }else{
     const user = await User.findOne({ userid: req.params.id });
     console.log(user);
-    const userStatus = checkPaidUserTriesMain(user);
+    const userStatus = checkPaidUserTriesMain(user.paid, user.tries, user.userid);
     res.send(userStatus);
   }
 });
@@ -168,11 +174,11 @@ app.get('/get/userinfo/:id', async (req, res) => {
   res.send(userObj);
 });
 
-function checkPaidUserTriesMain(user){
-  let ifPaid = user.paid;
+function checkPaidUserTriesMain(userPaid, userTries, userId){
+  let ifPaid = userPaid;
   console.log('This is ifPaid value:' + ifPaid);
-  let userTriesLeft = user.tries;
-  let url = 'https://buy.stripe.com/test_cN2eYOcmH24DgDe6oo?client_reference_id=' + user.userid;
+  let userTriesLeft = userTries;
+  let url = 'https://buy.stripe.com/test_cN2eYOcmH24DgDe6oo?client_reference_id=' + userId;
   if (ifPaid === 'true') {
 
     if (userTriesLeft > 0) {
@@ -402,7 +408,7 @@ app.post('/edit/user', bodyParser.urlencoded({ extended: true }), async (req, re
 });
 
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: "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",
 
 });
 
