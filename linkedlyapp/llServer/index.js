@@ -6,14 +6,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const Stripe = require('stripe');
 const app = express();
-const port = 3000;
-const hostname = '127.0.0.1';
+const port = 443;
+const hostname = '146.190.121.97';
 
 
 app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+    console.log(`Server running at https://${hostname}:${port}/`);
 });
-mongoose.connect('mongodb+srv://doadmin:4951nu8ah32QV0Pj@db-mongodb-nyc1-51418-f4c19a18.mongo.ondigitalocean.com/admin?tls=true&authSource=admin&replicaSet=db-mongodb-nyc1-51418', {
+mongoose.connect( '', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {
@@ -51,8 +51,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-const stripe = new Stripe('whsec_d3c04e45fffbed0756cf7e39807adba9ede94b7f34f17889d0ac1ac67f0942a5');
-const endpointSecret = 'whsec_d3c04e45fffbed0756cf7e39807adba9ede94b7f34f17889d0ac1ac67f0942a5';
+const stripe = new Stripe('');
+const endpointSecret = '';
 
 app.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
   const sig = request.headers['stripe-signature'];
@@ -249,7 +249,7 @@ async function getEmails(name,companyName){
     domain = doesDomainExist.domain;
     console.log('domain exists in MongoDB: '+ domain);
   }else{
-    const apiKey = process.env.HUNTERIO_API_KEY; // replace with your Hunter API key
+    const apiKey = ''; // replace with your Hunter API key
     const url = `https://api.hunter.io/v2/domain-search?company=${encodeURIComponent(companyName)}&api_key=${apiKey}`;
     const response = await fetch(url);
     let hunterRes = await response.json();
@@ -408,7 +408,7 @@ app.post('/edit/user', bodyParser.urlencoded({ extended: true }), async (req, re
 });
 
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "",
 
 });
 

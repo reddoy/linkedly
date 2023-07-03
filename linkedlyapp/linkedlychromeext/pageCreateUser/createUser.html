@@ -18,16 +18,16 @@
       <p id="info-message">
         <p>Enter in some information about yourself.</p>
         <p>We will use this to curate your personalized messages.</p>
-        <p>* Don't worry, we won't share this with anyone! *</p>
-        <p>You can edit the information at any time in the setting menu.</p>
-        <p>* The more info the better the message! *</p>
+        <p><span>*</span> Don't worry, we won't share this with anyone! <span>*</span></p>
+        <p>You can edit this information at any time in the settings menu.</p>
+        <p><span>*</span> More detailed information equals a better message! <span>*</span></p>
       </p>
     </div>
-    <form action="http://127.0.0.1:3000/create/user" method="POST" id="userForm">
+    <form action="http://146.190.118.126:3000/create/user" method="POST" id="userForm">
       <input type="hidden" id="userId" name="userId" value="">
       <section class="person-inputs">
         <div class="question">
-          <label for="fName">First Name *</label>
+          <label for="fName">First Name <span>*</span></label>
           <input type="text" id="fName" name="firstName" required>
         </div>
         <div class="question">
@@ -39,11 +39,11 @@
           <input type="text" id="school" name="school" required>
         </div>
         <div class="question">
-          <label for="occup-role">Occupation/Role *</label>
+          <label for="occup-role">Occupation/Role <span>*</span></label>
           <input type="text" id="occup" name="occupation" required>
         </div>
         <div class="question">
-          <label for="purpose">Purpose *</label>
+          <label for="purpose">Purpose <span>*</span></label>
           <p>
             What is your purpose for reaching out?
           </p>
@@ -55,7 +55,7 @@
           <input type="text" required name="purpose">
         </div>
         <div class="question">
-          <label for="goal">Current Goal? *</label>
+          <label for="goal">Current Goal? <span>*</span></label>
           <p>
             What is your reach out Goal?
           </p>

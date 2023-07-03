@@ -22,6 +22,10 @@ p{
     text-align: center;
 }
 
+span{
+    color: red;
+    font-size: 14px;
+}
 #info-message p{
     margin: 2px;
     text-align: center;
