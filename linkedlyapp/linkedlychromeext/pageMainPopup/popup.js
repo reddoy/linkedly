@@ -15,7 +15,7 @@ window.onload = async function () {
 
   async function getStatOnload(userid, tl) {
           let stat = await fetch(
-              "http://127.0.0.1:3000/get/userstat/" + userid
+              "http://146.190.118.126:3000/get/userstat/" + userid
           );
           let statTag = await stat.text();
           tl.innerHTML = statTag;
@@ -140,7 +140,7 @@ window.onload = async function () {
           curHeadline: response.curHeadline,
           curAbout: response.curAbout,
       };
-      const reachResponse = await fetch("http://127.0.0.1:3000/get/message", {
+      const reachResponse = await fetch("http://146.190.118.126:3000/get/message", {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
@@ -168,7 +168,7 @@ window.onload = async function () {
               curAbout: response.curAbout,
           };
           const regenResponse = await fetch(
-              "http://127.0.0.1:3000/regen/message", {
+              "http://146.190.118.126:3000/regen/message", {
                   method: "POST",
                   headers: {
                       "Content-Type": "application/json",

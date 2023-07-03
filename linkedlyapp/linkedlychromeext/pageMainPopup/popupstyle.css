@@ -113,7 +113,7 @@ input, textarea {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 80%;
+    height: 87%;
     margin: 5px;
     padding: 10px;
     border: 2px solid transparent;
@@ -230,7 +230,7 @@ input, textarea {
 }
 
 .listBtns{
-  height: 25%;
+  height: 18%;
 border: 2px solid transparent;
 border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
     margin: 5px;
@@ -238,13 +238,13 @@ border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
 
 .listBtns button{
   width: 150px;
-  height: 80px;
+  height: 50px;
 }
 
 .listBtns a{
   padding: 0px;
   width: 150px;
-  height: 80px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
