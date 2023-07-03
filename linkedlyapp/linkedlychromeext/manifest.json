@@ -11,7 +11,7 @@
     }
   },
   "oauth2": {
-    "client_id": "434880350039-65lciljagiu0jp47g08k896b94mtu5dk.apps.googleusercontent.com",
+    "client_id": "434880350039-52nck35iokk401emp47a4p7kn0t8cj5u.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]
@@ -22,7 +22,7 @@
   "externally_connectable": {
     "matches": ["https://*/*", "http://*/*"]
   },
-  "host_permissions": ["https://www.linkedin.com/in/*", "http://www.linkedin.com/in/*", "http://146.190.118.126:3000/*"],
+  "host_permissions": ["https://www.linkedin.com/in/*", "http://www.linkedin.com/in/*", "https://linkedly.app/*"],
   "content_scripts": [
     {
       "matches": ["https://www.linkedin.com/in/*", "http://www.linkedin.com/in/*"],

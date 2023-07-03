@@ -25,7 +25,7 @@ async function checkLogin() {
     let userid = checkData.id;
     console.log('got a user'+ userid);
     await chrome.storage.local.set({user: userid});
-    const userResponse = await fetch('http://146.190.118.126:3000/check/user/' + userid);
+    const userResponse = await fetch('https://linkedly.app/check/user/' + userid);
     const userData = await userResponse.text();
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
@@ -54,7 +54,7 @@ async function runLogin() {
     const data = await response.json();
     let userid = data.id;
     await chrome.storage.local.set({user: userid}); // Store the token in chrome.storage
-    let userResponse = await fetch('http://146.190.118.126:3000/check/user/' + userid);
+    let userResponse = await fetch('https://linkedly.app/check/user/' + userid);
     let userData = await userResponse.text();
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
