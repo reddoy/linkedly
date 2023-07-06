@@ -18,7 +18,6 @@ window.onload = function(){
     
         yesBtn.addEventListener('click', function() {
             chrome.storage.local.remove('personList',function() {
-                console.log("personList cleared");
                 confirmationMsg.innerHTML = "";
                 displayCurList();
                 setTimeout(function(){
@@ -47,7 +46,6 @@ window.onload = function(){
                     let note = rowArray[3].replace(/,/g, ';').replace(/"/g, '""');
                     csvContent += `${name}, ${profLink}, ${emails}, "${note}"\r\n`;
                 }
-                console.log(csvContent);
                 var encodedUri = encodeURI(csvContent);
                 var link = document.createElement('a');
                 link.setAttribute('href', encodedUri);
@@ -63,11 +61,8 @@ window.onload = function(){
     
 }
 
-// create a function that gets the current personList from chrome storage
-// and loops through the list and display each element
 function displayCurList(){
     chrome.storage.local.get(["personList"], function(result) {
-        console.log(result.personList);
         if (result.personList) {
             personArr = result.personList;
         } else {
@@ -81,11 +76,9 @@ function displayCurList(){
             let emailString = person[2];
             let note = person[3];
 
-            // Create a new row
             let row = document.createElement('div');
             row.className = 'row';
 
-            // Create cells and add them to the row
             let nameCell = document.createElement('div');
             nameCell.className = 'cell';
             nameCell.textContent = fullname;
@@ -117,40 +110,30 @@ function displayCurList(){
             deleteCell.appendChild(deleteButton);
             row.appendChild(deleteCell);
 
-            // Add the row to the table body
             tableBody.appendChild(row);
             deleteButton.addEventListener('click', function() {
-                // Replace the delete button with a confirmation
                 deleteCell.innerHTML = 'Are you sure? <button class="confirm">Yes</button> <button class="cancel">No</button>';
 
-                // Add event listeners to the confirmation buttons
                 deleteCell.querySelector('.confirm').addEventListener('click', function() {
-                    // Remove the person from the array
                     personArr.splice(personArr.indexOf(person), 1);
 
-                    // Update the array in chrome.storage
                     chrome.storage.local.set({personList: personArr}, function() {
-                        console.log('Person deleted.');
 
-                        // Refresh the table
                         displayCurList();
                     });
                 });
 
                 deleteCell.querySelector('.cancel').addEventListener('click', function() {
-                    // Cancel the deletion - replace the confirmation with the delete button
                     deleteCell.innerHTML = '';
                     deleteCell.appendChild(deleteButton);
                 });
             });
         }
 
-        // ... (same as before)
         let links = document.getElementsByClassName('person-link');
         for (let link of links) {
             link.addEventListener('click', function(event) {
                 event.preventDefault();
-                // Send a message to the background script to open the link in a new tab
                 chrome.runtime.sendMessage({action: "openLink", url: this.getAttribute('href')});
             });
         }

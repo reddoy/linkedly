@@ -9,13 +9,6 @@ window.onload = async function() {
     document.getElementById('userId').value = userid.user;
     
 
-    const form = document.getElementById('userForm');
-    form.addEventListener('submit', function (event) {
-      const formData = new FormData(form);
-      chrome.storage.local.set({ formData: Object.fromEntries(formData) }, function () {
-        console.log('Form data saved to Chrome storage');
-      });
-    });
 
   document.getElementById('payment-info').addEventListener('click', function() {
     chrome.tabs.create({url: 'https://billing.stripe.com/p/login/28o5nbf7T6bn6aI3cc'});
@@ -37,7 +30,6 @@ window.onload = async function() {
 
 async function insertCurUserInfo(){
   let userid = await chrome.storage.local.get('user');
-  console.log(userid.user);
   let userinfo = await fetch('https://linkedly.app/get/userinfo/'+ userid.user);
   let userJson = await userinfo.json();
   document.getElementById('fName').value = userJson.firstname;
