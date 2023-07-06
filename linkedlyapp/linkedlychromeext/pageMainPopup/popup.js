@@ -34,7 +34,6 @@ window.onload = async function () {
     document.getElementById("genConnectBtn").addEventListener("click", async function () {
         try {
             curStat = document.getElementById("tL").innerHTML;
-            console.log(curStat);
             if (curStat.includes(" 0/")) {
                 tL.classList.add("flash");
                 setTimeout(() => {
@@ -78,7 +77,6 @@ window.onload = async function () {
                 reachData[1] = reachData[1].replace(/"/g, "");
                 document.getElementById("note").value = reachData[1].replace(/\n/g, "");
                 document.getElementById("fullname").innerText = targetContent.curName.trim();
-                console.log(reachData[0]);
                 tL.innerHTML = reachData[0];
                 katiePretty(reachData[2]);
                 addRegen();
@@ -285,7 +283,6 @@ window.onload = async function () {
           return userId;
       }
       catch (error) {
-          console.log(error);
           return null;
       }
   }
