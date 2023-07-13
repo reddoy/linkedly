@@ -94,7 +94,7 @@ function displayCurList(){
             row.appendChild(urlCell);
 
             let emailCell = document.createElement('div');
-            emailCell.className = 'cell';
+            emailCell.className = 'emailCell';
             emailCell.innerHTML = emailString.split(',').join('<br>');
             row.appendChild(emailCell);
 

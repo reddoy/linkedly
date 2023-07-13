@@ -45,8 +45,10 @@ window.onload = async function () {
             connectDiv.innerHTML =
                 '<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
             const reachData = await getMessage(targetContent);
-
-            if (reachData[0] != "limit reached") {
+            if (reachData[0] == 'reload'){
+                connectDiv.innerText = 'Please refresh the profile page and try again.';
+            }
+            else if (reachData[0] != "limit reached") {
                 connectDiv.innerHTML = `
                     <div class="question">
                       <label for="linkUrl">Linkedin URL</label>
@@ -129,6 +131,9 @@ window.onload = async function () {
   }
 
   async function getMessage(response) {
+    if (!response){
+        return ['reload'];
+    }
       const userid = await isUserLoggedIn();
       const reachJson = {
           curUserId: userid,

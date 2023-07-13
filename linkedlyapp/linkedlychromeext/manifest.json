@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Linkedly",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Linkedly is a chrome extension that helps you find the most relevant LinkedIn profiles for your target companies.",
   "permissions": ["tabs", "storage", "identity"],
   "action": {
@@ -11,7 +11,7 @@
     }
   },
   "oauth2": {
-    "client_id": "434880350039-52nck35iokk401emp47a4p7kn0t8cj5u.apps.googleusercontent.com",
+    "client_id": "434880350039-oa4f7bc3k4shqjq5ev3edhvcj3itjvdv.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email"
     ]
