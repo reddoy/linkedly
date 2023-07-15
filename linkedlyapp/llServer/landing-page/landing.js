@@ -1,4 +1,4 @@
-let textArray = ['Hello, World!', 'This is a typing animation.', 'It will delete soon.'];
+let textArray = ['connect faster.', 'find email addresses.', 'stay organized.'];
 let arrayIndex = 0;
 let charIndex = 0;
 
@@ -13,19 +13,25 @@ function typeText() {
 }
 
 function deleteText() {
-  if (charIndex != 0) {
-    let tempString = textArray[arrayIndex].substring(0, charIndex-1);
+  if (charIndex !== 0) {
+    let tempString = textArray[arrayIndex].substring(0, charIndex - 1);
     document.getElementById('animatedText').textContent = tempString;
     charIndex--;
     setTimeout(deleteText, 100);
   } else {
     arrayIndex++;
-    if(arrayIndex>=textArray.length)
-      arrayIndex=0;
+    if (arrayIndex >= textArray.length) {
+      arrayIndex = 0;
+    }
     setTimeout(typeText, 2000);
+  }
+  
+  // Add a space after deleting all the text
+  if (charIndex === 0 && arrayIndex === 0) {
+    document.getElementById('animatedText').textContent = ' ';
   }
 }
 
-document.addEventListener('DOMContentLoaded', function(event) {
-  setTimeout(typeText, 2000);
-});
+window.setTimeout(function() {
+  typeText();
+}, 0);

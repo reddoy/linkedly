@@ -1,17 +1,118 @@
+
+/* Computer Breakpoint */
+
+body{
+    background-color: #000000;
+    color: white;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
+
+.hero,
+.createUser-section,
+.emailFinder-section,
+.footer {
+  height: 100vh;
+  scroll-snap-align: start;
+}
+
+.nav{
+  top: 0;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.navbar-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background-color: #000000;
+  color: white;
+  width: 100%;
+}
+
+.navbar-brand{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-brand h2{
+  margin-right: 5px;
+}
+
+#getAppBtn{
+  background-color: #126C9E;
+  text-decoration: none;
+  color: white;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5%;
+  padding: 5px;
+}
+
+.hero{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-text-container{
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.aTcontainer{
+  display: flex;
+  width: 350px;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  50.1% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#typeCursor {
+  color: #126C9E;
+  animation: blink 1s infinite;
+}
+
+
+
 #animatedText {
-    font-family: monospace;
-    white-space: pre;
-    overflow: hidden;
-    border-right: .15em solid orange; 
-    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-  }
-  
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-  }
-  
-  @keyframes blink-caret {
-    50% { border-color: transparent }
-  }
-  
+  padding-left: .25em;
+}
+
+.demo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+  background-color: #000000;
+  color: white;
+}
