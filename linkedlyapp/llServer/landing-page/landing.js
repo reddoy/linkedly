@@ -6,9 +6,9 @@ function typeText() {
   if (charIndex < textArray[arrayIndex].length) {
     document.getElementById('animatedText').textContent += textArray[arrayIndex].charAt(charIndex);
     charIndex++;
-    setTimeout(typeText, 150);
+    setTimeout(typeText, 75);
   } else {
-    setTimeout(deleteText, 2000);
+    setTimeout(deleteText, 1000);
   }
 }
 
@@ -17,13 +17,13 @@ function deleteText() {
     let tempString = textArray[arrayIndex].substring(0, charIndex - 1);
     document.getElementById('animatedText').textContent = tempString;
     charIndex--;
-    setTimeout(deleteText, 100);
+    setTimeout(deleteText, 50);
   } else {
     arrayIndex++;
     if (arrayIndex >= textArray.length) {
       arrayIndex = 0;
     }
-    setTimeout(typeText, 2000);
+    setTimeout(typeText, 1000);
   }
   
   // Add a space after deleting all the text
