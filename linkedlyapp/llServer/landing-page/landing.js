@@ -35,3 +35,25 @@ function deleteText() {
 window.setTimeout(function() {
   typeText();
 }, 0);
+
+var container = document.querySelector('.scroll-snap-container');
+container.addEventListener('scroll', function() {
+  var nav = document.querySelector('.nav');
+  var footer = document.querySelector('.footer');
+  var logoH1 = document.querySelector('.logo h1');
+  var logoImg = document.querySelector('.logo img');
+  var footerRect = footer.getBoundingClientRect();
+  var containerRect = container.getBoundingClientRect();
+
+  if (footerRect.top <= containerRect.bottom) {
+    nav.style.opacity = '0';
+    nav.style.transition = 'opacity 0.5s';
+    logoH1.classList.add('animate');
+    logoImg.classList.add('animate');
+  } else {
+    nav.style.opacity = '1';
+    nav.style.transition = 'opacity 0.5s';
+    logoH1.classList.remove('animate');
+    logoImg.classList.remove('animate');
+  }
+});

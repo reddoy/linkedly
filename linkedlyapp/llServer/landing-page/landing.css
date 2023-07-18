@@ -4,9 +4,9 @@ html, body {
 }
 
 body, #getAppBtn{
-	background: radial-gradient(circle, #12acff,#45bbff, #0171c0,#5ca2ca);
+	background: radial-gradient(circle, #12acff,#68c8ff, #296d9e,#4b7b97);
 	background-size: 400% 400%;
-	animation: gradient 17s ease infinite;
+	animation: gradient 9s ease infinite;
 }
 
 @keyframes gradient {
@@ -39,6 +39,7 @@ body{
   scroll-snap-type: y mandatory;
   height: 100vh;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 .hero,
@@ -48,6 +49,7 @@ body{
 .footer {
   height: 100vh;
   scroll-snap-align: start;
+  scroll-behavior: smooth;
 }
 
 
@@ -123,7 +125,6 @@ body{
 
 .aTcontainer{
   display: flex;
-  width: 685px;
 }
 
 @keyframes blink {
@@ -233,4 +234,80 @@ video{
   background-color: #000000;
   bottom: 0;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.footer-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-container{
+  width: 100%;
+  height: 50%;
+}
+
+.socials{
+  display: flex;
+  justify-content: center;
+  height: 70%;
+  background: linear-gradient(-45deg, #12acff,#68c8ff, #296d9e,#4b7b97);
+	background-size: 400% 400%;
+	animation: gradient 12s ease infinite;
+}
+
+.logo{
+  font-size: 2vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img{
+  margin: 10px;
+  width: 100px;
+  height: 100px;
+}
+
+.top-row{
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.top-row div{
+  margin: auto;
+}
+
+.socials img{
+  margin: 3%;
+}
+
+#insta-icon,
+#twitter-icon,
+#linkedin-icon{
+  transition: filter 0.3s ease;
+}
+
+#insta-icon:hover,#twitter-icon:hover,#linkedin-icon:hover{
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+}
+
+#insta-icon:active,
+#twitter-icon:active,
+#linkedin-icon:active{
+  transform: scale(0.9);
+}
+
+
+
+
