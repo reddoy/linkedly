@@ -192,7 +192,7 @@ body{
   border-bottom:3px solid black;
 }
 
-.text-section h2, .text-section div{
+.text-section h2, .text-section h1, .text-section div{
   margin: 3%;
 }
 
@@ -309,5 +309,6 @@ video{
 }
 
 
-
-
+#getChromeBtn img{
+  border-radius: 10px;
+}
