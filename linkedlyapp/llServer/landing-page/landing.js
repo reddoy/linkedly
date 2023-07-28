@@ -45,15 +45,18 @@ container.addEventListener('scroll', function() {
   var footerRect = footer.getBoundingClientRect();
   var containerRect = container.getBoundingClientRect();
 
-  if (footerRect.top <= containerRect.bottom) {
+  if (footerRect.bottom <= containerRect.bottom) {
+    // Footer is about to enter the viewport, so hide the nav and animate the logo.
     nav.style.opacity = '0';
     nav.style.transition = 'opacity 0.5s';
     logoH1.classList.add('animate');
     logoImg.classList.add('animate');
   } else {
+    // Footer is not yet visible in the viewport, so show the nav and remove the logo animation.
     nav.style.opacity = '1';
     nav.style.transition = 'opacity 0.5s';
     logoH1.classList.remove('animate');
     logoImg.classList.remove('animate');
   }
+  
 });

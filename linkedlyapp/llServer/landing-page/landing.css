@@ -9,6 +9,16 @@ body, #getAppBtn{
 	animation: gradient 9s ease infinite;
 }
 
+iframe{
+  width: 550px;
+  height: 400px;
+}
+
+ul, li{
+  padding: 0;
+  margin: 0;
+}
+
 @keyframes gradient {
 	0% {
 		background-position: 25% 25%;
@@ -109,8 +119,6 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top:3px solid #000000;
-  border-bottom:3px solid black;
 }
 
 .hero-text-container{
@@ -188,12 +196,32 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top:3px solid #000000;
-  border-bottom:3px solid black;
 }
 
 .text-section h2, .text-section h1, .text-section div{
-  margin: 3%;
+  margin: 1%;
+}
+
+#featureList{
+  width: 50%;
+  text-align: center;
+}
+
+li{
+  font-size: 10px;
+  width: 100%;
+}
+
+#linkGen{
+  text-align: center;
+}
+
+#listHeader{
+  font-size: 27px;
+}
+
+.info-container #listHeader{
+  width: 100%;
 }
 
 .video-container{
@@ -251,15 +279,20 @@ video{
 .social-container{
   width: 100%;
   height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(-45deg, #12acff,#68c8ff, #296d9e,#4b7b97);
+	background-size: 400% 400%;
+	animation: gradient 12s ease infinite;
 }
 
 .socials{
   display: flex;
   justify-content: center;
-  height: 70%;
-  background: linear-gradient(-45deg, #12acff,#68c8ff, #296d9e,#4b7b97);
-	background-size: 400% 400%;
-	animation: gradient 12s ease infinite;
+  height: 55%;
+  width: 500px;
 }
 
 .logo{
@@ -291,10 +324,18 @@ video{
   margin: 3%;
 }
 
+.bottom-row{
+  width: 100%;
+  height: 50%;
+}
+
 #insta-icon,
 #twitter-icon,
 #linkedin-icon{
   transition: filter 0.3s ease;
+  width: 20%;
+  display: flex;
+  margin: 1%;
 }
 
 #insta-icon:hover,#twitter-icon:hover,#linkedin-icon:hover{
@@ -311,4 +352,80 @@ video{
 
 #getChromeBtn img{
   border-radius: 10px;
+  width: 28vw;
+}
+
+#links{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+  width: 100%;
+}
+
+#links a{
+  margin: 1%;
+}
+
+.social-icons{
+  display: flex;
+  align-items: center;
+  align-items: center;
+}
+
+
+
+@media screen and (max-width: 414px){
+  .hero-text-container{
+    font-size: 3vw;
+    flex-direction: column;
+  }
+
+  .hero{
+    flex-direction: column;
+  }
+
+  h1{
+    font-size: 5vw;
+  }
+
+  .text-section{
+    flex-direction: column;
+  }
+
+  iframe{
+    width: 300px;
+    height: 200px;
+  }
+
+  .video-container{
+    width: 95%;
+  }
+
+  #featureList{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  li h1{
+    font-size: 14px;
+  }
+
+#listHeader{
+  font-size: 17px;
+  width: 100%;
+}
+
+#getChromeBtn img{
+  width: 49vw;
+  border-radius: 5px;
+}
+  ul{
+    width: 89%;
+  }
+  .top-row{
+    flex-direction: column;
+  }
 }
