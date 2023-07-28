@@ -1,6 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 body{
@@ -91,6 +92,10 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.navbar-brand img{
+  margin-top: 3px;
 }
 
 .navbar-brand h2{
@@ -326,6 +331,7 @@ video{
 
 .socials img{
   margin: 3%;
+  width: 100%;
 }
 
 .bottom-row{
