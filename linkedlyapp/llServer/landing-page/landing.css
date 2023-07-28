@@ -3,10 +3,14 @@ html, body {
   padding: 0;
 }
 
-body, #getAppBtn{
+body{
 	background: radial-gradient(circle, #12acff,#68c8ff, #296d9e,#4b7b97);
 	background-size: 400% 400%;
 	animation: gradient 9s ease infinite;
+}
+
+body, #getAppBtn{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 iframe{
@@ -365,6 +369,7 @@ video{
 
 #links a{
   margin: 1%;
+  color: white;
 }
 
 .social-icons{
