@@ -1,16 +1,20 @@
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log("Message received: ", request.message);
   if (request.message === 'logout') {
+    console.log("Running logout");
     runLogout();
   } else if (request.message === 'login') {
+    console.log("Running login");
     runLogin();
   } else if (request.message === 'checkLogin'){
+    console.log("Checking login");
     checkLogin();
   }
 });
 
 async function checkLogin() {
   try {
+    console.log("In checkLogin");
     const token = await new Promise((resolve, reject) => {
       chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
         if (chrome.runtime.lastError) {
@@ -20,12 +24,15 @@ async function checkLogin() {
         }
       });
     });
+    console.log("Got token: ", token);
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const checkData = await response.json();
     let userid = checkData.id;
+    console.log("Got userid: ", userid);
     await chrome.storage.local.set({user: userid});
     const userResponse = await fetch('https://linkedly.app/check/user/' + userid);
     const userData = await userResponse.text();
+    console.log("Got user data: ", userData);
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
     } else {
@@ -39,6 +46,7 @@ async function checkLogin() {
 
 async function runLogin() {
   try {
+    console.log("In runLogin");
     const token = await new Promise((resolve, reject) => {
       chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
         if (chrome.runtime.lastError) {
@@ -48,22 +56,26 @@ async function runLogin() {
         }
       });
     });
+    console.log("Got token: ", token);
     await chrome.storage.local.set({token: token}); // Store the token in chrome.storage
     const response = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     const data = await response.json();
     let userid = data.id;
+    console.log("Got userid: ", userid);
     await chrome.storage.local.set({user: userid}); // Store the token in chrome.storage
     let userResponse = await fetch('https://linkedly.app/check/user/' + userid);
     let userData = await userResponse.text();
+    console.log("Got user data: ", userData);
     if (userData === 'nouser') {
       chrome.runtime.sendMessage({message:"newUser"});
     } else {
       chrome.runtime.sendMessage({message:"loggedIn"});
     }
   } catch (error) {
-    console.log(error.message);
+    console.log("Error in runLogin: ", error.message);
   }
 }
+
 
 async function runLogout() {
   try {
