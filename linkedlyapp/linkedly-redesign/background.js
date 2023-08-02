@@ -1,16 +1,26 @@
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log("Message received: ", request.message);
-  if (request.message === 'logout') {
-    console.log("Running logout");
-    runLogout();
-  } else if (request.message === 'login') {
-    console.log("Running login");
-    runLogin();
-  } else if (request.message === 'checkLogin'){
-    console.log("Checking login");
-    checkLogin();
-  }
+let contentScriptPort = null;
+
+chrome.runtime.onConnect.addListener(function(contentScriptPortFromUser) {
+  console.log("Connected to content script");
+  contentScriptPort = contentScriptPortFromUser;
+  contentScriptPort.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log("Message received: ", request.message);
+    if (request.message === 'logout') {
+      console.log("Running logout");
+      runLogout();
+    } else if (request.message === 'login') {
+      console.log("Running login");
+      runLogin();
+    } else if (request.message === 'checkLogin'){
+      console.log("Checking login");
+      checkLogin();
+    }else if (request.action == "openLink") {
+      chrome.tabs.create({url: request.url});
+    }
+  });
 });
+
+
 
 async function checkLogin() {
   try {
@@ -34,12 +44,12 @@ async function checkLogin() {
     const userData = await userResponse.text();
     console.log("Got user data: ", userData);
     if (userData === 'nouser') {
-      chrome.runtime.sendMessage({message:"newUser"});
+      sendMessageToContent("newUser");
     } else {
-      chrome.runtime.sendMessage({message:"loggedIn"});
+      sendMessageToContent("loggedIn");
     }
   } catch (error) {
-    chrome.runtime.sendMessage({message:"notLoggedIn"});
+    sendMessageToContent("notLoggedIn");
     console.error('Error:', error);
   }
 }
@@ -67,9 +77,9 @@ async function runLogin() {
     let userData = await userResponse.text();
     console.log("Got user data: ", userData);
     if (userData === 'nouser') {
-      chrome.runtime.sendMessage({message:"newUser"});
+      sendMessageToContent("newUser");
     } else {
-      chrome.runtime.sendMessage({message:"loggedIn"});
+      sendMessageToContent("loggedIn");
     }
   } catch (error) {
     console.log("Error in runLogin: ", error.message);
@@ -104,18 +114,14 @@ async function runLogout() {
     });
     await chrome.storage.local.remove('token');
     await chrome.storage.local.remove('user');
-    chrome.runtime.sendMessage({message: 'loggedOut'});
+    sendMessageToContent("loggedOut");
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action == "openLink") {
-    chrome.tabs.create({url: request.url});
-  }
-});
+
 
 async function isTokenValid(token) {
   const response = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${token}`);
@@ -124,4 +130,37 @@ async function isTokenValid(token) {
     return false;
   }
   return true;
+}
+
+// async function sendMessageToContent(message) {
+//   // const tabs = await chrome.tabs.query({
+//   //     active: true,
+//   //     currentWindow: true,
+//   // });
+//   // const curTab = tabs[0];
+//   // console.log(curTab);
+
+//   // const response = await new Promise((resolve) => {
+//   //     chrome.tabs.sendMessage(
+//   //         curTab.id, {
+//   //             message: message,
+//   //         },
+//   //         resolve
+//   //     );
+//   // });
+// }
+
+async function sendMessageToContent(message) {
+  if (!contentScriptPort) {
+    console.error('No content script connection');
+    return;
+  }
+
+  const response = await new Promise((resolve) => {
+    contentScriptPort.onMessage.addListener(resolve);
+    contentScriptPort.postMessage({message: message});
+    console.log("Sent message: ", message);
+  });
+
+  console.log(response);
 }
