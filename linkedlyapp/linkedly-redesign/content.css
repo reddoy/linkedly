@@ -2,12 +2,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 95px;
+}
+
+.main-big-wrapper{
+    margin: 10px;
+    width: 100%; 
+}
+
+.top-section{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .logo{
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 50%;
+}
+
+.logo img, .logo h1, .logo a{
+    margin: 1%;
 }
 
 #linkedlylogo{
@@ -23,8 +41,16 @@
     font-size: 50px;
 }
 
+#button-section{
+    width: 50%;
+}
+
 .buttons{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+}
+
+.buttons button{
+    height: 50px;
 }

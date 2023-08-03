@@ -1,0 +1,208 @@
+body{
+    background-color: #0093E9;
+    background-color: black;
+    color: white;
+    border-radius: 15px;
+    width: 770px;
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+.logo{
+    display: flex;
+    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+#linkedlylogo{
+    margin: 5px;
+}
+
+.logo h1{
+    font-size: 25px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#homeBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-weight: bold;
+    text-align: center;
+    background-color: black;
+    border: none;
+    text-align: center;
+    font-size: 50px;
+    padding: 5px;
+    width: 50px;
+    height: 50px;
+    transition: 0.5s;
+    margin: 5px;
+    text-decoration: none;
+}
+
+.top{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+
+.table {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 98%;
+    background-color: black; /* To ensure the header is not transparent */
+}
+
+.body {
+    overflow: auto;
+    height: 300px; /* Adjust as needed */
+}
+
+.header-row{
+    display: flex;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 280px;
+    scroll-snap-align: start;
+}
+
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 25%; /* Adjust as needed */
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
+    padding: 5px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.emailCell{
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    overflow-x: auto;
+    flex-direction: column;
+    width: 25%; /* Adjust as needed */
+    border: 2px solid transparent;
+    border-image: linear-gradient(to right, #0093E9, #80D0C7) 1;
+    padding: 5px;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.confirm, .cancel{
+    margin:2px;
+    cursor: pointer;
+}
+
+.scroll-container{
+    height: 280px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 5px;
+    scroll-snap-type: y mandatory;
+
+    /* This will change the scrollbar's track (background) */
+    scrollbar-color: lightgrey black; /* For Firefox */
+    scrollbar-width: thin; /* For Firefox */
+
+    /* This will change the scrollbar's thumb (the part you drag) */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: black;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: lightgrey;
+        border-radius: 20px;
+        border: 3px solid black;
+    }
+}
+
+
+
+.cell button{
+    color: white;
+    border-radius: 2px;
+    font-weight: bold;
+    background-color: #126C9E;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 65px;
+    transition: 0.5s;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bottom-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.bottom-row button{
+    color: white;
+    border-radius: 12px;
+    font-weight: bold;
+    background-color: #126C9E;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 150px;
+    transition: 0.5s;
+    margin: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+#clearListBtn:hover, #downloadListBtn:hover{
+    background-color: #ffffff;
+    color: #126C9E;
+    transition: 0.5s;
+}

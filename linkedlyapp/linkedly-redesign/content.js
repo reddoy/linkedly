@@ -5,16 +5,30 @@ let hasLinkedlyLoaded= false;
 let chainlogoNoBG = chrome.runtime.getURL('images/chain-link-noBG.svg');
 let chainlogoMain = chrome.runtime.getURL('images/chain-logo-small-svg.svg')
 let popupMain;
+let settingsMain;
+let currentListMain;
 
 
 async function loadHtml() {
   try {
-      let response = await fetch(chrome.runtime.getURL('pageMainPopup/popup.html'));
-      let data = await response.text();
+      let popupData = await fetch(chrome.runtime.getURL('pageMainPopup/popup.html'));
+      let settingsData = await fetch(chrome.runtime.getURL('pageSettings/settings.html'));
+      let currentListData = await fetch(chrome.runtime.getURL('pageCurrentList/currentList.html'));
+
+      let currentList = await currentListData.text();
+      let settings = await settingsData.text();
+      let popup = await popupData.text();
       
       const parser = new DOMParser();
-      const htmlDocument = parser.parseFromString(data, 'text/html');
+
+      const htmlDocument = parser.parseFromString(popup, 'text/html');
+      const settingsDocument = parser.parseFromString(settings, 'text/html');
+      const currentListDocument = parser.parseFromString(currentList, 'text/html');
+
+
       popupMain = htmlDocument.querySelector('#body');
+      settingsMain = settingsDocument.querySelector('#body');
+      currentListMain = currentListDocument.querySelector('#body');
 
       // Do something with myElement
   } catch (err) {
@@ -45,9 +59,7 @@ portToBackgroundScript.onMessage.addListener(function(request) {
       console.log(document.getElementById('linkedly-div'));
   } else if (request.message === 'loggedIn') {
       linkedlyDiv.innerHTML = popupMain.innerHTML;
-      document.getElementById('linkedlylogo').src = chainlogoMain;
-      document.getElementById('genBtnImg').src = chainlogoNoBG;
-      document.getElementById('linkedly-header').classList.add('text-heading-xlarge', 'inline', 't-24', 'v-align-middle', 'break-words');
+      addListenersToMainPopup();
   } else if (request.message === 'newUser') {
       linkedlyDiv.innerHTML = 'new user';
   }else if(request.message = 'tabChanged'){
@@ -115,6 +127,27 @@ function addLoginButton() {
   console.log('Login button added to Linkedly div.');
 }
 
+// main popup section ------------------------------------
+
+function addListenersToMainPopup(){
+  document.getElementById('linkedlylogo').src = chainlogoMain;
+  document.getElementById('genBtnImg').src = chainlogoNoBG;
+  document.getElementById('linkedly-header').classList.add('text-heading-xlarge', 'inline', 't-24', 'v-align-middle', 'break-words');
+
+  let settingsBtn = document.getElementById('settingsBtn');
+  let genConnectBtn = document.getElementById('genConnectBtn');
+  let showCurListBtn = document.getElementById('showCurListBtn');
+  settingsBtn.addEventListener('click', function() {
+  });
+  genConnectBtn.addEventListener('click', function() {
+  });
+  showCurListBtn.addEventListener('click', function() {
+  });
+
+}
+
+// main popup section END ------------------------------------
+
 
 function elementsStable() {
   return new Promise((resolve) => {
@@ -125,7 +158,7 @@ function elementsStable() {
       const count = document.querySelectorAll('*').length;
       if (count === lastCount) {
         repeatCount += 1;
-        if (repeatCount === 4) {
+        if (repeatCount === 4 && count > 1000) {
           observer.disconnect();
           console.log('The number of elements on the page has stabilized at: ' + count);
           resolve();
