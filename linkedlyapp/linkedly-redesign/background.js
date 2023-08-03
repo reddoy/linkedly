@@ -164,3 +164,11 @@ async function sendMessageToContent(message) {
 
   console.log(response);
 }
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  // Fires when the tab updates, e.g., the URL changes
+  if (changeInfo.url) {
+      console.log('Tab URL changed to: ' + changeInfo.url);
+      sendMessageToContent('tabChanged');
+  }
+});

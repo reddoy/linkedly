@@ -1,135 +1,185 @@
-// let linkedlyDiv;
-// let numberCalled = 0;
-// let portToBackgroundScript = chrome.runtime.connect({name: 'contentScriptToBackgroundScript'});
-// let hasLinkedlyLoaded= false;
+let linkedlyDiv;
+let numberCalled = 0;
+let portToBackgroundScript = chrome.runtime.connect({name: 'contentScriptToBackgroundScript'});
+let hasLinkedlyLoaded= false;
+let chainlogoNoBG = chrome.runtime.getURL('images/chainlogonobg.png');
+let chainlogoMain = chrome.runtime.getURL('images/chainlogoblacksmall.png')
 
 
-// function checkLogin(){
-//   addLinkedlyDivWhenInterestsLoaded();
-//   portToBackgroundScript.postMessage({message: 'checkLogin'});
-// }
+async function loadHtml() {
+  try {
+      let response = await fetch(chrome.runtime.getURL('pageMainPopup/popup.html'));
+      let data = await response.text();
+      
+      const parser = new DOMParser();
+      const htmlDocument = parser.parseFromString(data, 'text/html');
+      const myElement = htmlDocument.querySelector('body');
+      console.log(myElement);
 
-// addLinkedlyDivWhenInterestsLoaded();
-// portToBackgroundScript.postMessage({message: 'checkLogin'});
-
-// window.onpopstate = function(event) {
-//   checkLogin(); 
-// };
-
-// portToBackgroundScript.onMessage.addListener(function(request) {
-//   console.log('Message received: ', request);
-//     if (request.message === 'notLoggedIn') {
-//       linkedlyDiv.innerHTML = 'user not logged in';
-//   } else if (request.message === 'loggedIn') {
-//       linkedlyDiv.innerHTML = 'user logged in';
-//   } else if (request.message === 'newUser') {
-//       linkedlyDiv.innerHTML = 'new user';
-//   }
-// });
-
-
-
-// function createLinkedlyDiv() {
-//   console.log('Creating Linkedly div...');
-//   linkedlyDiv = document.createElement('div');
-//   linkedlyDiv.innerHTML = `<div id="linkedly-div"></div>`;
-//   linkedlyDiv.classList.add('artdeco-card', 'ember-view', 'relative', 'break-words', 'pb3', 'mt2');
-//   console.log('Linkedly div created.');
-//   return linkedlyDiv;
-// }
-
-// function insertLinkedlyDiv() {
-//   console.log('Inserting Linkedly div into webpage...');
-//   const mainSections = document.querySelector('div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile > div > div > main');
-//   const secondChild = mainSections.children[1];
-//   mainSections.insertBefore(linkedlyDiv, secondChild);
-//   console.log('Linkedly div inserted into webpage.');
-// }
-
-// function addLinkedlyDivWhenInterestsLoaded() {
-//   console.log('Starting to observe for #interests element...');
-//   const observer = new MutationObserver((mutationsList, observer) => {
-//     for(let mutation of mutationsList) {
-//       if (mutation.type === 'childList') {
-//         const interests = document.querySelector('#interests');
-//         if (interests) {
-//           console.log('#interests element found.');
-//           if (!document.querySelector('#linkedly-div')) {  // check the id of the div you insert
-//             if (!linkedlyDiv) {
-//               createLinkedlyDiv();
-//             }
-//             insertLinkedlyDiv();
-//             hasLinkedlyLoaded = true;
-//             numberCalled += 1;
-//             console.log(numberCalled);
-//             observer.disconnect();  // stop observing once #linkedly-div has been inserted
-//             console.log('Observer disconnected.');  // log when the observer is done
-//           }
-//         }
-//       }
-//     }
-//   });
-
-//   // Start observing the document with the configured parameters
-//   observer.observe(document.body, { childList: true, subtree: true });
-// }
-
-
-
-
-// function addLoginButton() {
-//   console.log('Adding login button to Linkedly div...');
-//   const button = document.createElement('button');
-//   button.innerHTML = 'Login';
-//   button.id = 'linkedly-login-button';
-
-//   // add the classes to the button
-//   button.classList.add('artdeco-dropdown__trigger', 'artdeco-dropdown__trigger--placement-bottom', 'ember-view', 
-//   'pvs-profile-actions__action', 'artdeco-button', 'artdeco-button--secondary', 'artdeco-button--muted', 'artdeco-button--2');
-
-//   button.setAttribute('type', 'button');
-
-//   // attach event listener to button
-//   button.addEventListener('click', function() {
-//     chrome.runtime.sendMessage({message: 'login'});
-//   });
-
-//   linkedlyDiv.appendChild(button);
-//   console.log('Login button added to Linkedly div.');
-// }
-
-
-let lastCount = 0;
-let repeatCount = 0;
-const observer = new MutationObserver(() => {
-  const count = document.querySelectorAll('*').length;
-  if (count === lastCount) {
-    repeatCount += 1;
-    if (repeatCount === 4) {
-      observer.disconnect();
-      console.log('The number of elements on the page has stabilized at: ' + count);
-    }
-  } else {
-    repeatCount = 0;
+      // Do something with myElement
+  } catch (err) {
+      console.warn('Error occurred', err);
   }
-  lastCount = count;
+}
+
+loadHtml();
+
+
+
+async function checkLogin(){
+  await elementsStable();
+  if(!doesLinkedlyDivExist()){
+    createLinkedlyDiv();
+    insertLinkedlyDiv();
+    portToBackgroundScript.postMessage({message: 'checkLogin'});
+  }
+}
+
+checkLogin();
+
+
+portToBackgroundScript.onMessage.addListener(function(request) {
+  console.log('Message received: ', request);
+    if (request.message === 'notLoggedIn') {
+      linkedlyDiv.innerHTML = 'user not logged in';
+      console.log(document.getElementById('linkedly-div'));
+  } else if (request.message === 'loggedIn') {
+      linkedlyDiv.innerHTML = `
+      <div class="logo">
+      <img src="${chainlogoMain}" alt="linkedlylogo" id="linkedlylogo">
+      <h1>Linkedly</h1>
+      <a href="#" id="settingsBtn">⚙️</a>  
+  </div>
+  <div id="main-content">
+      <div id="connect-section">
+          <div id="info-section">
+              <div class="buttons">
+                  <button id="genConnectBtn">Generate <img src="..\images/chainlogonobg.png" alt="linkedlylogo"></button>
+              </div>
+          </div>
+          <p id="tL"></p>
+      </div>
+      <div class="listBtns">
+          <div class="buttons">
+              <div class="top-row">
+                  <button id="addToListBtn">Add to List</button>
+                  <a href="..\pageCurrentList\currentList.html" id="showCurListBtn">See Current List</a>
+              </div>
+          </div>
+      </div>
+  </div>
+  <p id="fullname" style="display: none;"></p>
+      `;
+  } else if (request.message === 'newUser') {
+      linkedlyDiv.innerHTML = 'new user';
+  }else if(request.message = 'tabChanged'){
+    console.log(document.querySelector('div.ph5 > div.mt2.relative > div:nth-child(1) > div:nth-child(1) > h1'));
+    if(doesLinkedlyDivExist()){
+      console.log('linkedly div does not exist')
+      
+    }else{
+      console.log('linkedly div does Exist');
+      checkLogin();
+    }
+  }
 });
 
-observer.observe(document.body, {childList: true, subtree: true});
 
-// Check every 10 milliseconds
-setInterval(() => {
-  const count = document.querySelectorAll('*').length;
-  console.log('There are currently ' + count + ' elements on the page.');
-  if (count === lastCount) {
-    repeatCount += 1;
-    if (repeatCount === 4) {
-      clearInterval(this);
-      observer.disconnect();
-      console.log('The number of elements on the page has stabilized at: ' + count);
-    }
-  } else {
-    repeatCount = 0;
+
+function createLinkedlyDiv() {
+  console.log('Creating Linkedly div...');
+  linkedlyDiv = document.createElement('div');
+  linkedlyDiv.id = 'linkedly-div';
+  linkedlyDiv.classList.add('artdeco-card', 'ember-view', 'relative', 'break-words', 'pb3', 'mt2');
+  console.log('Linkedly div created.');
+  return linkedlyDiv;
+}
+
+function insertLinkedlyDiv() {
+  console.log('Inserting Linkedly div into webpage...');
+  const mainSections = document.querySelector('div > div.scaffold-layout.scaffold-layout--breakpoint-xl.scaffold-layout--main-aside.scaffold-layout--reflow.pv-profile > div > div > main');
+  const secondChild = mainSections.children[1];
+  mainSections.insertBefore(linkedlyDiv, secondChild);
+  console.log('Linkedly div inserted into webpage.');
+}
+
+
+function doesLinkedlyDivExist(){
+  console.log(document.getElementById('linkedly-div'));
+  if (document.getElementById('linkedly-div')){
+    console.log('returned true');
+    return true;
+  }else{
+    console.log('returned false');
+    return false;
   }
-  lastCount = count;
-}, 10);
+}
+
+
+function addLoginButton() {
+  console.log('Adding login button to Linkedly div...');
+  const button = document.createElement('button');
+  button.innerHTML = 'Login';
+  button.id = 'linkedly-login-button';
+
+  // add the classes to the button
+  button.classList.add('artdeco-dropdown__trigger', 'artdeco-dropdown__trigger--placement-bottom', 'ember-view', 
+  'pvs-profile-actions__action', 'artdeco-button', 'artdeco-button--secondary', 'artdeco-button--muted', 'artdeco-button--2');
+
+  button.setAttribute('type', 'button');
+
+  // attach event listener to button
+  button.addEventListener('click', function() {
+    chrome.runtime.sendMessage({message: 'login'});
+  });
+
+  linkedlyDiv.appendChild(button);
+  console.log('Login button added to Linkedly div.');
+}
+
+
+function elementsStable() {
+  return new Promise((resolve) => {
+    let lastCount = 0;
+    let repeatCount = 0;
+
+    const observer = new MutationObserver(() => {
+      const count = document.querySelectorAll('*').length;
+      if (count === lastCount) {
+        repeatCount += 1;
+        if (repeatCount === 4) {
+          observer.disconnect();
+          console.log('The number of elements on the page has stabilized at: ' + count);
+          resolve();
+        }
+      } else {
+        repeatCount = 0;
+      }
+      lastCount = count;
+    });
+
+    observer.observe(document.body, {childList: true, subtree: true});
+
+    // Check every 10 milliseconds
+    let intervalId = setInterval(() => {
+      const count = document.querySelectorAll('*').length;
+      console.log('There are currently ' + count + ' elements on the page.');
+      if (count === lastCount) {
+        repeatCount += 1;
+        if (repeatCount === 100 && count > 1000) {
+          console.log(repeatCount);
+          clearInterval(intervalId);
+          observer.disconnect();
+          console.log('The number of elements on the page has stabilized at: ' + count);
+          resolve();
+        }
+      } else {
+        repeatCount = 0;
+      }
+      lastCount = count;
+    }, 10);
+  });
+}
+
+
+

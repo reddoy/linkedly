@@ -113,3 +113,10 @@ async function isTokenValid(token) {
   }
   return true;
 }
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  // Fires when the tab updates, e.g., the URL changes
+  if (changeInfo.url) {
+      console.log('Tab URL changed to: ' + changeInfo.url);
+  }
+});
