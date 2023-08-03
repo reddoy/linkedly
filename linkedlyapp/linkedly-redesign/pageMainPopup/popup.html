@@ -8,30 +8,33 @@
     <title>Reader</title>
 </head>
 <body>
-    <div class="logo">
-        <img src="..\images\chainlogoblacksmall.png" alt="linkedlylogo" id="linkedlylogo">
-        <h1>Linkedly</h1>
-        <a href="..\pageSettings\settings.html" id="settingsBtn">⚙️</a>  
-    </div>
-    <div id="main-content">
-        <div id="connect-section">
-            <div id="info-section">
+    <div id="body">
+        <div class="logo">
+            <img src="..\images\chainlogoblacksmall.png" alt="linkedlylogo" id="linkedlylogo">
+            <h1 id="linkedly-header">Linkedly</h1>
+            <a href="..\pageSettings\settings.html" id="settingsBtn">⚙️</a>  
+        </div>
+        <div id="main-content">
+            <div id="connect-section">
+                <div id="info-section">
+                    <div class="buttons">
+                        <button id="genConnectBtn" class="small-text artdeco-button"> Generate <img src="..\images/chainlogonobg.png" alt="linkedlylogo" id="genBtnImg"></button>
+                    </div>
+                </div>
+                <p id="tL"></p>
+            </div>
+            <div class="listBtns">
                 <div class="buttons">
-                    <button id="genConnectBtn">Generate <img src="..\images/chainlogonobg.png" alt="linkedlylogo"></button>
-                </div>
-            </div>
-            <p id="tL"></p>
-        </div>
-        <div class="listBtns">
-            <div class="buttons">
-                <div class="top-row">
-                    <button id="addToListBtn">Add to List</button>
-                    <a href="..\pageCurrentList\currentList.html" id="showCurListBtn">See Current List</a>
+                    <div class="top-row">
+                        <button id="addToListBtn" class="small-text">Add to List</button>
+                        <a href="..\pageCurrentList\currentList.html" id="showCurListBtn" class="small-text">See Current List</a>
+                    </div>
                 </div>
             </div>
         </div>
+        <p id="fullname" style="display: none;"></p>
     </div>
-    <p id="fullname" style="display: none;"></p>
+
     <script src="popup.js"></script>
 </body>
 </html>

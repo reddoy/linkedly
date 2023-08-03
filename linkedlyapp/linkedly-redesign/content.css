@@ -3,3 +3,28 @@
     justify-content: center;
     align-items: center;
 }
+
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#linkedlylogo{
+    padding-top: 2px;
+}
+
+#settingsBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

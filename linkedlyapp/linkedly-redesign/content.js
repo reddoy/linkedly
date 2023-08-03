@@ -2,8 +2,9 @@ let linkedlyDiv;
 let numberCalled = 0;
 let portToBackgroundScript = chrome.runtime.connect({name: 'contentScriptToBackgroundScript'});
 let hasLinkedlyLoaded= false;
-let chainlogoNoBG = chrome.runtime.getURL('images/chainlogonobg.png');
-let chainlogoMain = chrome.runtime.getURL('images/chainlogoblacksmall.png')
+let chainlogoNoBG = chrome.runtime.getURL('images/chain-link-noBG.svg');
+let chainlogoMain = chrome.runtime.getURL('images/chain-logo-small-svg.svg')
+let popupMain;
 
 
 async function loadHtml() {
@@ -13,8 +14,7 @@ async function loadHtml() {
       
       const parser = new DOMParser();
       const htmlDocument = parser.parseFromString(data, 'text/html');
-      const myElement = htmlDocument.querySelector('body');
-      console.log(myElement);
+      popupMain = htmlDocument.querySelector('#body');
 
       // Do something with myElement
   } catch (err) {
@@ -44,32 +44,10 @@ portToBackgroundScript.onMessage.addListener(function(request) {
       linkedlyDiv.innerHTML = 'user not logged in';
       console.log(document.getElementById('linkedly-div'));
   } else if (request.message === 'loggedIn') {
-      linkedlyDiv.innerHTML = `
-      <div class="logo">
-      <img src="${chainlogoMain}" alt="linkedlylogo" id="linkedlylogo">
-      <h1>Linkedly</h1>
-      <a href="#" id="settingsBtn">⚙️</a>  
-  </div>
-  <div id="main-content">
-      <div id="connect-section">
-          <div id="info-section">
-              <div class="buttons">
-                  <button id="genConnectBtn">Generate <img src="..\images/chainlogonobg.png" alt="linkedlylogo"></button>
-              </div>
-          </div>
-          <p id="tL"></p>
-      </div>
-      <div class="listBtns">
-          <div class="buttons">
-              <div class="top-row">
-                  <button id="addToListBtn">Add to List</button>
-                  <a href="..\pageCurrentList\currentList.html" id="showCurListBtn">See Current List</a>
-              </div>
-          </div>
-      </div>
-  </div>
-  <p id="fullname" style="display: none;"></p>
-      `;
+      linkedlyDiv.innerHTML = popupMain.innerHTML;
+      document.getElementById('linkedlylogo').src = chainlogoMain;
+      document.getElementById('genBtnImg').src = chainlogoNoBG;
+      document.getElementById('linkedly-header').classList.add('text-heading-xlarge', 'inline', 't-24', 'v-align-middle', 'break-words');
   } else if (request.message === 'newUser') {
       linkedlyDiv.innerHTML = 'new user';
   }else if(request.message = 'tabChanged'){
