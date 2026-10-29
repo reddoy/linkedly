@@ -2,7 +2,11 @@
 
 A Chrome extension for AI-assisted networking on LinkedIn. Open someone's profile and Linkedly writes a tailored outreach message with ChatGPT, finds likely email addresses through Hunter.io, and lets you build downloadable lists of connections.
 
-**Status:** archived side project from 2023. The server and database it relied on are no longer running.
+**Status:** Archived. The server and database it relied on are no longer running.
+
+## Background
+
+I built Linkedly in college over about three months, and wrote most of it by hand. It worked, but by the end I was burned out, wasn't excited about the idea anymore, and didn't want to market it, so I shelved it.
 
 ## Features
 
