@@ -2,7 +2,13 @@
 
 A Chrome extension for AI-assisted networking on LinkedIn. Open someone's profile and Linkedly writes a tailored outreach message with ChatGPT, finds likely email addresses through Hunter.io, and lets you build downloadable lists of connections.
 
-**Status:** Archived. The server and database it relied on are no longer running.
+**Landing page:** [reddoy.github.io/linkedly](https://reddoy.github.io/linkedly/)
+
+**Demo video:** [How to use Linkedly on LinkedIn](https://www.youtube.com/watch?v=Hvo2tw3bvSM), recorded in 2023 when the extension was live.
+
+[![Linkedly demo video](https://i.ytimg.com/vi/Hvo2tw3bvSM/hqdefault.jpg)](https://www.youtube.com/watch?v=Hvo2tw3bvSM)
+
+**Status:** Archived. The extension is no longer on the Chrome Web Store, and the server and database it relied on are no longer running.
 
 ## Background
 
@@ -28,7 +34,7 @@ I built Linkedly in college over about three months, and wrote most of it by han
 |---|---|
 | `linkedlyapp/linkedlychromeext/` | The extension as it shipped: login, onboarding, main popup, lists, and settings pages |
 | `linkedlyapp/linkedly-redesign/` | An unfinished redesign of the extension |
-| `linkedlyapp/llServer/` | The Express API server (`index.js`) and the landing page (`landing-page/`) |
+| `linkedlyapp/llServer/` | The Express API server (`index.js`) and the landing page (`landing-page/`, deployed to GitHub Pages) |
 | `linkedlyapp/llServer/domains.py` | Scraper for company email domains |
 
 ## Running it
